@@ -1,19 +1,16 @@
 import { useState } from 'react'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import MapView from '@/components/MapView'
 import MapFilters from '@/components/MapFilters'
 import { useMapData } from '@/hooks/useMapData'
-import { useNavigate } from 'react-router-dom'
 
 export default function AdminMapPage() {
+  const [searchParams] = useSearchParams()
+  const truckIdParam = searchParams.get('truckId') || undefined
   const [statusFilter, setStatusFilter] = useState('')
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
   const { positions, loading } = useMapData({ status: statusFilter || undefined, search: search || undefined })
-
-  const filteredPositions = positions.map((p) => ({
-    ...p,
-    status: p.status,
-  }))
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
@@ -31,8 +28,9 @@ export default function AdminMapPage() {
       />
       <div style={{ flex: 1, borderRadius: 8, overflow: 'hidden' }}>
         <MapView
-          positions={filteredPositions}
+          positions={positions}
           height="100%"
+          highlightedTruckId={truckIdParam}
           onMarkerClick={(truckId) => navigate(`/admin/trucks/${truckId}`)}
         />
       </div>

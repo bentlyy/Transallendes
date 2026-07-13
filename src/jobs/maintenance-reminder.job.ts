@@ -1,10 +1,26 @@
-// @ts-nocheck
 import { pool } from '../shared/db.js';
 import { logger } from '../utils/logger.js';
+import { BaseJob, type JobContext, type JobResult } from '../shared/job.js';
 import cron from 'node-cron';
 
-async function getUpcomingMaintenance() {
-  const { rows } = await pool.query(`
+interface MaintenanceRow {
+  id: number;
+  truck_id: number;
+  type: string;
+  description: string | null;
+  scheduled_date: string;
+  tenant_id: string;
+  license_plate: string;
+  driver_id: number | null;
+  driver_user_id: number | null;
+}
+
+interface UserRow {
+  id: number;
+}
+
+async function getUpcomingMaintenance(): Promise<MaintenanceRow[]> {
+  const { rows } = await pool.query<MaintenanceRow>(`
     SELECT
       m.id, m.truck_id, m.type, m.description, m.scheduled_date, m.tenant_id,
       t.plate AS license_plate, t.driver_id, d.user_id AS driver_user_id
@@ -21,7 +37,7 @@ async function getUpcomingMaintenance() {
   return rows;
 }
 
-async function createNotification(tenantId, userId, title, message) {
+async function createNotification(tenantId: string, userId: number | null, title: string, message: string): Promise<void> {
   if (!userId) return;
   await pool.query(
     `INSERT INTO notifications (user_id, title, message, type, tenant_id, created_at)
@@ -30,10 +46,21 @@ async function createNotification(tenantId, userId, title, message) {
   );
 }
 
-async function createAlert(tenantId, data) {
+interface AlertCreateData {
+  type: string;
+  severity: string;
+  title: string;
+  message: string;
+  resource_type: string;
+  resource_id: number;
+  truck_id: number | null;
+  driver_id: number | null;
+}
+
+async function createAlert(tenantId: string, data: AlertCreateData): Promise<void> {
   await pool.query(
     `INSERT INTO alerts
-       (type, severity, title, message, resource_type, resource_id,
+       (type, severity, title, description, resource_type, resource_id,
         truck_id, driver_id, tenant_id, created_at)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())`,
     [
@@ -45,8 +72,8 @@ async function createAlert(tenantId, data) {
   );
 }
 
-async function getAdminUsers(tenantId) {
-  const { rows } = await pool.query(
+async function getAdminUsers(tenantId: string): Promise<UserRow[]> {
+  const { rows } = await pool.query<UserRow>(
     `SELECT id FROM users
      WHERE tenant_id = $1 AND role IN ('admin', 'superadmin')`,
     [tenantId]
@@ -54,15 +81,21 @@ async function getAdminUsers(tenantId) {
   return rows;
 }
 
-export function startMaintenanceReminder() {
-  cron.schedule('0 */6 * * *', async () => {
-    try {
-      const records = await getUpcomingMaintenance();
-      if (!records.length) return;
+class MaintenanceReminderJob extends BaseJob {
+  readonly name = 'maintenance-reminder';
 
-      const tenantAdminCache = {};
+  async execute(_ctx: JobContext): Promise<JobResult> {
+    const records = await getUpcomingMaintenance();
+    if (!records.length) {
+      return { success: true, processed: 0, errors: 0, duration: 0 };
+    }
 
-      for (const rec of records) {
+    const tenantAdminCache: Record<string, UserRow[]> = {};
+    let processed = 0;
+    let errors = 0;
+
+    for (const rec of records) {
+      try {
         const isOverdue = new Date(rec.scheduled_date) <= new Date();
         const daysUntil = Math.ceil(
           (new Date(rec.scheduled_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
@@ -99,13 +132,21 @@ export function startMaintenanceReminder() {
         for (const admin of tenantAdminCache[rec.tenant_id]) {
           await createNotification(rec.tenant_id, admin.id, title, message);
         }
-      }
 
-      logger.info(`Maintenance reminders sent for ${records.length} records`);
-    } catch (err) {
-      logger.error('Maintenance reminder error', { error: err });
+        processed++;
+      } catch (err) {
+        errors++;
+        logger.error('Maintenance reminder failed for record', { error: err, record_id: rec.id });
+      }
     }
-  });
-  logger.info('Maintenance reminder started (every 6h)');
+
+    logger.info(`Maintenance reminders sent for ${records.length} records`);
+    return { success: true, processed, errors, duration: 0 };
+  }
 }
 
+export function startMaintenanceReminder(): void {
+  const job = new MaintenanceReminderJob();
+  cron.schedule('0 */6 * * *', () => { job.run().catch(err => logger.error('Maintenance reminder cron error', { error: err })); });
+  logger.info('Maintenance reminder started (every 6h)');
+}

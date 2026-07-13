@@ -13,11 +13,12 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "noImplicitAny": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": false
   },
   "include": ["src/**/*", "src/@types/**/*.d.ts"],
   "exclude": ["node_modules", "dist", "tests", "coverage"]

@@ -1,10 +1,29 @@
-// @ts-nocheck
 import { pool } from '../shared/db.js';
 import { logger } from '../utils/logger.js';
+import { BaseJob, type JobContext, type JobResult } from '../shared/job.js';
 import cron from 'node-cron';
 
-async function getExpiringDocuments() {
-  const { rows } = await pool.query(`
+interface DocumentRow {
+  id: number;
+  name: string;
+  type: string;
+  expiry_date: string;
+  resource_type: string;
+  resource_id: number;
+  tenant_id: string;
+}
+
+interface AlertCreateData {
+  type: string;
+  severity: string;
+  title: string;
+  message: string;
+  resource_type: string;
+  resource_id: number;
+}
+
+async function getExpiringDocuments(): Promise<DocumentRow[]> {
+  const { rows } = await pool.query<DocumentRow>(`
     SELECT id, name, type, expiry_date, resource_type, resource_id, tenant_id
     FROM documents
     WHERE status = 'active'
@@ -15,10 +34,10 @@ async function getExpiringDocuments() {
   return rows;
 }
 
-async function createAlert(tenantId, data) {
+async function createAlert(tenantId: string, data: AlertCreateData): Promise<void> {
   await pool.query(
     `INSERT INTO alerts
-       (type, severity, title, message, resource_type, resource_id, tenant_id, created_at)
+       (type, severity, title, description, resource_type, resource_id, tenant_id, created_at)
      VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
     [
       data.type, data.severity, data.title, data.message,
@@ -28,7 +47,7 @@ async function createAlert(tenantId, data) {
   );
 }
 
-async function createNotification(tenantId, userId, title, message) {
+async function createNotification(tenantId: string, userId: number | null, title: string, message: string): Promise<void> {
   if (!userId) return;
   await pool.query(
     `INSERT INTO notifications (user_id, title, message, type, tenant_id, created_at)
@@ -37,11 +56,11 @@ async function createNotification(tenantId, userId, title, message) {
   );
 }
 
-async function getRelatedUserIds(document) {
-  const userIds = [];
+async function getRelatedUserIds(document: DocumentRow): Promise<number[]> {
+  const userIds: number[] = [];
 
   if (document.resource_type === 'truck') {
-    const { rows } = await pool.query(
+    const { rows } = await pool.query<{ user_id: number }>(
       `SELECT d.user_id FROM drivers d
        JOIN trucks t ON t.driver_id = d.id AND t.tenant_id = d.tenant_id
        WHERE t.id = $1 AND t.tenant_id = $2 AND d.user_id IS NOT NULL`,
@@ -51,14 +70,14 @@ async function getRelatedUserIds(document) {
   }
 
   if (document.resource_type === 'driver') {
-    const { rows } = await pool.query(
+    const { rows } = await pool.query<{ user_id: number }>(
       'SELECT user_id FROM drivers WHERE id = $1 AND tenant_id = $2 AND user_id IS NOT NULL',
       [document.resource_id, document.tenant_id]
     );
     for (const r of rows) userIds.push(r.user_id);
   }
 
-  const { rows } = await pool.query(
+  const { rows } = await pool.query<{ id: number }>(
     `SELECT id FROM users
      WHERE tenant_id = $1 AND role IN ('admin', 'superadmin')`,
     [document.tenant_id]
@@ -68,7 +87,7 @@ async function getRelatedUserIds(document) {
   return [...new Set(userIds)];
 }
 
-async function alertExists(docId, tenantId) {
+async function alertExists(docId: number, tenantId: string): Promise<boolean> {
   const { rows } = await pool.query(
     `SELECT id FROM alerts
      WHERE resource_type = 'document' AND resource_id = $1 AND tenant_id = $2
@@ -80,13 +99,20 @@ async function alertExists(docId, tenantId) {
   return rows.length > 0;
 }
 
-export function startDocumentExpiry() {
-  cron.schedule('0 */6 * * *', async () => {
-    try {
-      const documents = await getExpiringDocuments();
-      if (!documents.length) return;
+class DocumentExpiryJob extends BaseJob {
+  readonly name = 'document-expiry';
 
-      for (const doc of documents) {
+  async execute(_ctx: JobContext): Promise<JobResult> {
+    const documents = await getExpiringDocuments();
+    if (!documents.length) {
+      return { success: true, processed: 0, errors: 0, duration: 0 };
+    }
+
+    let processed = 0;
+    let errors = 0;
+
+    for (const doc of documents) {
+      try {
         const isExpired = new Date(doc.expiry_date) <= new Date();
         const daysUntil = Math.ceil(
           (new Date(doc.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
@@ -115,12 +141,21 @@ export function startDocumentExpiry() {
         for (const uid of userIds) {
           await createNotification(doc.tenant_id, uid, title, message);
         }
-      }
 
-      logger.info(`Document expiry checks sent for ${documents.length} documents`);
-    } catch (err) {
-      logger.error('Document expiry error', { error: err });
+        processed++;
+      } catch (err) {
+        errors++;
+        logger.error('Document expiry failed for document', { error: err, document_id: doc.id });
+      }
     }
-  });
+
+    logger.info(`Document expiry checks sent for ${documents.length} documents`);
+    return { success: true, processed, errors, duration: 0 };
+  }
+}
+
+export function startDocumentExpiry(): void {
+  const job = new DocumentExpiryJob();
+  cron.schedule('0 */6 * * *', () => { job.run().catch(err => logger.error('Document expiry cron error', { error: err })); });
   logger.info('Document expiry started (every 6h)');
 }

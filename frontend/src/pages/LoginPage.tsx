@@ -41,17 +41,34 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', backgroundColor: 'var(--background)' }}>
       {/* Left panel - branding */}
-      <div style={{
+      <div className="login-branding login-branding-bg" style={{
         flex: 1,
         display: 'none',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e293b 100%)',
         padding: 40,
         position: 'relative',
         overflow: 'hidden',
-      }} className="login-branding">
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'url(/Libertadores.png) center/cover no-repeat',
+          zIndex: 0,
+        }} />
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(135deg, rgba(15,23,42,0.85) 0%, rgba(30,58,95,0.75) 50%, rgba(30,41,59,0.85) 100%)',
+          zIndex: 1,
+        }} />
         <div style={{
           position: 'absolute',
           top: '-50%',
@@ -59,7 +76,8 @@ export default function LoginPage() {
           width: '600px',
           height: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%)',
+          zIndex: 2,
         }} />
         <div style={{
           position: 'absolute',
@@ -68,9 +86,10 @@ export default function LoginPage() {
           width: '400px',
           height: '400px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)',
+          zIndex: 2,
         }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 400, textAlign: 'center' }}>
+        <div style={{ position: 'relative', zIndex: 3, maxWidth: 400, textAlign: 'center' }}>
           <div style={{
             width: 64,
             height: 64,

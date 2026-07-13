@@ -1,1 +1,1 @@
-declare module 'hpp';
+declare module 'hpp'

@@ -1,5 +1,5 @@
-import { RequestHandler } from 'express';
-import { logger } from '../utils/logger.js';
+import { RequestHandler } from 'express'
+import { logger } from '../utils/logger.js'
 
 const SENSITIVE_FIELDS = new Set([
   'password',
@@ -12,29 +12,29 @@ const SENSITIVE_FIELDS = new Set([
   'cookie',
   'stripe_key',
   'api_key',
-]);
+])
 
 function sanitizeBody(body: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
-  if (!body || typeof body !== 'object') return body;
+  if (!body || typeof body !== 'object') return body
 
-  const sanitized: Record<string, unknown> = {};
+  const sanitized: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(body)) {
     if (SENSITIVE_FIELDS.has(key)) {
-      sanitized[key] = '[REDACTED]';
+      sanitized[key] = '[REDACTED]'
     } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      sanitized[key] = sanitizeBody(value as Record<string, unknown>);
+      sanitized[key] = sanitizeBody(value as Record<string, unknown>)
     } else {
-      sanitized[key] = value;
+      sanitized[key] = value
     }
   }
-  return sanitized;
+  return sanitized
 }
 
 export const requestLogger: RequestHandler = (req, res, next) => {
-  const start = Date.now();
+  const start = Date.now()
 
   res.on('finish', () => {
-    const duration = Date.now() - start;
+    const duration = Date.now() - start
 
     const logData: Record<string, unknown> = {
       method: req.method,
@@ -44,20 +44,20 @@ export const requestLogger: RequestHandler = (req, res, next) => {
       ip: req.ip || req.socket.remoteAddress,
       userAgent: req.headers['user-agent'],
       requestId: req.headers['x-request-id'],
-    };
+    }
 
     if (req.user) {
-      logData.userId = req.user.id;
-      logData.tenantId = req.tenant_id;
+      logData.userId = req.user.id
+      logData.tenantId = req.tenant_id
     }
 
     if (Object.keys(req.body || {}).length > 0 && req.method !== 'GET') {
-      logData.body = sanitizeBody(req.body);
+      logData.body = sanitizeBody(req.body)
     }
 
-    const level = res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'info';
-    logger.log(level, `${req.method} ${req.path} ${res.statusCode}`, logData);
-  });
+    const level = res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'info'
+    logger.log(level, `${req.method} ${req.path} ${res.statusCode}`, logData)
+  })
 
-  next();
-};
+  next()
+}

@@ -31,6 +31,9 @@ Thumbs.db
 # Docker
 pgdata/
 
+# Session logs
+logs/
+
 # Coverage
 coverage/
 

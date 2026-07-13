@@ -8,7 +8,7 @@ interface MapFiltersProps {
   onSearchChange: (query: string) => void
   clientId?: string
   onClientChange?: (clientId: string) => void
-  clients?: { id: string; companyName: string }[]
+  clients?: { id: string; name: string }[]
   dateFrom?: string
   dateTo?: string
   onDateFromChange?: (date: string) => void
@@ -81,7 +81,7 @@ export default function MapFilters({
         >
           <option value="">Todos los clientes</option>
           {clients.map((c) => (
-            <option key={c.id} value={c.id}>{c.companyName}</option>
+            <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
       )}

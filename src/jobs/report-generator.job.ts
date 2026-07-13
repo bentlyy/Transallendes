@@ -1,10 +1,41 @@
-// @ts-nocheck
 import { pool } from '../shared/db.js';
 import { logger } from '../utils/logger.js';
+import { BaseJob, type JobContext, type JobResult } from '../shared/job.js';
 import cron from 'node-cron';
 
-async function getTenantsWithAutoReport() {
-  const { rows } = await pool.query(`
+interface TenantWithReport {
+  id: string;
+  name: string;
+  config: Record<string, unknown> | null;
+}
+
+interface ReportDataRow {
+  total_trips: number;
+  completed_trips: number;
+  in_progress_trips: number;
+  delayed_trips: number;
+  total_distance_km: number;
+  avg_duration_hours: number;
+  total_alerts: number;
+  critical_alerts: number;
+  emergency_alerts: number;
+  total_trucks: number;
+  active_trucks: number;
+  in_maintenance: number;
+  overdue_maintenance: number;
+  expiring_docs: number;
+}
+
+interface Report {
+  title: string;
+  type: 'daily' | 'weekly' | 'monthly';
+  generated_at: string;
+  period: { from: string; to: string };
+  data: ReportDataRow;
+}
+
+async function getTenantsWithAutoReport(): Promise<TenantWithReport[]> {
+  const { rows } = await pool.query<TenantWithReport>(`
     SELECT id, name, config
     FROM tenants
     WHERE active = true
@@ -14,8 +45,8 @@ async function getTenantsWithAutoReport() {
   return rows;
 }
 
-async function queryReportData(tenantId, since) {
-  const { rows } = await pool.query(`
+async function queryReportData(tenantId: string, since: Date): Promise<ReportDataRow> {
+  const { rows } = await pool.query<ReportDataRow>(`
     WITH trip_stats AS (
       SELECT
         COUNT(*)::int AS total_trips,
@@ -87,47 +118,44 @@ async function queryReportData(tenantId, since) {
   return rows[0];
 }
 
-async function generateDailyReport(tenantId, tenantName) {
+function generateDailyReport(_tenantId: string, tenantName: string): Report {
   const since = new Date();
   since.setDate(since.getDate() - 1);
-  const data = await queryReportData(tenantId, since);
   return {
     title: `Daily Report - ${tenantName}`,
     type: 'daily',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
-    data,
+    data: null as unknown as ReportDataRow,
   };
 }
 
-async function generateWeeklyReport(tenantId, tenantName) {
+function generateWeeklyReport(_tenantId: string, tenantName: string): Report {
   const since = new Date();
   since.setDate(since.getDate() - 7);
-  const data = await queryReportData(tenantId, since);
   return {
     title: `Weekly Report - ${tenantName}`,
     type: 'weekly',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
-    data,
+    data: null as unknown as ReportDataRow,
   };
 }
 
-async function generateMonthlyReport(tenantId, tenantName) {
+function generateMonthlyReport(_tenantId: string, tenantName: string): Report {
   const since = new Date();
   since.setMonth(since.getMonth() - 1);
-  const data = await queryReportData(tenantId, since);
   return {
     title: `Monthly Report - ${tenantName}`,
     type: 'monthly',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
-    data,
+    data: null as unknown as ReportDataRow,
   };
 }
 
-async function saveReport(tenantId, report) {
-  const { rows } = await pool.query(
+async function saveReport(tenantId: string, report: Report): Promise<{ id: number }> {
+  const { rows } = await pool.query<{ id: number }>(
     `INSERT INTO reports (tenant_id, title, type, data, generated_at)
      VALUES ($1, $2, $3, $4::jsonb, NOW())
      RETURNING id`,
@@ -136,8 +164,8 @@ async function saveReport(tenantId, report) {
   return rows[0];
 }
 
-async function notifyAdmins(tenantId, reportTitle) {
-  const { rows } = await pool.query(
+async function notifyAdmins(tenantId: string, reportTitle: string): Promise<void> {
+  const { rows } = await pool.query<{ id: number }>(
     `SELECT id FROM users WHERE tenant_id = $1 AND role IN ('admin', 'superadmin')`,
     [tenantId]
   );
@@ -150,52 +178,66 @@ async function notifyAdmins(tenantId, reportTitle) {
   }
 }
 
-export function startReportGenerator() {
-  cron.schedule('0 1 * * *', async () => {
-    try {
-      const tenants = await getTenantsWithAutoReport();
-      if (!tenants.length) return;
+class ReportGeneratorJob extends BaseJob {
+  readonly name = 'report-generator';
 
-      for (const tenant of tenants) {
-        try {
-          const cfg = tenant.config?.auto_report || {};
-          const frequency = cfg.frequency || 'daily';
-          const now = new Date();
-
-          let report;
-          switch (frequency) {
-            case 'daily':
-              report = await generateDailyReport(tenant.id, tenant.name);
-              break;
-            case 'weekly':
-              if (now.getDay() !== 1) continue;
-              report = await generateWeeklyReport(tenant.id, tenant.name);
-              break;
-            case 'monthly':
-              if (now.getDate() !== 1) continue;
-              report = await generateMonthlyReport(tenant.id, tenant.name);
-              break;
-            default:
-              logger.warn(`Unknown report frequency for tenant ${tenant.id}: ${frequency}`);
-              continue;
-          }
-
-          const saved = await saveReport(tenant.id, report);
-          await notifyAdmins(tenant.id, report.title);
-
-          logger.info(`Report generated for tenant ${tenant.name}`, {
-            tenant_id: tenant.id,
-            report_id: saved.id,
-            type: frequency,
-          });
-        } catch (tenantErr) {
-          logger.error(`Report generation failed for tenant ${tenant.id}`, { error: tenantErr });
-        }
-      }
-    } catch (err) {
-      logger.error('Report generator error', { error: err });
+  async execute(_ctx: JobContext): Promise<JobResult> {
+    const tenants = await getTenantsWithAutoReport();
+    if (!tenants.length) {
+      return { success: true, processed: 0, errors: 0, duration: 0 };
     }
-  });
-  logger.info('Report generator started (daily at 1:00 AM)');
+
+    let processed = 0;
+    let errors = 0;
+
+    for (const tenant of tenants) {
+      try {
+        const cfg = (tenant.config as Record<string, unknown>)?.auto_report as Record<string, unknown> || {};
+        const frequency = (cfg.frequency as string) || 'daily';
+        const now = new Date();
+
+        let report: Report;
+        switch (frequency) {
+          case 'daily':
+            report = generateDailyReport(tenant.id, tenant.name);
+            report.data = await queryReportData(tenant.id, new Date(report.period.from));
+            break;
+          case 'weekly':
+            if (now.getDay() !== 1) continue;
+            report = generateWeeklyReport(tenant.id, tenant.name);
+            report.data = await queryReportData(tenant.id, new Date(report.period.from));
+            break;
+          case 'monthly':
+            if (now.getDate() !== 1) continue;
+            report = generateMonthlyReport(tenant.id, tenant.name);
+            report.data = await queryReportData(tenant.id, new Date(report.period.from));
+            break;
+          default:
+            logger.warn(`Unknown report frequency for tenant ${tenant.id}: ${frequency}`);
+            continue;
+        }
+
+        const saved = await saveReport(tenant.id, report);
+        await notifyAdmins(tenant.id, report.title);
+
+        processed++;
+        logger.info(`Report generated for tenant ${tenant.name}`, {
+          tenant_id: tenant.id,
+          report_id: saved.id,
+          type: frequency,
+        });
+      } catch (tenantErr) {
+        errors++;
+        logger.error(`Report generation failed for tenant ${tenant.id}`, { error: tenantErr });
+      }
+    }
+
+    return { success: true, processed, errors, duration: 0 };
+  }
 }
 
+export function startReportGenerator(): void {
+  const job = new ReportGeneratorJob();
+  cron.schedule('0 1 * * *', () => { job.run().catch(err => logger.error('Report generator cron error', { error: err })); });
+  logger.info('Report generator started (daily at 1:00 AM)');
+}

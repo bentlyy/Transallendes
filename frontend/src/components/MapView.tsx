@@ -1,8 +1,6 @@
-import { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef } from 'react'
 import L from 'leaflet'
-import 'leaflet.markercluster'
 import { MAP } from '@/utils/constants'
-import { getTruckStatusColor } from '@/utils/statusColors'
 
 interface MapPosition {
   id: string
@@ -41,31 +39,99 @@ interface MapViewProps {
   height?: string | number
   center?: [number, number]
   zoom?: number
-  showClusters?: boolean
+  highlightedTruckId?: string
+  disableAutoFit?: boolean
 }
 
 function isValidCoord(v: unknown): v is number {
   return typeof v === 'number' && isFinite(v)
 }
 
-function makeMarkerIcon(status: string) {
-  const color = getTruckStatusColor(status)
+const STATUS_LABELS: Record<string, string> = {
+  moving: 'En movimiento',
+  stopped: 'Detenido',
+  idle: 'Inactivo',
+  engine_off: 'Apagado',
+  alert: 'Alerta',
+  disconnected: 'Desconectado',
+}
+
+function getMarkerColor(status: string): string {
+  switch (status) {
+    case 'moving': return '#22c55e'
+    case 'stopped':
+    case 'engine_off': return '#ef4444'
+    case 'idle': return '#f59e0b'
+    case 'alert': return '#dc2626'
+    case 'disconnected': return '#94a3b8'
+    default: return '#94a3b8'
+  }
+}
+
+const RING_ON = '#22c55e'
+const RING_OFF = '#ef4444'
+
+function makeMarkerIcon(_status: string, ignition: boolean, highlighted = false) {
+  const ringColor = ignition ? RING_ON : RING_OFF
+  const ringWidth = highlighted ? 3 : 2
+  const circleSize = highlighted ? 32 : 28
+  const fontSize = highlighted ? 16 : 14
+  const pulse = ignition ? 'animation: truck-pulse 2s infinite;' : ''
+  const shadow = highlighted
+    ? '0 0 0 3px rgba(59,130,246,0.4),0 2px 6px rgba(0,0,0,0.2)'
+    : '0 1px 4px rgba(0,0,0,0.15)'
+
   return L.divIcon({
-    html: `<div style="width:28px;height:28px;background:${color};border:3px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-size:12px;color:white;">🚛</div>`,
+    html: `<div style="
+      width:${circleSize}px;height:${circleSize}px;
+      background:rgba(255,255,255,0.92);
+      border:${ringWidth}px solid ${ringColor};
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:${shadow};
+      ${pulse}
+      font-size:${fontSize}px;line-height:1;
+    ">
+      🚛
+    </div>`,
     className: '',
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
+    iconSize: [circleSize + 6, circleSize + 6],
+    iconAnchor: [(circleSize + 6) / 2, (circleSize + 6) / 2],
   })
 }
 
-function makePopupHtml(m: { plate: string; status: string; speed?: number; driverName?: string }) {
-  const color = getTruckStatusColor(m.status)
-  return `<div style="font-family:system-ui;min-width:160px;">
-    <strong>${m.plate}</strong><br/>
-    <span style="color:${color};">● ${m.status}</span><br/>
-    ${m.speed != null ? `<span>${m.speed} km/h</span><br/>` : ''}
-    ${m.driverName ? `<span style="color:#64748b;">${m.driverName}</span>` : ''}
+function makeTooltipHtml(m: {
+  plate: string
+  status: string
+  speed: number
+  ignition: boolean
+  driverName?: string
+}) {
+  const color = getMarkerColor(m.status)
+  const label = STATUS_LABELS[m.status] || m.status
+  return `<div style="font-family:system-ui,sans-serif;min-width:150px;line-height:1.5;">
+    <strong style="font-size:14px;">${m.plate}</strong><br/>
+    <span style="color:${color};font-size:13px;">● ${label}</span><br/>
+    <span style="font-size:13px;">🚀 ${m.speed} km/h</span><br/>
+    <span style="font-size:13px;">${m.ignition ? '⛽ Encendido' : '⛽ Apagado'}</span>
+    ${m.driverName ? `<br/><span style="font-size:12px;color:#64748b;">👤 ${m.driverName}</span>` : ''}
   </div>`
+}
+
+function animateMarker(marker: L.Marker, target: L.LatLng, duration = 1200) {
+  const start = marker.getLatLng()
+  if (start.equals(target)) return
+  const begin = performance.now()
+  function step(now: number) {
+    const t = Math.min((now - begin) / duration, 1)
+    const e = 1 - Math.pow(1 - t, 3)
+    marker.setLatLng([
+      start.lat + (target.lat - start.lat) * e,
+      start.lng + (target.lng - start.lng) * e,
+    ])
+    if (t < 1) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
 }
 
 export default function MapView({
@@ -76,16 +142,18 @@ export default function MapView({
   height = 500,
   center = MAP.DEFAULT_CENTER,
   zoom = MAP.DEFAULT_ZOOM,
-  showClusters = true,
+  highlightedTruckId,
+  disableAutoFit = false,
 }: MapViewProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
-  const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null)
-  const markersLayerRef = useRef<L.LayerGroup | null>(null)
+  const markersRef = useRef<Map<string, L.Marker>>(new Map())
   const geofenceLayersRef = useRef<L.Circle[]>([])
   const routeLayerRef = useRef<L.Polyline | null>(null)
+  const initialFitDone = useRef(false)
+  const lastHighlightedRef = useRef<string | undefined>(undefined)
 
-  // Initialize map
+  // Initialize map once
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return
 
@@ -100,84 +168,93 @@ export default function MapView({
       maxZoom: 19,
     }).addTo(map)
 
-    const clusterGroup = L.markerClusterGroup({
-      chunkedLoading: true,
-      maxClusterRadius: 50,
-      spiderfyOnMaxZoom: true,
-      showCoverageOnHover: false,
-      disableClusteringAtZoom: 16,
-    })
-    map.addLayer(clusterGroup)
-    clusterGroupRef.current = clusterGroup
-
-    const markersLayer = L.layerGroup()
-    map.addLayer(markersLayer)
-    markersLayerRef.current = markersLayer
-
     mapRef.current = map
-
     setTimeout(() => map.invalidateSize(), 100)
 
     return () => {
       map.remove()
       mapRef.current = null
+      markersRef.current.clear()
+      initialFitDone.current = false
+      lastHighlightedRef.current = undefined
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [center, zoom])
 
-  // Memoize valid markers
-  const validMarkers = useMemo(() => {
-    return positions
-      .filter((p) => isValidCoord(p.lat) && isValidCoord(p.lng))
-      .map((p) => ({
-        key: p.truckId,
-        lat: p.lat,
-        lng: p.lng,
-        plate: p.plate,
-        status: p.status,
-        speed: p.speed,
-        heading: p.heading,
-        driverName: p.driverName,
-        lastUpdate: p.lastUpdate,
-        onClick: () => onMarkerClick?.(p.truckId),
-      }))
-  }, [positions, onMarkerClick])
-
-  // Render markers
+  // Sync markers with positions (update/create/remove with smooth animation)
   useEffect(() => {
-    if (!mapRef.current) return
     const map = mapRef.current
-    const clusterGroup = clusterGroupRef.current
-    const markersLayer = markersLayerRef.current
-    if (!clusterGroup || !markersLayer) return
+    if (!map) return
 
-    clusterGroup.clearLayers()
-    markersLayer.clearLayers()
+    const valid = positions.filter((p) => isValidCoord(p.lat) && isValidCoord(p.lng))
 
-    validMarkers.forEach((m) => {
-      const icon = makeMarkerIcon(m.status)
-      const marker = L.marker([m.lat, m.lng], { icon })
-      marker.bindPopup(makePopupHtml(m))
-      if (m.onClick) marker.on('click', m.onClick)
+    // Fit bounds once on first valid data (only when no route is provided)
+    if (!disableAutoFit && !initialFitDone.current && valid.length > 0 && route.length === 0) {
+      const bounds = L.latLngBounds(valid.map((p) => [p.lat, p.lng]))
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 })
+      initialFitDone.current = true
+    }
 
-      if (showClusters) {
-        clusterGroup.addLayer(marker)
+    const newKeys = new Set(valid.map((p) => p.truckId))
+
+    // Remove stale markers
+    for (const [truckId, marker] of markersRef.current) {
+      if (!newKeys.has(truckId)) {
+        map.removeLayer(marker)
+        markersRef.current.delete(truckId)
+      }
+    }
+
+    // Update or create markers
+    valid.forEach((p) => {
+      const existing = markersRef.current.get(p.truckId)
+      const targetLatLng = L.latLng(p.lat, p.lng)
+      const highlighted = p.truckId === highlightedTruckId
+      const icon = makeMarkerIcon(p.status, p.ignition, highlighted)
+
+      if (existing) {
+        existing.setIcon(icon)
+        animateMarker(existing, targetLatLng)
+        if (existing.getTooltip()) {
+          existing.setTooltipContent(makeTooltipHtml(p))
+        }
       } else {
-        markersLayer.addLayer(marker)
+        const marker = L.marker([p.lat, p.lng], { icon })
+        marker.bindTooltip(makeTooltipHtml(p), {
+          sticky: true,
+          direction: 'top',
+          offset: [0, -8],
+        })
+        if (onMarkerClick) {
+          marker.on('click', () => onMarkerClick(p.truckId))
+        }
+        marker.addTo(map)
+        markersRef.current.set(p.truckId, marker)
       }
     })
+  }, [positions, onMarkerClick, highlightedTruckId, route.length])
 
-    // Fit bounds
-    if (validMarkers.length > 0) {
-      const bounds = L.latLngBounds(validMarkers.map((m) => [m.lat, m.lng]))
-      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 })
+  // Only re-center when highlightedTruckId changes to a specific truck
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+
+    if (highlightedTruckId && highlightedTruckId !== lastHighlightedRef.current) {
+      lastHighlightedRef.current = highlightedTruckId
+      setTimeout(() => {
+        const marker = markersRef.current.get(highlightedTruckId)
+        if (marker) {
+          map.setView(marker.getLatLng(), 14, { animate: true })
+        }
+      }, 100)
+    } else if (!highlightedTruckId) {
+      lastHighlightedRef.current = undefined
     }
-  }, [validMarkers, showClusters])
+  }, [highlightedTruckId])
 
   // Geofences
   useEffect(() => {
-    if (!mapRef.current) return
     const map = mapRef.current
+    if (!map) return
     geofenceLayersRef.current.forEach((l) => map.removeLayer(l))
     geofenceLayersRef.current = []
 
@@ -187,7 +264,7 @@ export default function MapView({
           radius: g.radius,
           color: g.color || '#3b82f6',
           fillColor: g.color || '#3b82f6',
-          fillOpacity: 0.1,
+          fillOpacity: 0.08,
           weight: 2,
         }).addTo(map)
         circle.bindPopup(`<strong>${g.name}</strong>`)
@@ -196,10 +273,10 @@ export default function MapView({
     })
   }, [geofences])
 
-  // Route polyline
+  // Route polyline — fit bounds only once
   useEffect(() => {
-    if (!mapRef.current) return
     const map = mapRef.current
+    if (!map) return
     if (routeLayerRef.current) {
       map.removeLayer(routeLayerRef.current)
     }
@@ -207,10 +284,14 @@ export default function MapView({
     if (validRoutePoints.length > 1) {
       const polyline = L.polyline(
         validRoutePoints.map((p) => [p.lat, p.lng]),
-        { color: '#3b82f6', weight: 3, opacity: 0.7 }
+        { color: '#3b82f6', weight: 3, opacity: 0.6 }
       ).addTo(map)
+
+      if (!disableAutoFit && !initialFitDone.current) {
+        map.fitBounds(polyline.getBounds(), { padding: [50, 50] })
+        initialFitDone.current = true
+      }
       routeLayerRef.current = polyline
-      map.fitBounds(polyline.getBounds(), { padding: [50, 50] })
     }
   }, [route])
 

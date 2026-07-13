@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const createTripSchema = z.object({
   trip_number: z.string().optional(),
@@ -9,11 +9,15 @@ export const createTripSchema = z.object({
   origin_country: z.string().min(1).max(100),
   destination_city: z.string().min(1).max(200),
   destination_country: z.string().min(1).max(100),
-  route: z.array(z.object({
-    lat: z.number(),
-    lng: z.number(),
-    timestamp: z.string().optional(),
-  })).optional(),
+  route: z
+    .array(
+      z.object({
+        lat: z.number(),
+        lng: z.number(),
+        timestamp: z.string().optional(),
+      }),
+    )
+    .optional(),
   cargo_description: z.string().max(1000).optional(),
   cargo_weight_kg: z.number().positive().optional(),
   cargo_value: z.number().nonnegative().optional(),
@@ -25,20 +29,24 @@ export const createTripSchema = z.object({
   fuel_consumed: z.number().nonnegative().optional(),
   cost: z.number().nonnegative().optional(),
   billing_status: z.enum(['pending', 'invoiced', 'paid', 'overdue']).optional(),
-  documents: z.array(z.object({
-    name: z.string(),
-    type: z.string(),
-    url: z.string(),
-  })).optional(),
+  documents: z
+    .array(
+      z.object({
+        name: z.string(),
+        type: z.string(),
+        url: z.string(),
+      }),
+    )
+    .optional(),
   notes: z.string().max(2000).optional(),
-});
+})
 
-export const updateTripSchema = createTripSchema.partial();
+export const updateTripSchema = createTripSchema.partial()
 
 export const updateTripStatusSchema = z.object({
   status: z.enum(['pending', 'in_progress', 'completed', 'cancelled', 'delayed']),
-});
+})
 
-export type CreateTripInput = z.infer<typeof createTripSchema>;
-export type UpdateTripInput = z.infer<typeof updateTripSchema>;
-export type UpdateTripStatusInput = z.infer<typeof updateTripStatusSchema>;
+export type CreateTripInput = z.infer<typeof createTripSchema>
+export type UpdateTripInput = z.infer<typeof updateTripSchema>
+export type UpdateTripStatusInput = z.infer<typeof updateTripStatusSchema>

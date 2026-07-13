@@ -2,14 +2,18 @@ import api from './axios'
 
 export interface Client {
   id: string
-  companyName: string
-  contactName: string
+  name: string
+  rut?: string
+  contactName?: string
   email: string
   phone: string
-  address: string
-  city: string
-  country: string
+  address?: string
+  city?: string
+  country?: string
+  contactEmail?: string
+  contactPhone?: string
   status: string
+  config?: Record<string, unknown>
   tenantId: string
   createdAt: string
   updatedAt: string
@@ -17,11 +21,9 @@ export interface Client {
 
 export interface ClientStats {
   totalTrips: number
-  activeTrips: number
-  totalTrucks: number
+  tripsByStatus: { status: string; count: number }[]
   activeTrucks: number
-  totalDistance?: number
-  totalCost?: number
+  totalRevenue: number
 }
 
 export async function getClients(params?: Record<string, string>): Promise<{ data: Client[]; total: number }> {

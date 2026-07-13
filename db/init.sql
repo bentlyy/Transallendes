@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS clients (
     email TEXT,
     phone TEXT,
     address TEXT,
+    city TEXT,
+    country TEXT,
     contact_name TEXT,
     contact_email TEXT,
     contact_phone TEXT,

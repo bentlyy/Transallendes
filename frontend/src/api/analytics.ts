@@ -16,11 +16,11 @@ export async function getClientDashboard(params?: Record<string, string>): Promi
 }
 
 export async function getDriverRankings(params?: Record<string, string>): Promise<Record<string, unknown>[]> {
-  const res = await api.get('/analytics/drivers/rankings', { params })
+  const res = await api.get('/analytics/rankings/drivers', { params })
   return res.data
 }
 
 export async function getClientRankings(params?: Record<string, string>): Promise<Record<string, unknown>[]> {
-  const res = await api.get('/analytics/clients/rankings', { params })
+  const res = await api.get('/analytics/rankings/clients', { params })
   return res.data
 }

@@ -1,50 +1,50 @@
-import { pool } from '../../shared/db.js';
-import { NotFoundError } from '../../utils/errors.js';
+import { pool } from '../../shared/db.js'
+import { NotFoundError } from '../../utils/errors.js'
 
 interface PositionFilters {
-  status?: string;
-  client_id?: number;
-  search?: string;
+  status?: string
+  client_id?: number
+  search?: string
 }
 
 interface ClusterBounds {
-  sw_lat: number;
-  sw_lng: number;
-  ne_lat: number;
-  ne_lng: number;
-  zoom: number;
+  sw_lat: number
+  sw_lng: number
+  ne_lat: number
+  ne_lng: number
+  zoom: number
 }
 
 function buildWhereClause(
   tenant_id: string,
   filters: PositionFilters,
-  startParam: number
+  startParam: number,
 ): { sql: string; params: unknown[] } {
-  const clauses: string[] = [`t.tenant_id = $${startParam}`];
-  const params: unknown[] = [tenant_id];
-  let idx = startParam + 1;
+  const clauses: string[] = [`t.tenant_id = $${startParam}`]
+  const params: unknown[] = [tenant_id]
+  let idx = startParam + 1
 
   if (filters.status) {
-    clauses.push(`t.status = $${idx++}`);
-    params.push(filters.status);
+    clauses.push(`t.status = $${idx++}`)
+    params.push(filters.status)
   }
 
   if (filters.client_id) {
-    clauses.push(`t.client_id = $${idx++}`);
-    params.push(filters.client_id);
+    clauses.push(`t.client_id = $${idx++}`)
+    params.push(filters.client_id)
   }
 
   if (filters.search) {
-    clauses.push(`(t.plate ILIKE $${idx} OR t.brand ILIKE $${idx} OR t.model ILIKE $${idx})`);
-    params.push(`%${filters.search}%`);
-    idx++;
+    clauses.push(`(t.plate ILIKE $${idx} OR t.brand ILIKE $${idx} OR t.model ILIKE $${idx})`)
+    params.push(`%${filters.search}%`)
+    idx++
   }
 
-  return { sql: clauses.join(' AND '), params };
+  return { sql: clauses.join(' AND '), params }
 }
 
 export async function getPositions(tenant_id: string, filters: PositionFilters) {
-  const where = buildWhereClause(tenant_id, filters, 1);
+  const where = buildWhereClause(tenant_id, filters, 1)
 
   const { rows } = await pool.query(
     `SELECT
@@ -65,11 +65,11 @@ export async function getPositions(tenant_id: string, filters: PositionFilters) 
      LEFT JOIN trips tr ON tr.truck_id = t.id AND tr.tenant_id = t.tenant_id AND tr.status = 'in_progress'
      WHERE ${where.sql} AND t.last_gps_position IS NOT NULL
      ORDER BY t.plate`,
-    where.params
-  );
+    where.params,
+  )
 
   return rows.map((r) => {
-    const pos = r.last_gps_position as Record<string, unknown> | null;
+    const pos = r.last_gps_position as Record<string, unknown> | null
     return {
       id: String(r.truck_id),
       truck_id: r.truck_id,
@@ -84,24 +84,18 @@ export async function getPositions(tenant_id: string, filters: PositionFilters) 
       last_update: pos?.recorded_at ?? pos?.timestamp ?? null,
       brand: r.brand,
       model: r.model,
-      driver: r.driver_id
-        ? { id: r.driver_id, name: r.driver_name, phone: r.driver_phone }
-        : null,
+      driver: r.driver_id ? { id: r.driver_id, name: r.driver_name, phone: r.driver_phone } : null,
       current_trip: r.current_trip_id
         ? { id: r.current_trip_id, status: r.trip_status, destination: r.trip_destination }
         : null,
-    };
-  });
+    }
+  })
 }
 
-export async function getClusters(
-  tenant_id: string,
-  bounds: ClusterBounds,
-  filters: PositionFilters
-) {
-  const where = buildWhereClause(tenant_id, filters, 1);
+export async function getClusters(tenant_id: string, bounds: ClusterBounds, filters: PositionFilters) {
+  const where = buildWhereClause(tenant_id, filters, 1)
 
-  const gridSize = Math.max(1, Math.floor(360 / Math.pow(2, bounds.zoom + 1)));
+  const gridSize = Math.max(1, Math.floor(360 / Math.pow(2, bounds.zoom + 1)))
 
   const { rows } = await pool.query(
     `SELECT
@@ -116,23 +110,15 @@ export async function getClusters(
        AND CAST((t.last_gps_position->>'lng') AS numeric) BETWEEN $${where.params.length + 5} AND $${where.params.length + 6}
      GROUP BY grid_lat, grid_lng
      ORDER BY count DESC`,
-    [
-      ...where.params,
-      gridSize,
-      gridSize,
-      bounds.sw_lat,
-      bounds.ne_lat,
-      bounds.sw_lng,
-      bounds.ne_lng,
-    ]
-  );
+    [...where.params, gridSize, gridSize, bounds.sw_lat, bounds.ne_lat, bounds.sw_lng, bounds.ne_lng],
+  )
 
   return rows.map((r) => ({
     lat: Number(r.grid_lat),
     lng: Number(r.grid_lng),
     count: Number(r.count),
     truck_ids: r.truck_ids,
-  }));
+  }))
 }
 
 export async function getTruckInfo(tenant_id: string, truckId: number) {
@@ -169,9 +155,9 @@ export async function getTruckInfo(tenant_id: string, truckId: number) {
       LEFT JOIN drivers d ON d.id = t.driver_id AND d.tenant_id = t.tenant_id
       LEFT JOIN trips tr ON tr.truck_id = t.id AND tr.tenant_id = t.tenant_id AND tr.status = 'in_progress'
       WHERE t.id = $1 AND t.tenant_id = $2`,
-    [truckId, tenant_id]
-  );
+    [truckId, tenant_id],
+  )
 
-  if (!rows[0]) throw new NotFoundError('Truck not found');
-  return rows[0];
+  if (!rows[0]) throw new NotFoundError('Truck not found')
+  return rows[0]
 }

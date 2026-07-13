@@ -116,7 +116,7 @@ export default function AppRoutes() {
           <Route path="settings" element={<SuperAdminSettingsPage />} />
         </Route>
 
-        {/* 404 */}
+        {/* Root redirect & 404 */}
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

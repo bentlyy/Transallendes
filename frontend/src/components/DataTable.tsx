@@ -32,6 +32,7 @@ interface DataTableProps<T> {
   emptyMessage?: string
   onRowClick?: (item: T) => void
   actions?: (item: T) => ReactNode
+  rowClassName?: (item: T) => string | undefined
 }
 
 export default function DataTable<T>({
@@ -48,6 +49,7 @@ export default function DataTable<T>({
   emptyMessage = 'No se encontraron registros',
   onRowClick,
   actions,
+  rowClassName,
 }: DataTableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
@@ -127,6 +129,7 @@ export default function DataTable<T>({
               <tr
                 key={keyExtractor(item)}
                 onClick={() => onRowClick?.(item)}
+                className={rowClassName?.(item)}
                 style={{ cursor: onRowClick ? 'pointer' : 'default' }}
               >
                 {columns.map((col) => (

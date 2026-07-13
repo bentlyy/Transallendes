@@ -1,7 +1,7 @@
-import helmet from 'helmet';
-import hpp from 'hpp';
-import { RequestHandler } from 'express';
-import { logger } from '../utils/logger.js';
+import helmet from 'helmet'
+import hpp from 'hpp'
+import { RequestHandler } from 'express'
+import { logger } from '../utils/logger.js'
 
 const scriptSrc = [
   "'self'",
@@ -10,7 +10,7 @@ const scriptSrc = [
   'https://unpkg.com',
   'https://api.mapbox.com',
   'https://events.mapbox.com',
-];
+]
 
 const styleSrc = [
   "'self'",
@@ -20,7 +20,7 @@ const styleSrc = [
   'https://api.mapbox.com',
   'https://api.tiles.mapbox.com',
   'https://maps.gstatic.com',
-];
+]
 
 const imgSrc = [
   "'self'",
@@ -32,9 +32,9 @@ const imgSrc = [
   'https://api.tiles.mapbox.com',
   'https://unpkg.com',
   'https://*.tile.openstreetmap.org',
-];
+]
 
-const fontSrc = ["'self'", 'https://fonts.gstatic.com', 'data:'];
+const fontSrc = ["'self'", 'https://fonts.gstatic.com', 'data:']
 
 const connectSrc = [
   "'self'",
@@ -42,9 +42,9 @@ const connectSrc = [
   'https://api.mapbox.com',
   'https://events.mapbox.com',
   'https://api.tiles.mapbox.com',
-];
+]
 
-const frameSrc = ["'self'", 'https://www.google.com'];
+const frameSrc = ["'self'", 'https://www.google.com']
 
 export const securityMiddleware: RequestHandler[] = [
   helmet({
@@ -83,57 +83,57 @@ export const securityMiddleware: RequestHandler[] = [
 
   hpp(),
 
-  (req, res, next) => {
+  (_req, res, _next) => {
     res.setHeader(
       'Permissions-Policy',
-      'geolocation=(self), microphone=(), camera=(), payment=(), usb=(), fullscreen=(self), autoplay=()'
-    );
-    next();
+      'geolocation=(self), microphone=(), camera=(), payment=(), usb=(), fullscreen=(self), autoplay=()',
+    )
+    _next()
   },
-];
+]
 
 export const validateEnvSecurity = (): void => {
-  const errors: string[] = [];
+  const errors: string[] = []
 
-  const jwtSecret = process.env.JWT_SECRET;
+  const jwtSecret = process.env.JWT_SECRET
   if (!jwtSecret) {
-    errors.push('JWT_SECRET is not set');
+    errors.push('JWT_SECRET is not set')
   } else if (jwtSecret.length < 32) {
-    errors.push('JWT_SECRET must be at least 32 characters long');
+    errors.push('JWT_SECRET must be at least 32 characters long')
   } else if (jwtSecret === 'CHANGEME_jwt_secret_key_min_32_chars_long') {
-    errors.push('JWT_SECRET must be changed from the default value');
+    errors.push('JWT_SECRET must be changed from the default value')
   }
 
-  const auditHmacSecret = process.env.AUDIT_HMAC_SECRET;
+  const auditHmacSecret = process.env.AUDIT_HMAC_SECRET
   if (!auditHmacSecret) {
-    errors.push('AUDIT_HMAC_SECRET is not set');
+    errors.push('AUDIT_HMAC_SECRET is not set')
   } else if (auditHmacSecret.length < 32) {
-    errors.push('AUDIT_HMAC_SECRET must be at least 32 characters long');
+    errors.push('AUDIT_HMAC_SECRET must be at least 32 characters long')
   }
 
-  const encryptionKey = process.env.ENCRYPTION_KEY;
+  const encryptionKey = process.env.ENCRYPTION_KEY
   if (!encryptionKey) {
-    errors.push('ENCRYPTION_KEY is not set');
+    errors.push('ENCRYPTION_KEY is not set')
   } else if (encryptionKey.length < 16) {
-    errors.push('ENCRYPTION_KEY must be at least 16 characters long');
+    errors.push('ENCRYPTION_KEY must be at least 16 characters long')
   }
 
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = process.env.DATABASE_URL
   if (!databaseUrl) {
-    errors.push('DATABASE_URL is not set');
+    errors.push('DATABASE_URL is not set')
   } else if (!databaseUrl.startsWith('postgresql://') && !databaseUrl.startsWith('postgres://')) {
-    errors.push('DATABASE_URL must be a valid PostgreSQL connection string');
+    errors.push('DATABASE_URL must be a valid PostgreSQL connection string')
   }
 
   if (errors.length > 0) {
     for (const error of errors) {
-      logger.error(`Security validation failed: ${error}`);
+      logger.error(`Security validation failed: ${error}`)
     }
     if (process.env.NODE_ENV === 'production') {
-      throw new Error(`Security environment validation failed:\n${errors.join('\n')}`);
+      throw new Error(`Security environment validation failed:\n${errors.join('\n')}`)
     }
-    logger.warn('Running with security warnings (non-production mode)');
+    logger.warn('Running with security warnings (non-production mode)')
   } else {
-    logger.info('All security environment variables validated');
+    logger.info('All security environment variables validated')
   }
-};
+}

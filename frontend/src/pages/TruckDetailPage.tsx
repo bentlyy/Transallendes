@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getTruck, getTruckPositions, type Truck, type TruckPosition } from '@/api/trucks'
+import { getTruck, getTruckPositions, getTruckLastPosition, type Truck, type TruckPosition } from '@/api/trucks'
 import { getMaintenance, type Maintenance } from '@/api/maintenance'
 import StatusBadge from '@/components/StatusBadge'
 import MapView from '@/components/MapView'
@@ -9,11 +9,16 @@ import DataTable, { type Column } from '@/components/DataTable'
 import { formatDate, formatDateTime, formatNumber, formatSpeed, formatFuel } from '@/utils/formatters'
 import { motion } from 'framer-motion'
 
+function isValidCoord(v: unknown): v is number {
+  return typeof v === 'number' && isFinite(v)
+}
+
 export default function TruckDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [truck, setTruck] = useState<Truck | null>(null)
   const [positions, setPositions] = useState<TruckPosition[]>([])
+  const [lastPosition, setLastPosition] = useState<TruckPosition | null>(null)
   const [maintenance, setMaintenance] = useState<Maintenance[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -21,14 +26,16 @@ export default function TruckDetailPage() {
     if (!id) return
     async function fetch() {
       try {
-        const [t, pos, maint] = await Promise.all([
+        const [t, pos, maint, lastPos] = await Promise.all([
           getTruck(id),
           getTruckPositions(id, { from: new Date(Date.now() - 86400000).toISOString() }).catch(() => []),
           getMaintenance({ truckId: id, limit: '10' }).catch(() => ({ data: [] })),
+          getTruckLastPosition(id).catch(() => null),
         ])
         setTruck(t)
         setPositions(pos)
         setMaintenance(maint.data)
+        setLastPosition(lastPos)
       } catch {
         navigate('/admin/trucks')
       } finally {
@@ -42,6 +49,25 @@ export default function TruckDetailPage() {
 
   const routePoints = positions.map((p) => ({ lat: p.lat, lng: p.lng }))
 
+  const lat = truck.lat ?? lastPosition?.lat
+  const lng = truck.lng ?? lastPosition?.lng
+
+  const truckPosition = isValidCoord(lat) && isValidCoord(lng)
+    ? {
+        id: truck.id,
+        truckId: truck.id,
+        plate: truck.plate,
+        lat: lat!,
+        lng: lng!,
+        speed: truck.speed ?? lastPosition?.speed ?? 0,
+        heading: lastPosition?.heading ?? 0,
+        status: truck.status,
+        ignition: truck.ignition ?? lastPosition?.ignition ?? false,
+        driverName: truck.driverName,
+        lastUpdate: truck.lastPositionUpdate ?? lastPosition?.recordedAt ?? new Date().toISOString(),
+      }
+    : null
+
   const maintCols: Column<Maintenance>[] = [
     { key: 'type', header: 'Tipo' },
     { key: 'status', header: 'Estado', render: (m) => <StatusBadge status={m.status} type="maintenance" /> },
@@ -51,11 +77,43 @@ export default function TruckDetailPage() {
   ]
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20,
+        flex: 1,
+      }}
+    >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <button className="btn btn-ghost" onClick={() => navigate('/admin/trucks')} style={{ fontSize: 18 }}>←</button>
         <h2 style={{ margin: 0, fontSize: 20 }}>{truck.plate}</h2>
         <StatusBadge status={truck.status} type="truck" />
+        <button
+          className="btn btn-ghost"
+          onClick={() => navigate(`/admin/map?truckId=${truck.id}`)}
+          style={{ marginLeft: 'auto', fontSize: 13, padding: '6px 12px', gap: 4, display: 'flex', alignItems: 'center' }}
+        >
+          🗺️ Ver en mapa
+        </button>
+      </div>
+
+      <div className="card" style={{ padding: 0, overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <h4 style={{ margin: '16px 16px 0', fontSize: 14, color: 'var(--muted)' }}>Últimos movimientos</h4>
+        <div style={{ flex: 1, position: 'relative', minHeight: 200 }}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <MapView
+              positions={truckPosition ? [truckPosition] : []}
+              route={routePoints}
+              height="100%"
+              zoom={15}
+              center={truckPosition ? [truckPosition.lat, truckPosition.lng] : undefined}
+              disableAutoFit
+            />
+          </div>
+        </div>
       </div>
 
       <div className="grid-3">
@@ -88,27 +146,6 @@ export default function TruckDetailPage() {
             <p style={{ color: 'var(--muted)', fontSize: 13 }}>Sin conductor asignado</p>
           )}
         </div>
-      </div>
-
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        <h4 style={{ margin: '16px 16px 0', fontSize: 14, color: 'var(--muted)' }}>Últimos movimientos</h4>
-        <MapView
-          positions={positions.length > 0 ? [{
-            id: truck.id,
-            truckId: truck.id,
-            plate: truck.plate,
-            lat: positions[positions.length - 1].lat,
-            lng: positions[positions.length - 1].lng,
-            speed: positions[positions.length - 1].speed,
-            heading: positions[positions.length - 1].heading,
-            status: truck.status,
-            ignition: truck.ignition ?? false,
-            driverName: truck.driverName,
-            lastUpdate: positions[positions.length - 1].recordedAt,
-          }] : []}
-          route={routePoints}
-          height={350}
-        />
       </div>
 
       <div className="card">

@@ -1,8 +1,8 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const acknowledgeAlertSchema = z.object({
   acknowledged_by: z.number().int().positive().optional(),
-});
+})
 
 export const createAlertSchema = z.object({
   type: z.string().min(1).max(100),
@@ -15,7 +15,7 @@ export const createAlertSchema = z.object({
   truck_id: z.number().int().positive().optional(),
   trip_id: z.number().int().positive().optional(),
   geofence_id: z.number().int().positive().optional(),
-});
+})
 
-export type AcknowledgeAlertInput = z.infer<typeof acknowledgeAlertSchema>;
-export type CreateAlertInput = z.infer<typeof createAlertSchema>;
+export type AcknowledgeAlertInput = z.infer<typeof acknowledgeAlertSchema>
+export type CreateAlertInput = z.infer<typeof createAlertSchema>

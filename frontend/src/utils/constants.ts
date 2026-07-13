@@ -106,7 +106,7 @@ export const PAGINATION = {
 export const MAP = {
   DEFAULT_CENTER: [-33.4489, -70.6693] as [number, number],
   DEFAULT_ZOOM: 8,
-  TILE_URL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  TILE_ATTRIBUTION: '&copy; OpenStreetMap contributors',
-  REFRESH_INTERVAL: 15000,
+  TILE_URL: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  TILE_ATTRIBUTION: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com">CARTO</a>',
+  REFRESH_INTERVAL: 10000,
 } as const

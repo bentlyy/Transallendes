@@ -162,7 +162,7 @@ export default function TripListPage() {
               <label className="form-label">Cliente</label>
               <select className="input" value={form.clientId || ''} onChange={(e) => setForm({ ...form, clientId: e.target.value || undefined })}>
                 <option value="">Seleccionar</option>
-                {clients.map((c) => <option key={c.id} value={c.id}>{c.companyName}</option>)}
+                {clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
           </div>

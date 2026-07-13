@@ -1,19 +1,19 @@
-import type { GpsProvider } from '../../../shared/gps-provider.interface.js';
-import type { GpsData } from '../../../types/index.js';
+import type { GpsProvider } from '../../../shared/gps-provider.interface.js'
+import type { GpsData } from '../../../types/index.js'
 
 // Santiago, Chile approximate center
-const SANTIAGO_LAT = -33.4489;
-const SANTIAGO_LNG = -70.6693;
+const SANTIAGO_LAT = -33.4489
+const SANTIAGO_LNG = -70.6693
 
 function randomInRange(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+  return Math.random() * (max - min) + min
 }
 
 function generateFakeGpsData(deviceId: string): GpsData {
-  const lat = SANTIAGO_LAT + randomInRange(-0.05, 0.05);
-  const lng = SANTIAGO_LNG + randomInRange(-0.05, 0.05);
-  const speed = Math.random() * 80;
-  const ignition = speed > 1;
+  const lat = SANTIAGO_LAT + randomInRange(-0.05, 0.05)
+  const lng = SANTIAGO_LNG + randomInRange(-0.05, 0.05)
+  const speed = Math.random() * 80
+  const ignition = speed > 1
 
   return {
     device_id: deviceId,
@@ -33,44 +33,44 @@ function generateFakeGpsData(deviceId: string): GpsData {
       provider: 'mock',
       simulation: true,
     },
-  };
+  }
 }
 
 export class MockGpsProvider implements GpsProvider {
-  readonly name = 'mock';
-  private connected = false;
+  readonly name = 'mock'
+  private connected = false
 
   async connect(): Promise<void> {
-    this.connected = true;
+    this.connected = true
   }
 
   async disconnect(): Promise<void> {
-    this.connected = false;
+    this.connected = false
   }
 
   async getRealtimeData(deviceId: string): Promise<GpsData | null> {
-    if (!this.connected) throw new Error('MockGpsProvider is not connected');
-    return generateFakeGpsData(deviceId);
+    if (!this.connected) throw new Error('MockGpsProvider is not connected')
+    return generateFakeGpsData(deviceId)
   }
 
   async getHistory(deviceId: string, from: Date, to: Date): Promise<GpsData[]> {
-    if (!this.connected) throw new Error('MockGpsProvider is not connected');
-    const points: GpsData[] = [];
-    const intervalMs = 60000;
-    let current = new Date(from.getTime());
+    if (!this.connected) throw new Error('MockGpsProvider is not connected')
+    const points: GpsData[] = []
+    const intervalMs = 60000
+    let current = new Date(from.getTime())
 
     while (current <= to) {
       points.push({
         ...generateFakeGpsData(deviceId),
         timestamp: current.toISOString(),
-      });
-      current = new Date(current.getTime() + intervalMs);
+      })
+      current = new Date(current.getTime() + intervalMs)
     }
 
-    return points;
+    return points
   }
 
   async processWebhook(payload: Record<string, unknown>): Promise<GpsData | null> {
-    return payload as unknown as GpsData;
+    return payload as unknown as GpsData
   }
 }

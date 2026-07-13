@@ -1,36 +1,35 @@
-import { RequestHandler, Request, Response, NextFunction } from 'express';
-import { jwtManager } from '../shared/jwt.service.js';
-import { tenantService } from '../shared/multi-tenant.service.js';
-import { UnauthorizedError, ForbiddenError } from '../utils/errors.js';
-import { logger } from '../utils/logger.js';
-import type { UserRole } from '../types/index.js';
+import { RequestHandler, Request } from 'express'
+import { jwtManager } from '../shared/jwt.service.js'
+import { UnauthorizedError, ForbiddenError } from '../utils/errors.js'
+import { logger } from '../utils/logger.js'
+import type { UserRole } from '../types/index.js'
 
-export const authMiddleware: RequestHandler = (req, res, next) => {
+export const authMiddleware: RequestHandler = (req, _res, next) => {
   try {
-    const token = extractToken(req);
+    const token = extractToken(req)
     if (!token) {
-      throw new UnauthorizedError('Authentication required');
+      throw new UnauthorizedError('Authentication required')
     }
 
     const decoded = jwtManager.verify<{
-      id: number;
-      email: string;
-      role: UserRole;
-      name?: string;
-      phone?: string;
-      tenant_id: string;
-    }>(token);
+      id: number
+      email: string
+      role: UserRole
+      name?: string
+      phone?: string
+      tenant_id: string
+    }>(token)
 
     if (!decoded || !decoded.id || !decoded.email || !decoded.role) {
-      throw new UnauthorizedError('Invalid token payload');
+      throw new UnauthorizedError('Invalid token payload')
     }
 
     if (decoded.tenant_id && req.tenant_id && decoded.tenant_id !== req.tenant_id) {
       logger.warn('Tenant mismatch in token', {
         tokenTenant: decoded.tenant_id,
         requestTenant: req.tenant_id,
-      });
-      throw new UnauthorizedError('Tenant mismatch');
+      })
+      throw new UnauthorizedError('Tenant mismatch')
     }
 
     req.user = {
@@ -40,31 +39,31 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
       name: decoded.name,
       phone: decoded.phone,
       tenant_id: decoded.tenant_id ?? req.tenant_id,
-    };
-
-    if (!req.tenant_id && req.user.tenant_id) {
-      req.tenant_id = req.user.tenant_id;
     }
 
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
+    if (!req.tenant_id && req.user.tenant_id) {
+      req.tenant_id = req.user.tenant_id
+    }
 
-export const optionalAuth: RequestHandler = (req, res, next) => {
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const optionalAuth: RequestHandler = (req, _res, next) => {
   try {
-    const token = extractToken(req);
-    if (!token) return next();
+    const token = extractToken(req)
+    if (!token) return next()
 
     const decoded = jwtManager.verify<{
-      id: number;
-      email: string;
-      role: UserRole;
-      name?: string;
-      phone?: string;
-      tenant_id: string;
-    }>(token);
+      id: number
+      email: string
+      role: UserRole
+      name?: string
+      phone?: string
+      tenant_id: string
+    }>(token)
 
     if (decoded?.id && decoded?.email && decoded?.role) {
       req.user = {
@@ -74,52 +73,52 @@ export const optionalAuth: RequestHandler = (req, res, next) => {
         name: decoded.name,
         phone: decoded.phone,
         tenant_id: decoded.tenant_id,
-      };
+      }
 
       if (!req.tenant_id && req.user.tenant_id) {
-        req.tenant_id = req.user.tenant_id;
+        req.tenant_id = req.user.tenant_id
       }
     }
 
-    next();
+    next()
   } catch {
-    next();
+    next()
   }
-};
+}
 
 export const authorize = (...roles: UserRole[]): RequestHandler => {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     if (!req.user) {
-      return next(new UnauthorizedError('Authentication required'));
+      return next(new UnauthorizedError('Authentication required'))
     }
 
-    const allowed = roles.length === 0 || roles.includes(req.user.role) || req.user.role === 'superadmin';
+    const allowed = roles.length === 0 || roles.includes(req.user.role) || req.user.role === 'superadmin'
     if (!allowed) {
-      return next(new ForbiddenError('Insufficient permissions'));
+      return next(new ForbiddenError('Insufficient permissions'))
     }
 
-    next();
-  };
-};
+    next()
+  }
+}
 
-export const setSecurityHeaders: RequestHandler = (req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  next();
-};
+export const setSecurityHeaders: RequestHandler = (_req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+  res.setHeader('Pragma', 'no-cache')
+  res.setHeader('Expires', '0')
+  res.setHeader('X-Content-Type-Options', 'nosniff')
+  next()
+}
 
 function extractToken(req: Request): string | null {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization
   if (authHeader?.startsWith('Bearer ')) {
-    return authHeader.slice(7);
+    return authHeader.slice(7)
   }
 
-  const cookie = req.cookies?.access_token;
+  const cookie = req.cookies?.access_token
   if (cookie) {
-    return cookie;
+    return cookie
   }
 
-  return null;
+  return null
 }

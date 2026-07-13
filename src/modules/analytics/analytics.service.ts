@@ -1,36 +1,36 @@
-import { pool } from '../../shared/db.js';
-import { NotFoundError } from '../../utils/errors.js';
+import { pool } from '../../shared/db.js'
+import { NotFoundError } from '../../utils/errors.js'
 
 interface AnalyticsFilters {
-  from?: string;
-  to?: string;
-  client_id?: number;
-  driver_id?: number;
+  from?: string
+  to?: string
+  client_id?: number
+  driver_id?: number
 }
 
 function dateClause(filters: AnalyticsFilters, startParam: number, alias?: string) {
-  const prefix = alias ? `${alias}.` : '';
-  const clauses: string[] = [];
-  const params: string[] = [];
-  let idx = startParam;
+  const prefix = alias ? `${alias}.` : ''
+  const clauses: string[] = []
+  const params: string[] = []
+  let idx = startParam
 
   if (filters.from) {
-    clauses.push(`${prefix}created_at >= $${idx}`);
-    params.push(filters.from);
-    idx++;
+    clauses.push(`${prefix}created_at >= $${idx}`)
+    params.push(filters.from)
+    idx++
   }
   if (filters.to) {
-    clauses.push(`${prefix}created_at <= $${idx}`);
-    params.push(filters.to);
-    idx++;
+    clauses.push(`${prefix}created_at <= $${idx}`)
+    params.push(filters.to)
+    idx++
   }
 
-  return { sql: clauses.length ? clauses.join(' AND ') : 'TRUE', params, nextParam: idx };
+  return { sql: clauses.length ? clauses.join(' AND ') : 'TRUE', params, nextParam: idx }
 }
 
 function buildKpiQuery(tenant_id: string, filters: AnalyticsFilters) {
-  const dc = dateClause(filters, 2);
-  const params: unknown[] = [tenant_id, ...dc.params];
+  const dc = dateClause(filters, 2)
+  const params: unknown[] = [tenant_id, ...dc.params]
 
   return {
     sql: `
@@ -60,12 +60,12 @@ function buildKpiQuery(tenant_id: string, filters: AnalyticsFilters) {
         ) AS total_fuel_liters
     `,
     params,
-  };
+  }
 }
 
 export async function getExecutiveDashboard(tenant_id: string, filters: AnalyticsFilters) {
-  const q = buildKpiQuery(tenant_id, filters);
-  const { rows } = await pool.query(q.sql, q.params);
+  const q = buildKpiQuery(tenant_id, filters)
+  const { rows } = await pool.query(q.sql, q.params)
   return {
     active_trucks: Number(rows[0].active_trucks),
     stopped_trucks: Number(rows[0].stopped_trucks),
@@ -77,12 +77,12 @@ export async function getExecutiveDashboard(tenant_id: string, filters: Analytic
     avg_speed_kmh: Number(rows[0].avg_speed).toFixed(1),
     total_distance_km: Number(rows[0].total_distance_km),
     total_fuel_liters: Number(rows[0].total_fuel_liters),
-  };
+  }
 }
 
 export async function getOperationalDashboard(tenant_id: string, filters: AnalyticsFilters) {
-  const dc = dateClause(filters, 2);
-  const params: unknown[] = [tenant_id, ...dc.params];
+  const dc = dateClause(filters, 2)
+  const params: unknown[] = [tenant_id, ...dc.params]
 
   const { rows } = await pool.query(
     `SELECT
@@ -99,8 +99,8 @@ export async function getOperationalDashboard(tenant_id: string, filters: Analyt
           (SELECT AVG(EXTRACT(EPOCH FROM (actual_arrival_at - departure_at)) / 60)
           FROM trips WHERE tenant_id = $1 AND status = 'completed' AND ${dc.sql}), 0
        ) AS avg_trip_duration_min`,
-    params
-  );
+    params,
+  )
 
   const topClients = await pool.query(
     `SELECT c.id, c.name, COUNT(t.id) AS trips
@@ -110,8 +110,8 @@ export async function getOperationalDashboard(tenant_id: string, filters: Analyt
      GROUP BY c.id, c.name
      ORDER BY trips DESC
      LIMIT 10`,
-    params
-  );
+    params,
+  )
 
   const topDrivers = await pool.query(
     `SELECT d.id, d.name, COUNT(t.id) AS trips
@@ -121,8 +121,8 @@ export async function getOperationalDashboard(tenant_id: string, filters: Analyt
      GROUP BY d.id, d.name
      ORDER BY trips DESC
      LIMIT 10`,
-    params
-  );
+    params,
+  )
 
   return {
     fleet_utilization_pct: Number(rows[0].fleet_utilization_pct),
@@ -130,22 +130,18 @@ export async function getOperationalDashboard(tenant_id: string, filters: Analyt
     avg_trip_duration_min: Math.round(Number(rows[0].avg_trip_duration_min)),
     top_clients_by_trips: topClients.rows,
     top_drivers_by_trips: topDrivers.rows,
-  };
+  }
 }
 
-export async function getClientDashboard(
-  tenant_id: string,
-  clientId: number,
-  filters: AnalyticsFilters
-) {
-  const dc = dateClause(filters, 3);
-  const params: unknown[] = [tenant_id, clientId, ...dc.params];
+export async function getClientDashboard(tenant_id: string, clientId: number, filters: AnalyticsFilters) {
+  const dc = dateClause(filters, 3)
+  const params: unknown[] = [tenant_id, clientId, ...dc.params]
 
   const { rows: clientRows } = await pool.query(
     `SELECT id, name, business_name, status FROM clients WHERE id = $2 AND tenant_id = $1`,
-    [tenant_id, clientId]
-  );
-  if (!clientRows[0]) throw new NotFoundError('Client not found');
+    [tenant_id, clientId],
+  )
+  if (!clientRows[0]) throw new NotFoundError('Client not found')
 
   const { rows } = await pool.query(
     `SELECT
@@ -158,8 +154,8 @@ export async function getClientDashboard(
        COUNT(*) AS total_trips
      FROM trips
      WHERE tenant_id = $1 AND client_id = $2 AND ${dc.sql}`,
-    params
-  );
+    params,
+  )
 
   return {
     client: clientRows[0],
@@ -172,12 +168,12 @@ export async function getClientDashboard(
       avg_distance_km: Math.round(Number(rows[0].avg_distance_km)),
       total_cargo_value: Number(rows[0].total_cargo_value),
     },
-  };
+  }
 }
 
 export async function getDriverRankings(tenant_id: string, filters: AnalyticsFilters) {
-  const dc = dateClause(filters, 2);
-  const params: unknown[] = [tenant_id, ...dc.params];
+  const dc = dateClause(filters, 2)
+  const params: unknown[] = [tenant_id, ...dc.params]
 
   const { rows } = await pool.query(
     `SELECT
@@ -192,8 +188,8 @@ export async function getDriverRankings(tenant_id: string, filters: AnalyticsFil
      WHERE d.tenant_id = $1
      GROUP BY d.id, d.name, d.status
      ORDER BY total_trips DESC`,
-    params
-  );
+    params,
+  )
 
   return rows.map((r) => ({
     id: r.id,
@@ -202,12 +198,12 @@ export async function getDriverRankings(tenant_id: string, filters: AnalyticsFil
     total_trips: Number(r.total_trips),
     total_distance_km: Number(r.total_distance_km),
     total_hours: Math.round(Number(r.total_hours) * 100) / 100,
-  }));
+  }))
 }
 
 export async function getClientRankings(tenant_id: string, filters: AnalyticsFilters) {
-  const dc = dateClause(filters, 2);
-  const params: unknown[] = [tenant_id, ...dc.params];
+  const dc = dateClause(filters, 2)
+  const params: unknown[] = [tenant_id, ...dc.params]
 
   const { rows } = await pool.query(
     `SELECT
@@ -221,8 +217,8 @@ export async function getClientRankings(tenant_id: string, filters: AnalyticsFil
      WHERE c.tenant_id = $1
      GROUP BY c.id, c.name, c.status
      ORDER BY total_trips DESC`,
-    params
-  );
+    params,
+  )
 
   return rows.map((r) => ({
     id: r.id,
@@ -230,5 +226,5 @@ export async function getClientRankings(tenant_id: string, filters: AnalyticsFil
     status: r.status,
     total_trips: Number(r.total_trips),
     total_revenue: Number(r.total_revenue),
-  }));
+  }))
 }

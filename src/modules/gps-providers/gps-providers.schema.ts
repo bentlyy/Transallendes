@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const ingestSchema = z.object({
   device_id: z.string().min(1),
@@ -18,6 +18,6 @@ export const ingestSchema = z.object({
   driver_id: z.number().int().positive().optional(),
   trip_id: z.number().int().positive().optional(),
   raw_data: z.record(z.string(), z.unknown()).optional(),
-});
+})
 
-export const batchIngestSchema = z.array(ingestSchema).min(1).max(1000);
+export const batchIngestSchema = z.array(ingestSchema).min(1).max(1000)

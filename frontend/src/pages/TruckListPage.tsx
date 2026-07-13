@@ -112,6 +112,7 @@ export default function TruckListPage() {
         pagination={{ ...pag, onPageChange: pag.setPage, onPageSizeChange: pag.setPageSize }}
         actions={(t) => (
           <div style={{ display: 'flex', gap: 4 }}>
+            <button className="btn btn-ghost" style={{ padding: '4px 8px', fontSize: 12 }} title="Ver en mapa" onClick={(e) => { e.stopPropagation(); navigate(`/admin/map?truckId=${t.id}`) }}>🗺️</button>
             <button className="btn btn-ghost" style={{ padding: '4px 8px', fontSize: 12 }} onClick={(e) => { e.stopPropagation(); openEdit(t) }}>✏️</button>
             <button className="btn btn-ghost" style={{ padding: '4px 8px', fontSize: 12, color: 'var(--danger)' }} onClick={(e) => { e.stopPropagation(); setDeleteId(t.id) }}>🗑️</button>
           </div>
