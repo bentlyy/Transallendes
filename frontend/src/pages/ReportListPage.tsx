@@ -65,14 +65,14 @@ export default function ReportListPage() {
     }
   }
 
-  async function handleDownload(id: string) {
+  async function handleDownload(id: string, format: string) {
     setDownloadingId(id)
     try {
       const blob = await downloadReport(id)
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `report-${id}.pdf`
+      a.download = `report-${id}.${format}`
       a.click()
       URL.revokeObjectURL(url)
     } catch {
@@ -105,7 +105,7 @@ export default function ReportListPage() {
         pagination={{ ...pag, onPageChange: pag.setPage, onPageSizeChange: pag.setPageSize }}
         actions={(r) => (
           r.status === 'completed' ? (
-            <button className="btn btn-ghost" style={{ padding: '4px 8px', fontSize: 12 }} onClick={(e) => { e.stopPropagation(); handleDownload(r.id) }} disabled={downloadingId === r.id}>
+            <button className="btn btn-ghost" style={{ padding: '4px 8px', fontSize: 12 }} onClick={(e) => { e.stopPropagation(); handleDownload(r.id, r.format) }} disabled={downloadingId === r.id}>
               {downloadingId === r.id ? '⏳' : '⬇️'}
             </button>
           ) : null

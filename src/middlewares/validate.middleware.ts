@@ -8,21 +8,21 @@ export const validateZod = (schema: ZodSchema, source: 'body' | 'query' | 'param
 
     if (!result.success) {
       const isDev = process.env.NODE_ENV === 'development'
-      const zodError = result.error as ZodError
 
-      const details = zodError.issues.map((err: any) => ({
+      const details = result.error.issues.map((err) => ({
         field: err.path.join('.'),
         message: err.message,
         code: err.code,
       }))
 
       const message = isDev
-        ? `Validation failed: ${details.map((d: any) => `${d.field}: ${d.message}`).join('; ')}`
+        ? `Validation failed: ${details.map((d) => `${d.field}: ${d.message}`).join('; ')}`
         : 'Validation failed'
 
       const error = new BadRequestError(message)
-      ;(error as any).details = isDev ? details : undefined
-      return next(error)
+      ;(error as Record<string, unknown>).details = isDev ? details : undefined
+      next(error)
+      return
     }
 
     req[source] = result.data

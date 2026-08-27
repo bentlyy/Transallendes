@@ -10,8 +10,11 @@ export async function getOperationalDashboard(params?: Record<string, string>): 
   return res.data
 }
 
-export async function getClientDashboard(params?: Record<string, string>): Promise<Record<string, unknown>> {
-  const res = await api.get('/analytics/client', { params })
+export async function getClientDashboard(
+  clientId: string | number,
+  params?: Record<string, string>,
+): Promise<Record<string, unknown>> {
+  const res = await api.get(`/analytics/client/${clientId}`, { params })
   return res.data
 }
 

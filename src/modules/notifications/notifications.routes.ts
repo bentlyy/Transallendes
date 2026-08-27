@@ -6,7 +6,7 @@ const router = Router()
 
 router.get('/', authMiddleware, findByUser)
 router.get('/unread-count', authMiddleware, getUnreadCount)
-router.patch('/:id/read', authMiddleware, markRead)
 router.patch('/read-all', authMiddleware, markAllRead)
+router.patch('/:id/read', authMiddleware, markRead)
 
 export default router

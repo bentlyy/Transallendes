@@ -103,15 +103,15 @@ export default function AdminDashboardPage() {
         <KpiCard
           icon="🚛"
           label="Vehículos activos"
-          value={execDash?.active_trucks ?? truckStats?.moving ?? 0}
+          value={execDash?.activeTrucks ?? truckStats?.moving ?? 0}
           sub={`de ${truckStats?.total ?? 0} totales`}
           color="#22c55e"
         />
         <KpiCard
           icon="🛣️"
           label="Viajes en curso"
-          value={execDash?.in_progress_trips ?? tripStats?.inProgress ?? 0}
-          sub={`${execDash?.todays_completed_trips ?? tripStats?.completed ?? 0} completados hoy`}
+          value={execDash?.inProgressTrips ?? tripStats?.inProgress ?? 0}
+          sub={`${execDash?.todaysCompletedTrips ?? tripStats?.completed ?? 0} completados hoy`}
           color="#3b82f6"
         />
         <KpiCard
@@ -124,15 +124,15 @@ export default function AdminDashboardPage() {
         <KpiCard
           icon="📍"
           label="Distancia total"
-          value={formatDistance(execDash?.total_distance_km ?? 0)}
+          value={formatDistance(execDash?.totalDistanceKm ?? 0)}
           sub="últimos 30 días"
           color="#a855f7"
         />
         <KpiCard
           icon="⛽"
           label="Rendimiento"
-          value={execDash ? `${execDash.avg_speed_kmh} km/h` : '-'}
-          sub={`${execDash?.total_fuel_liters ?? 0} L consumidos`}
+          value={execDash ? `${execDash.avgSpeedKmh} km/h` : '-'}
+          sub={`${execDash?.totalFuelLiters ?? 0} L consumidos`}
           color="#f59e0b"
         />
       </div>
@@ -145,15 +145,15 @@ export default function AdminDashboardPage() {
             </div>
             <div className="grid-3" style={{ marginTop: 16 }}>
               <div style={{ textAlign: 'center', padding: 16 }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--primary)' }}>{opDash.fleet_utilization_pct}%</div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--primary)' }}>{opDash.fleetUtilizationPct}%</div>
                 <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>Utilización flota</div>
               </div>
               <div style={{ textAlign: 'center', padding: 16 }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: '#22c55e' }}>{opDash.on_time_delivery_pct}%</div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: '#22c55e' }}>{opDash.onTimeDeliveryPct}%</div>
                 <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>Entrega a tiempo</div>
               </div>
               <div style={{ textAlign: 'center', padding: 16 }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: '#a855f7' }}>{opDash.avg_trip_duration_min} min</div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: '#a855f7' }}>{opDash.avgTripDurationMin} min</div>
                 <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>Duración promedio</div>
               </div>
             </div>
@@ -212,7 +212,7 @@ export default function AdminDashboardPage() {
           <div className="card-header">
             <span className="card-title">Top Clientes</span>
           </div>
-          {opDash?.top_clients_by_trips?.length > 0 ? (
+          {opDash?.topClientsByTrips?.length > 0 ? (
             <table className="table" style={{ marginTop: 8 }}>
               <thead>
                 <tr>
@@ -221,7 +221,7 @@ export default function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {opDash.top_clients_by_trips.map((c: any) => (
+                {opDash.topClientsByTrips.map((c: any) => (
                   <tr key={c.id}>
                     <td>{c.name}</td>
                     <td style={{ textAlign: 'right' }}>{formatNumber(c.trips)}</td>
@@ -238,7 +238,7 @@ export default function AdminDashboardPage() {
           <div className="card-header">
             <span className="card-title">Top Conductores</span>
           </div>
-          {opDash?.top_drivers_by_trips?.length > 0 ? (
+          {opDash?.topDriversByTrips?.length > 0 ? (
             <table className="table" style={{ marginTop: 8 }}>
               <thead>
                 <tr>
@@ -247,7 +247,7 @@ export default function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {opDash.top_drivers_by_trips.map((d: any) => (
+                {opDash.topDriversByTrips.map((d: any) => (
                   <tr key={d.id}>
                     <td>{d.name}</td>
                     <td style={{ textAlign: 'right' }}>{formatNumber(d.trips)}</td>

@@ -170,11 +170,11 @@ export default function MaintenancePage() {
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Kilometraje</label>
-              <input className="input" type="number" value={form.mileage || ''} onChange={(e) => setForm({ ...form, mileage: Number(e.target.value) })} />
+              <input className="input" type="number" value={form.mileage ?? ''} onChange={(e) => setForm({ ...form, mileage: Number(e.target.value) })} />
             </div>
             <div className="form-group">
               <label className="form-label">Costo estimado</label>
-              <input className="input" type="number" value={form.cost || ''} onChange={(e) => setForm({ ...form, cost: Number(e.target.value) })} />
+              <input className="input" type="number" value={form.cost ?? ''} onChange={(e) => setForm({ ...form, cost: Number(e.target.value) })} />
             </div>
           </div>
           <div className="form-group">

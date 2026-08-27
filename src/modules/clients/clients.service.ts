@@ -140,7 +140,7 @@ export const getClientTrips = async (tenant_id: string, clientId: number) => {
     `SELECT t.* FROM trips t WHERE t.client_id = $1 AND t.tenant_id = $2 ORDER BY t.departure_at DESC LIMIT 100`,
     [clientId, tenant_id],
   )
-  return result.rows
+  return { data: result.rows, total: result.rows.length }
 }
 
 export const getClientTrucks = async (tenant_id: string, clientId: number) => {
@@ -151,7 +151,7 @@ export const getClientTrucks = async (tenant_id: string, clientId: number) => {
     `SELECT t.* FROM trucks t WHERE t.client_id = $1 AND t.tenant_id = $2 ORDER BY t.created_at DESC`,
     [clientId, tenant_id],
   )
-  return result.rows
+  return { data: result.rows, total: result.rows.length }
 }
 
 export const getClientStats = async (tenant_id: string, clientId: number) => {

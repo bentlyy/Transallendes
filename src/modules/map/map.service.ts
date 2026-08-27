@@ -72,7 +72,7 @@ export async function getPositions(tenant_id: string, filters: PositionFilters) 
     const pos = r.last_gps_position as Record<string, unknown> | null
     return {
       id: String(r.truck_id),
-      truck_id: r.truck_id,
+      truckId: r.truck_id,
       plate: r.license_plate,
       lat: pos?.lat ?? null,
       lng: pos?.lng ?? null,
@@ -80,12 +80,12 @@ export async function getPositions(tenant_id: string, filters: PositionFilters) 
       heading: pos?.direction ?? pos?.heading ?? null,
       ignition: pos?.ignition ?? null,
       status: r.status,
-      driver_name: r.driver_name ?? null,
-      last_update: pos?.recorded_at ?? pos?.timestamp ?? null,
+      driverName: r.driver_name ?? null,
+      lastUpdate: pos?.recorded_at ?? pos?.timestamp ?? null,
       brand: r.brand,
       model: r.model,
       driver: r.driver_id ? { id: r.driver_id, name: r.driver_name, phone: r.driver_phone } : null,
-      current_trip: r.current_trip_id
+      currentTrip: r.current_trip_id
         ? { id: r.current_trip_id, status: r.trip_status, destination: r.trip_destination }
         : null,
     }
@@ -117,7 +117,7 @@ export async function getClusters(tenant_id: string, bounds: ClusterBounds, filt
     lat: Number(r.grid_lat),
     lng: Number(r.grid_lng),
     count: Number(r.count),
-    truck_ids: r.truck_ids,
+    truckIds: r.truck_ids,
   }))
 }
 

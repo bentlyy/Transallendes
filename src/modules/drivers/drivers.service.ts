@@ -125,7 +125,7 @@ export const getDriverTrips = async (tenant_id: string, driverId: number) => {
      ORDER BY t.created_at DESC LIMIT 100`,
     [tenant_id, driverId],
   )
-  return result.rows
+  return { data: result.rows, total: result.rows.length }
 }
 
 export const getStats = async (tenant_id: string) => {

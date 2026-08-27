@@ -211,12 +211,26 @@ export class TripRepository {
     let idx = 1
 
     const allowed = [
-      'truck_id', 'driver_id', 'origin_city', 'origin_country',
-      'destination_city', 'destination_country', 'route',
-      'cargo_description', 'cargo_weight_kg', 'cargo_value',
-      'status', 'departure_at', 'estimated_arrival_at', 'actual_arrival_at',
-      'distance_km', 'fuel_consumed', 'cost', 'billing_status',
-      'documents', 'notes',
+      'truck_id',
+      'driver_id',
+      'origin_city',
+      'origin_country',
+      'destination_city',
+      'destination_country',
+      'route',
+      'cargo_description',
+      'cargo_weight_kg',
+      'cargo_value',
+      'status',
+      'departure_at',
+      'estimated_arrival_at',
+      'actual_arrival_at',
+      'distance_km',
+      'fuel_consumed',
+      'cost',
+      'billing_status',
+      'documents',
+      'notes',
     ]
 
     for (const field of allowed) {
@@ -244,7 +258,12 @@ export class TripRepository {
     return result.rows.length > 0
   }
 
-  async getGpsPositions(truckId: number, tenant_id: string, from: string, to?: string | null): Promise<Record<string, unknown>[]> {
+  async getGpsPositions(
+    truckId: number,
+    tenant_id: string,
+    from: string,
+    to?: string | null,
+  ): Promise<Record<string, unknown>[]> {
     const result = await pool.query(
       `SELECT
          gps.latitude AS lat,
@@ -273,7 +292,7 @@ export class TripRepository {
          COUNT(*) FILTER (WHERE status = 'completed')::int AS completed,
          COUNT(*) FILTER (WHERE status = 'cancelled')::int AS cancelled,
          COUNT(*) FILTER (WHERE status = 'delayed')::int AS delayed,
-         COALESCE(SUM(distance_km) FILTER (WHERE status = 'completed'), 0)::float AS avg_distance,
+         COALESCE(AVG(distance_km) FILTER (WHERE status = 'completed'), 0)::float AS avg_distance,
          COALESCE(AVG(
            EXTRACT(EPOCH FROM (actual_arrival_at - departure_at)) / 3600
          ) FILTER (WHERE status = 'completed' AND actual_arrival_at IS NOT NULL AND departure_at IS NOT NULL), 0)::float AS avg_duration

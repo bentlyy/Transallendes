@@ -3,7 +3,7 @@ services:
     image: postgis/postgis:15-3.4-alpine
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/transallendes
       NODE_ENV: development
@@ -37,7 +37,7 @@ services:
       JWT_SECRET: dev_jwt_secret_key_min_32_chars_long
       ENCRYPTION_KEY: dev_encryption_key
       AUDIT_HMAC_SECRET: dev_audit_hmac_secret_32_chars_long
-      FRONTEND_URL: http://localhost:5173
+      FRONTEND_URL: http://localhost:5174
       LOG_LEVEL: debug
     depends_on:
       db:
@@ -59,7 +59,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
-      - "5173:5173"
+      - "5174:5173"
     environment:
       VITE_API_PROXY_TARGET: http://backend:3000
     depends_on:
