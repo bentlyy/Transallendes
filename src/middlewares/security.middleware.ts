@@ -40,6 +40,7 @@ const imgSrc = [
   'https://api.tiles.mapbox.com',
   'https://unpkg.com',
   'https://*.tile.openstreetmap.org',
+  'https://*.basemaps.cartocdn.com',
 ]
 
 const fontSrc = ["'self'", 'https://fonts.gstatic.com', 'data:']
@@ -51,6 +52,7 @@ const connectSrc = [
   'https://api.mapbox.com',
   'https://events.mapbox.com',
   'https://api.tiles.mapbox.com',
+  'https://*.basemaps.cartocdn.com',
 ]
 
 const frameSrc = ["'self'", 'https://www.google.com']
