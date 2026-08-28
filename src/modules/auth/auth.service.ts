@@ -116,8 +116,8 @@ export const register = async ({
   access_token: string
   refresh_token: string
 }> => {
-  if (!email || !password) throw new BadRequestError('Email and password required')
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new BadRequestError('Invalid email format')
+  if (!email || !password) throw new BadRequestError('Email y contrasena son obligatorios')
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new BadRequestError('Formato de email invalido')
 
   const tid = tenant_id || process.env.DEFAULT_TENANT_ID || 'default'
   const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS)
@@ -160,8 +160,8 @@ export const register = async ({
   } catch (error: unknown) {
     await client.query('ROLLBACK')
     const pgError = error as { code?: string }
-    if (pgError.code === '23505') throw new BadRequestError('Email already registered')
-    throw new BadRequestError('Error creating user')
+    if (pgError.code === '23505') throw new BadRequestError('El email ya esta registrado')
+    throw new BadRequestError('Error al crear el usuario')
   } finally {
     client.release()
   }
@@ -188,9 +188,9 @@ export const login = async (
     tenant_id: string
   }
 }> => {
-  if (!email || !password) throw new BadRequestError('Email and password required')
+  if (!email || !password) throw new BadRequestError('Email y contrasena son obligatorios')
 
-  logger.debug('Login attempt', { email, tenantId })
+  logger.debug('Intento de login', { email, tenantId })
 
   let result = await pool.query<UserRow>(
     `SELECT id, email, name, phone, role, password, password_changed, totp_enabled, totp_secret, tenant_id, active, last_login_at, failed_attempts, locked_until, token_version
@@ -208,20 +208,22 @@ export const login = async (
     )
     user = result.rows[0]
     if (user) {
-      logger.info('Login resolved by email across tenants', { email, resolvedTenant: user.tenant_id })
+      logger.info('Login resuelto por email entre tenants', { email, resolvedTenant: user.tenant_id })
     }
   }
 
   if (!user) {
     const dummyHash = '$2b$10$LJ3m4ys3Lg3YOCwFfj5NOWJX0GqBiN3H0w5Cqx3z5Gq5X5z5P5Q5S'
     await bcrypt.compare(password, dummyHash)
-    logger.warn('Login failed: user not found', { email, tenantId })
-    throw new BadRequestError('Invalid credentials')
+    logger.warn('Login fallido: usuario no encontrado', { email, tenantId })
+    throw new BadRequestError('Credenciales invalidas')
   }
 
   if (user.locked_until && new Date(user.locked_until) > new Date()) {
-    logger.warn('Login blocked - account locked', { userId: user.id })
-    throw new UnauthorizedError('Account is temporarily locked due to too many failed attempts. Try again later.')
+    logger.warn('Login bloqueado - cuenta bloqueada', { userId: user.id })
+    throw new UnauthorizedError(
+      'La cuenta esta temporalmente bloqueada por demasiados intentos fallidos. Intentalo de nuevo mas tarde.',
+    )
   }
 
   const isValid = await bcrypt.compare(password, user.password)
@@ -234,25 +236,25 @@ export const login = async (
       WHERE id = $3`,
       [MAX_FAILED_ATTEMPTS, `${LOCKOUT_MINUTES} minutes`, user.id],
     )
-    logger.warn('Login failed: wrong password', { email, tenantId, userId: user.id })
-    throw new BadRequestError('Invalid credentials')
+    logger.warn('Login fallido: contrasena incorrecta', { email, tenantId, userId: user.id })
+    throw new BadRequestError('Credenciales invalidas')
   }
 
   if (!user.active) {
-    logger.warn('Login blocked - user inactive', { userId: user.id })
-    throw new UnauthorizedError('Account is deactivated. Contact an administrator.')
+    logger.warn('Login bloqueado - usuario inactivo', { userId: user.id })
+    throw new UnauthorizedError('La cuenta esta desactivada. Contacta a un administrador.')
   }
 
   await pool.query('UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = $1', [user.id])
 
   if (user.totp_enabled) {
     if (!totp_code) {
-      const err = new BadRequestError('2FA token required')
+      const err = new BadRequestError('Se requiere token 2FA')
       ;(err as any).code = '2FA_REQUIRED'
       throw err
     }
     if (!user.totp_secret || !verifyToken(user.totp_secret, totp_code)) {
-      throw new BadRequestError('Invalid 2FA token')
+      throw new BadRequestError('Token 2FA invalido')
     }
   }
 
@@ -391,13 +393,13 @@ export const changePassword = async (
   tenantId = 'default',
 ): Promise<void> => {
   const userResult = await pool.query('SELECT password FROM users WHERE id = $1 AND tenant_id = $2', [userId, tenantId])
-  if (!userResult.rows[0]) throw new BadRequestError('User not found')
+  if (!userResult.rows[0]) throw new BadRequestError('Usuario no encontrado')
 
   const isValid = await bcrypt.compare(currentPassword, userResult.rows[0].password)
-  if (!isValid) throw new BadRequestError('Current password is incorrect')
+  if (!isValid) throw new BadRequestError('La contrasena actual es incorrecta')
 
   if (currentPassword === newPassword) {
-    throw new BadRequestError('New password must be different from current password')
+    throw new BadRequestError('La nueva contrasena debe ser diferente de la contrasena actual')
   }
 
   const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_ROUNDS)
@@ -493,13 +495,13 @@ export const verifyAndEnable2FA = async (userId: number, token: string): Promise
     const storedSecret = result.rows[0]?.totp_secret
     if (!storedSecret) {
       await client.query('ROLLBACK')
-      throw new BadRequestError('2FA not initialized')
+      throw new BadRequestError('2FA no inicializado')
     }
 
     const isValid = verifyToken(storedSecret, token)
     if (!isValid) {
       await client.query('ROLLBACK')
-      throw new BadRequestError('Invalid 2FA token')
+      throw new BadRequestError('Token 2FA invalido')
     }
 
     await client.query('UPDATE users SET totp_enabled = true WHERE id = $1', [userId])
@@ -514,20 +516,22 @@ export const verifyAndEnable2FA = async (userId: number, token: string): Promise
 }
 
 export const disable2FA = async (userId: number, password: string, totpToken?: string): Promise<void> => {
-  if (!password) throw new BadRequestError('Password is required to disable 2FA')
+  if (!password) throw new BadRequestError('La contrasena es obligatoria para desactivar 2FA')
 
   const userResult = await pool.query('SELECT password, totp_secret FROM users WHERE id = $1', [userId])
-  if (!userResult.rows[0]) throw new BadRequestError('User not found')
+  if (!userResult.rows[0]) throw new BadRequestError('Usuario no encontrado')
 
   const isValid = await bcrypt.compare(password, userResult.rows[0].password)
-  if (!isValid) throw new UnauthorizedError('Current password is incorrect')
+  if (!isValid) throw new UnauthorizedError('La contrasena actual es incorrecta')
 
   if (userResult.rows[0].totp_secret) {
     if (!totpToken) {
-      throw new BadRequestError('TOTP code required to disable 2FA. Enter the code from your authenticator app.')
+      throw new BadRequestError(
+        'Se requiere codigo TOTP para desactivar 2FA. Ingresa el codigo de tu app de autenticacion.',
+      )
     }
     if (!verifyToken(userResult.rows[0].totp_secret, totpToken)) {
-      throw new BadRequestError('Invalid TOTP code')
+      throw new BadRequestError('Codigo TOTP invalido')
     }
   }
 
@@ -566,17 +570,17 @@ export const forgotPassword = async (email: string, tenantId: string): Promise<v
     try {
       await sendEmail({
         to: email,
-        subject: 'Password Reset - Transporte',
+        subject: 'Restablecer Contrasena - Transporte',
         html: `
-          <h2>Password Reset</h2>
-          <p>Click the link below to reset your password. This link expires in 1 hour.</p>
-          <p><a href="${resetUrl}">Reset Password</a></p>
-          <p>If you did not request this change, please ignore this email.</p>
+          <h2>Restablecer Contrasena</h2>
+          <p>Haz clic en el enlace para restablecer tu contrasena. Este enlace expira en 1 hora.</p>
+          <p><a href="${resetUrl}">Restablecer Contrasena</a></p>
+          <p>Si no solicitaste este cambio, ignora este email.</p>
         `,
         tenantId,
       })
     } catch (err) {
-      logger.error('Error sending password reset email', { error: (err as Error).message })
+      logger.error('Error al enviar el email de restablecimiento de contrasena', { error: (err as Error).message })
     }
   }
 
@@ -604,7 +608,7 @@ export const resetPassword = async (
     )
 
     if (result.rows.length === 0) {
-      throw new BadRequestError('Invalid or expired reset token')
+      throw new BadRequestError('Token de restablecimiento invalido o expirado')
     }
 
     const tokenRecord = result.rows[0]
@@ -615,11 +619,11 @@ export const resetPassword = async (
     )
 
     if (userResult.rows.length === 0) {
-      throw new NotFoundError('User not found')
+      throw new NotFoundError('Usuario no encontrado')
     }
 
     if (userResult.rows[0].email !== email) {
-      throw new BadRequestError('Email does not match reset token')
+      throw new BadRequestError('El email no coincide con el token de restablecimiento')
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_ROUNDS)

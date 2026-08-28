@@ -33,7 +33,7 @@ export default function ClientTripListPage() {
 
   useEffect(() => { fetch() }, [pag.page, pag.pageSize, search, statusFilter])
 
-  const STATUS_FILTERS = ['', 'planned', 'in_progress', 'completed', 'cancelled']
+  const STATUS_FILTERS = ['', 'pending', 'in_progress', 'completed', 'cancelled']
 
   const columns: Column<Trip>[] = [
     { key: 'code', header: 'Código', sortable: true },
@@ -52,7 +52,7 @@ export default function ClientTripListPage() {
       <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
         {STATUS_FILTERS.map((s) => (
           <button key={s} className={`btn ${statusFilter === s ? 'btn-primary' : 'btn-ghost'}`} onClick={() => { setStatusFilter(s); pag.setPage(1) }} style={{ fontSize: 12, padding: '4px 10px' }}>
-            {s ? { planned: 'Planificado', in_progress: 'En ruta', completed: 'Completado', cancelled: 'Cancelado' }[s] || s : 'Todos'}
+            {s ? { pending: 'Pendiente', in_progress: 'En ruta', completed: 'Completado', cancelled: 'Cancelado' }[s] || s : 'Todos'}
           </button>
         ))}
       </div>

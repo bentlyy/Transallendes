@@ -39,12 +39,12 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
   const refresh_token_value = req.body.refresh_token || req.cookies?.refresh_token
   if (!refresh_token_value) {
-    throw new BadRequestError('Refresh token required')
+    throw new BadRequestError('Se requiere token de refresco')
   }
   const data = await authService.refresh(refresh_token_value)
   if (!data) {
     clearAuthCookies(res)
-    throw new UnauthorizedError('Invalid or expired refresh token')
+    throw new UnauthorizedError('Token de refresco invalido o expirado')
   }
   setAuthCookies(res, data.access_token, data.refresh_token)
   res.json(data)
@@ -56,21 +56,21 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     await authService.logout(refresh_token_value, req.user?.id)
   }
   clearAuthCookies(res)
-  res.json({ message: 'Logged out successfully' })
+  res.json({ message: 'Sesion cerrada correctamente' })
 })
 
 export const logoutAll = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {
-    throw new UnauthorizedError('Authentication required')
+    throw new UnauthorizedError('Autenticacion requerida')
   }
   clearAuthCookies(res)
   await authService.logoutAll(req.user.id)
-  res.json({ message: 'Logged out from all devices' })
+  res.json({ message: 'Sesion cerrada en todos los dispositivos' })
 })
 
 export const changePassword = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {
-    throw new UnauthorizedError('Authentication required')
+    throw new UnauthorizedError('Autenticacion requerida')
   }
   await authService.changePassword(
     {
@@ -80,12 +80,12 @@ export const changePassword = asyncHandler(async (req: Request, res: Response) =
     },
     req.tenant_id,
   )
-  res.json({ message: 'Password changed successfully' })
+  res.json({ message: 'Contrasena cambiada correctamente' })
 })
 
 export const enable2FA = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {
-    throw new UnauthorizedError('Authentication required')
+    throw new UnauthorizedError('Autenticacion requerida')
   }
   const { rows } = await pool.query('SELECT email FROM users WHERE id = $1', [req.user.id])
   const email = rows[0]?.email || 'user'
@@ -95,31 +95,31 @@ export const enable2FA = asyncHandler(async (req: Request, res: Response) => {
 
 export const verifyAndEnable2FA = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {
-    throw new UnauthorizedError('Authentication required')
+    throw new UnauthorizedError('Autenticacion requerida')
   }
   await authService.verifyAndEnable2FA(req.user.id, req.body.code || req.body.token)
-  res.json({ message: '2FA enabled successfully' })
+  res.json({ message: '2FA habilitado correctamente' })
 })
 
 export const disable2FA = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {
-    throw new UnauthorizedError('Authentication required')
+    throw new UnauthorizedError('Autenticacion requerida')
   }
   if (!req.body.password) {
-    throw new BadRequestError('Password is required to disable 2FA')
+    throw new BadRequestError('La contrasena es obligatoria para desactivar 2FA')
   }
   await authService.disable2FA(req.user.id, req.body.password, req.body.totp_token)
-  res.json({ message: '2FA disabled successfully' })
+  res.json({ message: '2FA desactivado correctamente' })
 })
 
 export const forgotPassword = asyncHandler(async (req: Request, res: Response) => {
   await authService.forgotPassword(req.body.email, req.tenant_id || '')
-  res.json({ message: 'If the email exists, a reset link has been sent' })
+  res.json({ message: 'Si el email existe, se ha enviado un enlace de restablecimiento' })
 })
 
 export const resetPassword = asyncHandler(async (req: Request, res: Response) => {
   await authService.resetPassword(req.body.token, req.body.email, req.body.password, req.tenant_id || '')
-  res.json({ message: 'Password reset successfully' })
+  res.json({ message: 'Contrasena restablecida correctamente' })
 })
 
 export const getJWKS = asyncHandler(async (_req: Request, res: Response) => {

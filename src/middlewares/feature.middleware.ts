@@ -31,7 +31,7 @@ async function isFeatureEnabled(tenantId: string, featureKey: string): Promise<b
 
     return enabled
   } catch (error) {
-    logger.error('Feature check failed', {
+    logger.error('Fallo la verificacion de la funcion', {
       tenantId,
       featureKey,
       error: (error as Error).message,
@@ -52,7 +52,8 @@ export const requireFeature = (featureKey: string): RequestHandler => {
       const enabled = await isFeatureEnabled(tenantId, featureKey)
 
       if (!enabled) {
-        return next(new ForbiddenError(`Feature "${featureKey}" is not available for this tenant`))
+        next(new ForbiddenError(`La funcion "${featureKey}" no esta disponible para este tenant`))
+        return
       }
 
       next()

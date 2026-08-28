@@ -19,7 +19,7 @@ export async function findAll(tenant_id: string, filters: TripFilters = {}) {
 
 export async function findById(tenant_id: string, id: number) {
   const trip = await repo.findById(tenant_id, id)
-  if (!trip) throw new NotFoundError(`Trip with id ${id} not found`)
+  if (!trip) throw new NotFoundError(`Viaje con id ${id} no encontrado`)
   return trip
 }
 
@@ -30,21 +30,21 @@ export async function create(tenant_id: string, data: Record<string, unknown>) {
 
 export async function update(tenant_id: string, id: number, data: Record<string, unknown>) {
   const trip = await repo.update(tenant_id, id, data)
-  if (!trip) throw new NotFoundError(`Trip with id ${id} not found`)
+  if (!trip) throw new NotFoundError(`Viaje con id ${id} no encontrado`)
   return trip
 }
 
 export async function remove(tenant_id: string, id: number) {
   const deleted = await repo.remove(tenant_id, id)
-  if (!deleted) throw new NotFoundError(`Trip with id ${id} not found`)
+  if (!deleted) throw new NotFoundError(`Viaje con id ${id} no encontrado`)
 }
 
 export async function updateStatus(tenant_id: string, id: number, status: string) {
   const previous = await repo.findById(tenant_id, id)
-  if (!previous) throw new NotFoundError(`Trip with id ${id} not found`)
+  if (!previous) throw new NotFoundError(`Viaje con id ${id} no encontrado`)
 
   const updated = await repo.update(tenant_id, id, { status })
-  if (!updated) throw new NotFoundError(`Trip with id ${id} not found`)
+  if (!updated) throw new NotFoundError(`Viaje con id ${id} no encontrado`)
 
   await pool.query(
     `INSERT INTO audit_logs (user_id, action, resource_type, resource_id, old_values, new_values, tenant_id, created_at)
@@ -57,7 +57,7 @@ export async function updateStatus(tenant_id: string, id: number, status: string
 
 export async function getTripPositions(tenant_id: string, tripId: number) {
   const trip = await repo.findById(tenant_id, tripId)
-  if (!trip) throw new NotFoundError(`Trip with id ${tripId} not found`)
+  if (!trip) throw new NotFoundError(`Viaje con id ${tripId} no encontrado`)
 
   if (!trip.truck_id) return []
 
@@ -66,7 +66,7 @@ export async function getTripPositions(tenant_id: string, tripId: number) {
 
 export async function getStats(tenant_id: string) {
   const result = await repo.getStats(tenant_id)
-  const row = result as Record<string, unknown>
+  const row = result
   return {
     total: row.total,
     inProgress: row.in_progress,

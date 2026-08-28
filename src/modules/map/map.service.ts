@@ -158,6 +158,6 @@ export async function getTruckInfo(tenant_id: string, truckId: number) {
     [truckId, tenant_id],
   )
 
-  if (!rows[0]) throw new NotFoundError('Truck not found')
+  if (!rows[0]) throw new NotFoundError('Camion no encontrado')
   return rows[0]
 }

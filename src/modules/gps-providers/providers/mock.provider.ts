@@ -49,12 +49,12 @@ export class MockGpsProvider implements GpsProvider {
   }
 
   async getRealtimeData(deviceId: string): Promise<GpsData | null> {
-    if (!this.connected) throw new Error('MockGpsProvider is not connected')
+    if (!this.connected) throw new Error('MockGpsProvider no esta conectado')
     return generateFakeGpsData(deviceId)
   }
 
   async getHistory(deviceId: string, from: Date, to: Date): Promise<GpsData[]> {
-    if (!this.connected) throw new Error('MockGpsProvider is not connected')
+    if (!this.connected) throw new Error('MockGpsProvider no esta conectado')
     const points: GpsData[] = []
     const intervalMs = 60000
     let current = new Date(from.getTime())

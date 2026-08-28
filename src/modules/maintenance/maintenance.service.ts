@@ -71,7 +71,7 @@ export const findById = async (tenant_id: string, id: number) => {
      WHERE m.id = $1 AND m.tenant_id = $2`,
     [id, tenant_id],
   )
-  if (result.rows.length === 0) throw new NotFoundError('Maintenance record not found')
+  if (result.rows.length === 0) throw new NotFoundError('Registro de mantenimiento no encontrado')
   return result.rows[0]
 }
 
@@ -111,7 +111,7 @@ export const create = async (tenant_id: string, data: Record<string, unknown>) =
 
 export const update = async (tenant_id: string, id: number, data: Record<string, unknown>) => {
   const existing = await query('SELECT id FROM maintenance WHERE id = $1 AND tenant_id = $2', [id, tenant_id])
-  if (existing.rows.length === 0) throw new NotFoundError('Maintenance record not found')
+  if (existing.rows.length === 0) throw new NotFoundError('Registro de mantenimiento no encontrado')
 
   const sets: string[] = []
   const values: unknown[] = []
@@ -149,10 +149,10 @@ export const update = async (tenant_id: string, id: number, data: Record<string,
 
 export const remove = async (tenant_id: string, id: number) => {
   const result = await query('DELETE FROM maintenance WHERE id = $1 AND tenant_id = $2 RETURNING id', [id, tenant_id])
-  if (result.rows.length === 0) throw new NotFoundError('Maintenance record not found')
+  if (result.rows.length === 0) throw new NotFoundError('Registro de mantenimiento no encontrado')
 }
 
-export const getUpcoming = async (tenant_id: string, days: number = 30) => {
+export const getUpcoming = async (tenant_id: string, days = 30) => {
   const result = await query(
     `SELECT m.*, t.plate AS truck_plate
      FROM maintenance m

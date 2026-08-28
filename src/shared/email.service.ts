@@ -12,7 +12,7 @@ const loadSendGrid = async (): Promise<any> => {
     sgMail = mod.default || mod
   } catch {
     sgMail = null
-    logger.warn('[Email] @sendgrid/mail not installed; SendGrid provider unavailable')
+    logger.warn('[Email] @sendgrid/mail no esta instalado; el proveedor SendGrid no esta disponible')
   }
   return sgMail
 }
@@ -61,11 +61,11 @@ const initSendGrid = async (): Promise<boolean> => {
   try {
     mod.setApiKey(apiKey)
     provider = 'sendgrid'
-    logger.info('[Email] SendGrid provider configured')
+    logger.info('[Email] Proveedor SendGrid configurado')
     return true
   } catch (err) {
     const error = err as Error
-    logger.error('[Email] Error configuring SendGrid:', { error: error.message })
+    logger.error('[Email] Error al configurar SendGrid:', { error: error.message })
     return false
   }
 }
@@ -84,11 +84,11 @@ const initSMTP = (): boolean => {
       auth: { user: emailUser, pass: emailPass },
     })
     provider = 'smtp'
-    logger.info('[Email] SMTP (Gmail) provider configured')
+    logger.info('[Email] Proveedor SMTP (Gmail) configurado')
     return true
   } catch (err) {
     const error = err as Error
-    logger.error('[Email] Error creating SMTP transport:', { error: error.message })
+    logger.error('[Email] Error al crear el transporte SMTP:', { error: error.message })
     return false
   }
 }
@@ -100,22 +100,22 @@ export const validateEmailConfig = async (): Promise<void> => {
   if (provider === 'smtp' && transporter) {
     transporter.verify((err: Error | null) => {
       if (err) {
-        logger.error('[Email] SMTP verification failed:', { error: err.message })
+        logger.error('[Email] La verificacion SMTP fallo:', { error: err.message })
       } else {
-        logger.info('[Email] SMTP connection verified')
+        logger.info('[Email] Conexion SMTP verificada')
       }
     })
   }
 
   if (provider === 'log') {
-    logger.warn('[Email] No provider configured. Emails will be logged to console.')
-    logger.warn('[Email] Set SENDGRID_API_KEY or EMAIL_USER + EMAIL_PASS environment variables.')
+    logger.warn('[Email] No hay proveedor configurado. Los correos se registraran en la consola.')
+    logger.warn('[Email] Configure las variables de entorno SENDGRID_API_KEY o EMAIL_USER + EMAIL_PASS.')
   }
 }
 
 const sendViaSendGrid = async ({ to, subject, html, tenantId }: EmailOptions): Promise<EmailResult> => {
   const mod = await loadSendGrid()
-  if (!mod) return { sent: false, error: 'SendGrid not installed' }
+  if (!mod) return { sent: false, error: 'SendGrid no esta instalado' }
   try {
     await mod.send({
       to,
@@ -126,13 +126,13 @@ const sendViaSendGrid = async ({ to, subject, html, tenantId }: EmailOptions): P
     return { sent: true }
   } catch (err) {
     const error = err as Error
-    logger.error('[Email] SendGrid error:', { error: error.message, to, subject })
+    logger.error('[Email] Error de SendGrid:', { error: error.message, to, subject })
     return { sent: false, error: error.message }
   }
 }
 
 const sendViaSMTP = async ({ to, subject, html, tenantId }: EmailOptions): Promise<EmailResult> => {
-  if (!transporter) return { sent: false, error: 'SMTP not initialized' }
+  if (!transporter) return { sent: false, error: 'SMTP no inicializado' }
 
   try {
     await transporter.sendMail({
@@ -144,20 +144,20 @@ const sendViaSMTP = async ({ to, subject, html, tenantId }: EmailOptions): Promi
     return { sent: true }
   } catch (err) {
     const error = err as Error
-    logger.error('[Email] SMTP error:', { error: error.message, stack: error.stack, to, subject })
+    logger.error('[Email] Error de SMTP:', { error: error.message, stack: error.stack, to, subject })
     return { sent: false, error: error.message }
   }
 }
 
 export const sendEmail = async (options: EmailOptions): Promise<EmailResult> => {
   if (provider === 'log') {
-    logger.info(`[Email] Log mode — To: ${options.to} | Subject: ${options.subject}`)
+    logger.info(`[Email] Modo log — Para: ${options.to} | Asunto: ${options.subject}`)
     return { sent: true }
   }
 
   if (provider === 'sendgrid') return sendViaSendGrid(options)
   if (provider === 'smtp') return sendViaSMTP(options)
 
-  logger.warn('[Email] No provider — log mode')
+  logger.warn('[Email] Sin proveedor: modo log')
   return { sent: true }
 }

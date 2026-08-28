@@ -77,9 +77,15 @@ export default function GeofenceListPage() {
     }
   }
 
+  const geofenceTypeLabels: Record<string, string> = {
+    circle: 'Círculo',
+    polygon: 'Polígono',
+    corridor: 'Corredor',
+  }
+
   const columns: Column<Geofence>[] = [
     { key: 'name', header: 'Nombre', sortable: true },
-    { key: 'type', header: 'Tipo', sortable: true },
+    { key: 'type', header: 'Tipo', sortable: true, render: (g) => geofenceTypeLabels[g.type] || g.type },
     { key: 'radius', header: 'Radio (m)', render: (g) => g.radius ? `${g.radius}m` : '—' },
     { key: 'enabled', header: 'Activa', render: (g) => g.enabled ? '✅' : '❌' },
   ]

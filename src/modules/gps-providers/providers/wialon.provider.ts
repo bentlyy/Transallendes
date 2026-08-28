@@ -48,7 +48,7 @@ export class WialonGpsProvider implements GpsProvider {
   }
 
   async getRealtimeData(_deviceId: string): Promise<GpsData | null> {
-    if (!this.connected) throw new Error('WialonGpsProvider is not connected')
+    if (!this.connected) throw new Error('WialonGpsProvider no esta conectado')
 
     // TODO: Implement real Wialon API call
     // POST /ajax/exec with params { action: 'unit/get_last_data', params: { ... } }
@@ -66,7 +66,7 @@ export class WialonGpsProvider implements GpsProvider {
   }
 
   async getHistory(_deviceId: string, _from: Date, _to: Date): Promise<GpsData[]> {
-    if (!this.connected) throw new Error('WialonGpsProvider is not connected')
+    if (!this.connected) throw new Error('WialonGpsProvider no esta conectado')
 
     // TODO: Implement Wialon history retrieval
     // POST /ajax/exec with params { action: 'unit/get_messages', params: { ... } }

@@ -9,7 +9,7 @@ interface JobData {
 type JobHandler = (job: JobData) => Promise<void>
 
 class MemoryQueue {
-  private handlers: Map<string, JobHandler> = new Map()
+  private handlers = new Map<string, JobHandler>()
 
   register(type: string, handler: JobHandler): void {
     this.handlers.set(type, handler)
@@ -66,7 +66,7 @@ export function registerWorkers(): void {
 
     if (!result.sent) {
       logger.error(`Email worker failed for "${emailType}"`, { to, error: result.error })
-      throw new Error(result.error || 'Email send failed')
+      throw new Error(result.error || 'El envio del correo fallo')
     }
 
     logger.info(`Email sent: ${emailType} -> ${to}`)

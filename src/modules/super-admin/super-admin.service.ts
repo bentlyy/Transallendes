@@ -8,7 +8,7 @@ export const getTenants = async () => {
 
 export const getTenantById = async (id: string) => {
   const result = await query('SELECT * FROM tenants WHERE id = $1', [id])
-  if (result.rows.length === 0) throw new NotFoundError('Tenant not found')
+  if (result.rows.length === 0) throw new NotFoundError('Tenant no encontrado')
   const usersResult = await query('SELECT id, email, name, role FROM users WHERE tenant_id = $1', [id])
   return { ...result.rows[0], users: usersResult.rows }
 }
@@ -37,7 +37,7 @@ export const createTenant = async (data: Record<string, unknown>) => {
 
 export const updateTenant = async (id: string, data: Record<string, unknown>) => {
   const existing = await query('SELECT id FROM tenants WHERE id = $1', [id])
-  if (existing.rows.length === 0) throw new NotFoundError('Tenant not found')
+  if (existing.rows.length === 0) throw new NotFoundError('Tenant no encontrado')
 
   const sets: string[] = []
   const values: unknown[] = []
@@ -63,7 +63,7 @@ export const updateTenant = async (id: string, data: Record<string, unknown>) =>
 
 export const deleteTenant = async (id: string) => {
   const result = await query('DELETE FROM tenants WHERE id = $1 RETURNING id', [id])
-  if (result.rows.length === 0) throw new NotFoundError('Tenant not found')
+  if (result.rows.length === 0) throw new NotFoundError('Tenant no encontrado')
 }
 
 export const getUsers = async () => {

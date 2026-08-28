@@ -47,7 +47,7 @@ export const findAll = async (tenant_id: string, filters: ClientFilters = {}) =>
 
 export const findById = async (tenant_id: string, id: number) => {
   const result = await query('SELECT * FROM clients WHERE id = $1 AND tenant_id = $2', [id, tenant_id])
-  if (result.rows.length === 0) throw new NotFoundError('Client not found')
+  if (result.rows.length === 0) throw new NotFoundError('Cliente no encontrado')
   return result.rows[0]
 }
 
@@ -89,7 +89,7 @@ export const create = async (tenant_id: string, data: Record<string, unknown>) =
 
 export const update = async (tenant_id: string, id: number, data: Record<string, unknown>) => {
   const existing = await query('SELECT id FROM clients WHERE id = $1 AND tenant_id = $2', [id, tenant_id])
-  if (existing.rows.length === 0) throw new NotFoundError('Client not found')
+  if (existing.rows.length === 0) throw new NotFoundError('Cliente no encontrado')
 
   const sets: string[] = []
   const values: unknown[] = []
@@ -129,12 +129,12 @@ export const update = async (tenant_id: string, id: number, data: Record<string,
 
 export const remove = async (tenant_id: string, id: number) => {
   const result = await query('DELETE FROM clients WHERE id = $1 AND tenant_id = $2 RETURNING id', [id, tenant_id])
-  if (result.rows.length === 0) throw new NotFoundError('Client not found')
+  if (result.rows.length === 0) throw new NotFoundError('Cliente no encontrado')
 }
 
 export const getClientTrips = async (tenant_id: string, clientId: number) => {
   const client = await query('SELECT id FROM clients WHERE id = $1 AND tenant_id = $2', [clientId, tenant_id])
-  if (client.rows.length === 0) throw new NotFoundError('Client not found')
+  if (client.rows.length === 0) throw new NotFoundError('Cliente no encontrado')
 
   const result = await query(
     `SELECT t.* FROM trips t WHERE t.client_id = $1 AND t.tenant_id = $2 ORDER BY t.departure_at DESC LIMIT 100`,
@@ -145,7 +145,7 @@ export const getClientTrips = async (tenant_id: string, clientId: number) => {
 
 export const getClientTrucks = async (tenant_id: string, clientId: number) => {
   const client = await query('SELECT id FROM clients WHERE id = $1 AND tenant_id = $2', [clientId, tenant_id])
-  if (client.rows.length === 0) throw new NotFoundError('Client not found')
+  if (client.rows.length === 0) throw new NotFoundError('Cliente no encontrado')
 
   const result = await query(
     `SELECT t.* FROM trucks t WHERE t.client_id = $1 AND t.tenant_id = $2 ORDER BY t.created_at DESC`,
@@ -156,7 +156,7 @@ export const getClientTrucks = async (tenant_id: string, clientId: number) => {
 
 export const getClientStats = async (tenant_id: string, clientId: number) => {
   const client = await query('SELECT id FROM clients WHERE id = $1 AND tenant_id = $2', [clientId, tenant_id])
-  if (client.rows.length === 0) throw new NotFoundError('Client not found')
+  if (client.rows.length === 0) throw new NotFoundError('Cliente no encontrado')
 
   const totalTrips = await query(`SELECT COUNT(*) FROM trips WHERE client_id = $1 AND tenant_id = $2`, [
     clientId,

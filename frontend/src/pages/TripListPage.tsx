@@ -13,7 +13,7 @@ import { formatDate, formatCurrency, formatDistance } from '@/utils/formatters'
 import { TRIP_STATUS } from '@/utils/constants'
 import { motion } from 'framer-motion'
 
-const STATUS_FILTERS = ['', 'planned', 'assigned', 'in_progress', 'completed', 'cancelled', 'delayed']
+const STATUS_FILTERS = ['', 'pending', 'in_progress', 'completed', 'cancelled', 'delayed']
 
 export default function TripListPage() {
   const navigate = useNavigate()
@@ -103,7 +103,7 @@ export default function TripListPage() {
       <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
         {STATUS_FILTERS.map((s) => (
           <button key={s} className={`btn ${statusFilter === s ? 'btn-primary' : 'btn-ghost'}`} onClick={() => { setStatusFilter(s); pag.setPage(1) }} style={{ fontSize: 12, padding: '4px 10px' }}>
-            {s ? ({ planned: 'Planificado', assigned: 'Asignado', in_progress: 'En ruta', completed: 'Completado', cancelled: 'Cancelado', delayed: 'Retrasado' }[s] || s) : 'Todos'}
+            {s ? ({ pending: 'Pendiente', in_progress: 'En ruta', completed: 'Completado', cancelled: 'Cancelado', delayed: 'Retrasado' }[s] || s) : 'Todos'}
           </button>
         ))}
       </div>

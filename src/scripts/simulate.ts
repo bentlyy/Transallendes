@@ -56,7 +56,7 @@ const ROUTES: Record<string, Waypoint[]> = {
     { lat: -33.47, lng: -70.6693 },
     { lat: -33.4489, lng: -70.6693 },
   ],
-  'Santiago-Valparaíso': [
+  'Santiago-Valparaiso': [
     { lat: -33.4489, lng: -70.6693 },
     { lat: -33.43, lng: -70.7 },
     { lat: -33.41, lng: -70.73 },
@@ -90,7 +90,7 @@ const ROUTES: Record<string, Waypoint[]> = {
     { lat: -35.4, lng: -70.68 },
     { lat: -35.4264, lng: -71.6654 },
   ],
-  'Valparaíso-Santiago': [
+  'Valparaiso-Santiago': [
     { lat: -33.0472, lng: -71.6127 },
     { lat: -33.05, lng: -70.74 },
     { lat: -33.07, lng: -70.79 },
@@ -155,7 +155,7 @@ function getRandomSpeed(): number {
   return 60 + Math.random() * 30
 }
 
-function addNoise(value: number, amount: number = 0.001): number {
+function addNoise(value: number, amount = 0.001): number {
   return value + (Math.random() - 0.5) * amount
 }
 
@@ -177,7 +177,7 @@ export const simulate = async (): Promise<void> => {
     const trips = tripsResult.rows
 
     if (trips.length === 0) {
-      logger.info('No active trips to simulate')
+      logger.info('No hay viajes activos para simular')
       return
     }
 
@@ -279,7 +279,7 @@ export const simulate = async (): Promise<void> => {
         } catch (err: unknown) {
           const pgError = err as { code?: string }
           if (pgError.code === '42P01') {
-            logger.warn('GPS partition table missing, creating...')
+            logger.warn('Falta la tabla de particiones GPS, creandola...')
             await client.query(
               `CREATE TABLE IF NOT EXISTS gps_positions_${partitionSuffix} PARTITION OF gps_positions
                FOR VALUES FROM ('${recordedAt.getFullYear()}-${String(recordedAt.getMonth() + 1).padStart(2, '0')}-01') TO ('${recordedAt.getMonth() === 11 ? recordedAt.getFullYear() + 1 : recordedAt.getFullYear()}-${String(recordedAt.getMonth() + 2).padStart(2, '0')}-01')`,
@@ -317,20 +317,20 @@ export const simulate = async (): Promise<void> => {
 
     logger.info(`Simulation tick: ${trips.length} trips processed`)
   } catch (err) {
-    logger.error('Simulation error', { error: (err as Error).message, stack: (err as Error).stack })
+    logger.error('Error en la simulacion', { error: (err as Error).message, stack: (err as Error).stack })
     throw err
   } finally {
     client.release()
   }
 }
 
-async function runLoop(intervalMs: number = 10000): Promise<void> {
+async function runLoop(intervalMs = 10000): Promise<void> {
   logger.info(`GPS simulator starting (interval: ${intervalMs}ms)`)
   const run = async () => {
     try {
       await simulate()
     } catch (err) {
-      logger.error('Simulation tick failed', { error: (err as Error).message })
+      logger.error('Tic de simulacion fallido', { error: (err as Error).message })
     }
   }
   await run()
@@ -341,7 +341,7 @@ const isMain = process.argv[1]?.endsWith('simulate.ts') || process.argv[1]?.ends
 if (isMain) {
   const interval = parseInt(process.argv[2] || '10000', 10)
   runLoop(interval).catch((err) => {
-    logger.error('Simulator failed', { error: (err as Error).message })
+    logger.error('Fallo el simulador', { error: (err as Error).message })
     process.exit(1)
   })
 }

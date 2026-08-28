@@ -13,31 +13,31 @@ export class AppError extends Error {
 }
 
 export class BadRequestError extends AppError {
-  constructor(message = 'Bad request', details?: unknown) {
+  constructor(message = 'Solicitud invalida', details?: unknown) {
     super(400, 'BAD_REQUEST', message, details)
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(message = 'Resource not found', details?: unknown) {
+  constructor(message = 'Recurso no encontrado', details?: unknown) {
     super(404, 'NOT_FOUND', message, details)
   }
 }
 
 export class UnauthorizedError extends AppError {
-  constructor(message = 'Unauthorized', details?: unknown) {
+  constructor(message = 'No autorizado', details?: unknown) {
     super(401, 'UNAUTHORIZED', message, details)
   }
 }
 
 export class ForbiddenError extends AppError {
-  constructor(message = 'Forbidden', details?: unknown) {
+  constructor(message = 'Acceso denegado', details?: unknown) {
     super(403, 'FORBIDDEN', message, details)
   }
 }
 
 export class ConflictError extends AppError {
-  constructor(message = 'Conflict', details?: unknown) {
+  constructor(message = 'Conflicto', details?: unknown) {
     super(409, 'CONFLICT', message, details)
   }
 }

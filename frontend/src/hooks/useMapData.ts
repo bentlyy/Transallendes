@@ -32,7 +32,7 @@ export function useMapData(options: UseMapDataOptions = {}) {
         setClusters(clusterData)
         setError(null)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching map data')
+        setError(err instanceof Error ? err.message : 'Error al obtener los datos del mapa')
       } finally {
         setLoading(false)
       }

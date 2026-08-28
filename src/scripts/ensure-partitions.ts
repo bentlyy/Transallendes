@@ -21,7 +21,7 @@ export async function ensurePartitions(): Promise<void> {
       logger.info(`Partition gps_positions_${suffix} ensured`)
     }
   } catch (err) {
-    logger.error('Failed to ensure GPS partitions', { error: (err as Error).message })
+    logger.error('Fallo al garantizar las particiones GPS', { error: (err as Error).message })
   } finally {
     client.release()
   }
@@ -30,11 +30,11 @@ export async function ensurePartitions(): Promise<void> {
 if (process.argv[1]?.endsWith('ensure-partitions.ts')) {
   ensurePartitions()
     .then(() => {
-      logger.info('Partition check complete')
+      logger.info('Verificacion de particiones completada')
       process.exit(0)
     })
     .catch((err) => {
-      logger.error('Partition check failed', { error: (err as Error).message })
+      logger.error('La verificacion de particiones fallo', { error: (err as Error).message })
       process.exit(1)
     })
 }

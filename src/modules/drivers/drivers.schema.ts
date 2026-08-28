@@ -2,8 +2,8 @@ import { z } from 'zod'
 
 export const createDriverSchema = z
   .object({
-    name: z.string().min(1, 'Name is required').max(255),
-    email: z.string().email('Invalid email').max(255),
+    name: z.string().min(1, 'El nombre es obligatorio').max(255),
+    email: z.string().email('Email invalido').max(255),
     phone: z.string().max(50).nullable().optional(),
     license_type: z.string().max(50).nullable().optional(),
     license_expiry: z.string().nullable().optional(),
@@ -16,7 +16,7 @@ export const createDriverSchema = z
 export const updateDriverSchema = z
   .object({
     name: z.string().min(1).max(255).optional(),
-    email: z.string().email('Invalid email').max(255).optional(),
+    email: z.string().email('Email invalido').max(255).optional(),
     phone: z.string().max(50).nullable().optional(),
     license_type: z.string().max(50).nullable().optional(),
     license_expiry: z.string().nullable().optional(),

@@ -94,7 +94,7 @@ export default function AdminDashboardPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Dashboard Ejecutivo</h1>
+          <h1 className="page-title">Panel Ejecutivo</h1>
           <p className="page-subtitle">Resumen operativo de la flota en tiempo real</p>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function AdminDashboardPage() {
         <div className="grid-3">
           <div className="card" style={{ gridColumn: 'span 2' }}>
             <div className="card-header">
-              <span className="card-title">KPIs Operacionales</span>
+              <span className="card-title">Indicadores Operacionales</span>
             </div>
             <div className="grid-3" style={{ marginTop: 16 }}>
               <div style={{ textAlign: 'center', padding: 16 }}>
@@ -210,7 +210,7 @@ export default function AdminDashboardPage() {
       <div className="grid-2">
         <div className="card">
           <div className="card-header">
-            <span className="card-title">Top Clientes</span>
+            <span className="card-title">Mejores Clientes</span>
           </div>
           {opDash?.topClientsByTrips?.length > 0 ? (
             <table className="table" style={{ marginTop: 8 }}>
@@ -236,7 +236,7 @@ export default function AdminDashboardPage() {
 
         <div className="card">
           <div className="card-header">
-            <span className="card-title">Top Conductores</span>
+            <span className="card-title">Mejores Conductores</span>
           </div>
           {opDash?.topDriversByTrips?.length > 0 ? (
             <table className="table" style={{ marginTop: 8 }}>

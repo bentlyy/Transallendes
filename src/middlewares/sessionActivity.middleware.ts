@@ -17,7 +17,7 @@ export const trackActivity: RequestHandler = async (req, _res, next) => {
       }, TRACK_INTERVAL_MS)
     }
   } catch {
-    // Silently fail — activity tracking should never break a request
+    // Fallar silenciosamente: el seguimiento de actividad nunca debe romper una solicitud
   }
 
   next()

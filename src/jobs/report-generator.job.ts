@@ -1,37 +1,37 @@
-import { pool } from '../shared/db.js';
-import { logger } from '../utils/logger.js';
-import { BaseJob, type JobContext, type JobResult } from '../shared/job.js';
-import cron from 'node-cron';
+import { pool } from '../shared/db.js'
+import { logger } from '../utils/logger.js'
+import { BaseJob, type JobContext, type JobResult } from '../shared/job.js'
+import cron from 'node-cron'
 
 interface TenantWithReport {
-  id: string;
-  name: string;
-  config: Record<string, unknown> | null;
+  id: string
+  name: string
+  config: Record<string, unknown> | null
 }
 
 interface ReportDataRow {
-  total_trips: number;
-  completed_trips: number;
-  in_progress_trips: number;
-  delayed_trips: number;
-  total_distance_km: number;
-  avg_duration_hours: number;
-  total_alerts: number;
-  critical_alerts: number;
-  emergency_alerts: number;
-  total_trucks: number;
-  active_trucks: number;
-  in_maintenance: number;
-  overdue_maintenance: number;
-  expiring_docs: number;
+  total_trips: number
+  completed_trips: number
+  in_progress_trips: number
+  delayed_trips: number
+  total_distance_km: number
+  avg_duration_hours: number
+  total_alerts: number
+  critical_alerts: number
+  emergency_alerts: number
+  total_trucks: number
+  active_trucks: number
+  in_maintenance: number
+  overdue_maintenance: number
+  expiring_docs: number
 }
 
 interface Report {
-  title: string;
-  type: 'daily' | 'weekly' | 'monthly';
-  generated_at: string;
-  period: { from: string; to: string };
-  data: ReportDataRow;
+  title: string
+  type: 'daily' | 'weekly' | 'monthly'
+  generated_at: string
+  period: { from: string; to: string }
+  data: ReportDataRow
 }
 
 async function getTenantsWithAutoReport(): Promise<TenantWithReport[]> {
@@ -41,12 +41,13 @@ async function getTenantsWithAutoReport(): Promise<TenantWithReport[]> {
     WHERE active = true
       AND config->'auto_report' IS NOT NULL
       AND config->'auto_report'->>'enabled' = 'true'
-  `);
-  return rows;
+  `)
+  return rows
 }
 
 async function queryReportData(tenantId: string, since: Date): Promise<ReportDataRow> {
-  const { rows } = await pool.query<ReportDataRow>(`
+  const { rows } = await pool.query<ReportDataRow>(
+    `
     WITH trip_stats AS (
       SELECT
         COUNT(*)::int AS total_trips,
@@ -113,45 +114,47 @@ async function queryReportData(tenantId: string, since: Date): Promise<ReportDat
     CROSS JOIN fleet_stats fs
     CROSS JOIN maintenance_count mc
     CROSS JOIN expiring_docs ed
-  `, [tenantId, since.toISOString()]);
+  `,
+    [tenantId, since.toISOString()],
+  )
 
-  return rows[0];
+  return rows[0]
 }
 
 function generateDailyReport(_tenantId: string, tenantName: string): Report {
-  const since = new Date();
-  since.setDate(since.getDate() - 1);
+  const since = new Date()
+  since.setDate(since.getDate() - 1)
   return {
-    title: `Daily Report - ${tenantName}`,
+    title: `Informe Diario - ${tenantName}`,
     type: 'daily',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
     data: null as unknown as ReportDataRow,
-  };
+  }
 }
 
 function generateWeeklyReport(_tenantId: string, tenantName: string): Report {
-  const since = new Date();
-  since.setDate(since.getDate() - 7);
+  const since = new Date()
+  since.setDate(since.getDate() - 7)
   return {
-    title: `Weekly Report - ${tenantName}`,
+    title: `Informe Semanal - ${tenantName}`,
     type: 'weekly',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
     data: null as unknown as ReportDataRow,
-  };
+  }
 }
 
 function generateMonthlyReport(_tenantId: string, tenantName: string): Report {
-  const since = new Date();
-  since.setMonth(since.getMonth() - 1);
+  const since = new Date()
+  since.setMonth(since.getMonth() - 1)
   return {
-    title: `Monthly Report - ${tenantName}`,
+    title: `Informe Mensual - ${tenantName}`,
     type: 'monthly',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
     data: null as unknown as ReportDataRow,
-  };
+  }
 }
 
 async function saveReport(tenantId: string, report: Report): Promise<{ id: number }> {
@@ -159,85 +162,93 @@ async function saveReport(tenantId: string, report: Report): Promise<{ id: numbe
     `INSERT INTO reports (tenant_id, title, type, data, generated_at)
      VALUES ($1, $2, $3, $4::jsonb, NOW())
      RETURNING id`,
-    [tenantId, report.title, report.type, JSON.stringify(report)]
-  );
-  return rows[0];
+    [tenantId, report.title, report.type, JSON.stringify(report)],
+  )
+  return rows[0]
 }
 
 async function notifyAdmins(tenantId: string, reportTitle: string): Promise<void> {
   const { rows } = await pool.query<{ id: number }>(
     `SELECT id FROM users WHERE tenant_id = $1 AND role IN ('admin', 'superadmin')`,
-    [tenantId]
-  );
+    [tenantId],
+  )
   for (const user of rows) {
     await pool.query(
       `INSERT INTO notifications (user_id, title, message, type, tenant_id, created_at)
        VALUES ($1, $2, $3, $4, $5, NOW())`,
-      [user.id, `Report ready: ${reportTitle}`, `The ${reportTitle} has been generated and is available for review.`, 'report_ready', tenantId]
-    );
+      [
+        user.id,
+        `Informe listo: ${reportTitle}`,
+        `El ${reportTitle} ha sido generado y esta disponible para revision.`,
+        'report_ready',
+        tenantId,
+      ],
+    )
   }
 }
 
 class ReportGeneratorJob extends BaseJob {
-  readonly name = 'report-generator';
+  readonly name = 'report-generator'
 
   async execute(_ctx: JobContext): Promise<JobResult> {
-    const tenants = await getTenantsWithAutoReport();
+    const tenants = await getTenantsWithAutoReport()
     if (!tenants.length) {
-      return { success: true, processed: 0, errors: 0, duration: 0 };
+      return { success: true, processed: 0, errors: 0, duration: 0 }
     }
 
-    let processed = 0;
-    let errors = 0;
+    let processed = 0
+    let errors = 0
 
     for (const tenant of tenants) {
       try {
-        const cfg = (tenant.config as Record<string, unknown>)?.auto_report as Record<string, unknown> || {};
-        const frequency = (cfg.frequency as string) || 'daily';
-        const now = new Date();
+        const cfg = ((tenant.config as Record<string, unknown>)?.auto_report as Record<string, unknown>) || {}
+        const frequency = (cfg.frequency as string) || 'daily'
+        const now = new Date()
 
-        let report: Report;
+        let report: Report
         switch (frequency) {
           case 'daily':
-            report = generateDailyReport(tenant.id, tenant.name);
-            report.data = await queryReportData(tenant.id, new Date(report.period.from));
-            break;
+            report = generateDailyReport(tenant.id, tenant.name)
+            report.data = await queryReportData(tenant.id, new Date(report.period.from))
+            break
           case 'weekly':
-            if (now.getDay() !== 1) continue;
-            report = generateWeeklyReport(tenant.id, tenant.name);
-            report.data = await queryReportData(tenant.id, new Date(report.period.from));
-            break;
+            if (now.getDay() !== 1) continue
+            report = generateWeeklyReport(tenant.id, tenant.name)
+            report.data = await queryReportData(tenant.id, new Date(report.period.from))
+            break
           case 'monthly':
-            if (now.getDate() !== 1) continue;
-            report = generateMonthlyReport(tenant.id, tenant.name);
-            report.data = await queryReportData(tenant.id, new Date(report.period.from));
-            break;
+            if (now.getDate() !== 1) continue
+            report = generateMonthlyReport(tenant.id, tenant.name)
+            report.data = await queryReportData(tenant.id, new Date(report.period.from))
+            break
           default:
-            logger.warn(`Unknown report frequency for tenant ${tenant.id}: ${frequency}`);
-            continue;
+            logger.warn(`Frecuencia de informe desconocida para el tenant ${tenant.id}: ${frequency}`)
+            continue
         }
 
-        const saved = await saveReport(tenant.id, report);
-        await notifyAdmins(tenant.id, report.title);
+        const saved = await saveReport(tenant.id, report)
+        await notifyAdmins(tenant.id, report.title)
 
-        processed++;
-        logger.info(`Report generated for tenant ${tenant.name}`, {
+        processed++
+        logger.info(`Informe generado para el tenant ${tenant.name}`, {
           tenant_id: tenant.id,
           report_id: saved.id,
           type: frequency,
-        });
+        })
       } catch (tenantErr) {
-        errors++;
-        logger.error(`Report generation failed for tenant ${tenant.id}`, { error: tenantErr });
+        errors++
+        logger.error(`La generacion del informe fallo para el tenant ${tenant.id}`, { error: tenantErr })
       }
     }
 
-    return { success: true, processed, errors, duration: 0 };
+    return { success: true, processed, errors, duration: 0 }
   }
 }
 
 export function startReportGenerator(): void {
-  const job = new ReportGeneratorJob();
-  cron.schedule('0 1 * * *', () => { job.run().catch(err => logger.error('Report generator cron error', { error: err })); });
-  logger.info('Report generator started (daily at 1:00 AM)');
+  const job = new ReportGeneratorJob()
+  cron.schedule('0 1 * * *', () => {
+    job.run().catch((err) => logger.error('Error en el cron del generador de informes', { error: err }))
+  })
+  logger.info('Generador de informes iniciado (diario a las 1:00 AM)')
 }

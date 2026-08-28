@@ -27,7 +27,7 @@ export const seed = async (): Promise<void> => {
     'INSERT INTO tenants (id, name, domain, locale, timezone, active) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING',
     [SUPERADMIN_TENANT_ID, 'Super Admin', 'admin.localhost', 'es', 'UTC', true],
   )
-  logger.info('Superadmin tenant ensured')
+  logger.info('Tenant superadmin garantizado')
 
   // ==================== SUPERADMIN USER ====================
   const adminResult = await pool.query(
@@ -36,7 +36,7 @@ export const seed = async (): Promise<void> => {
      ON CONFLICT (tenant_id, email) DO UPDATE SET password = EXCLUDED.password, name = EXCLUDED.name RETURNING id`,
     ['admin@transallendes.com', HASH, 'Super Admin', 'superadmin', '+56912345678', SUPERADMIN_TENANT_ID],
   )
-  logger.info('Superadmin user ensured', { id: adminResult.rows[0]?.id })
+  logger.info('Usuario superadmin garantizado', { id: adminResult.rows[0]?.id })
 
   // Remove superadmin from company tenant if they existed there before
   await pool.query('DELETE FROM users WHERE tenant_id = $1 AND role = $2 AND email = $3 AND id != $4', [
@@ -51,7 +51,7 @@ export const seed = async (): Promise<void> => {
     'INSERT INTO tenants (id, name, domain, locale, timezone, active) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING',
     [COMPANY_TENANT_ID, 'Transallendes', 'localhost', 'es', 'America/Santiago', true],
   )
-  logger.info('Company tenant ensured')
+  logger.info('Tenant de la empresa garantizado')
 
   // ==================== COMPANY ADMIN USER ====================
   const companyAdminResult = await pool.query(
@@ -60,7 +60,7 @@ export const seed = async (): Promise<void> => {
      ON CONFLICT (tenant_id, email) DO UPDATE SET password = EXCLUDED.password, name = EXCLUDED.name RETURNING id`,
     ['admin@transallendes.cl', HASH, 'Admin Transallendes', 'admin', '+56987654321', COMPANY_TENANT_ID],
   )
-  logger.info('Company admin ensured', { id: companyAdminResult.rows[0]?.id })
+  logger.info('Admin de la empresa garantizado', { id: companyAdminResult.rows[0]?.id })
 
   // ==================== CLIENTS ====================
   const clientData = [
@@ -69,7 +69,7 @@ export const seed = async (): Promise<void> => {
       rut: '76543210-5',
       email: 'contacto@distribuidorasur.cl',
       phone: '+56225567890',
-      address: 'Av. Vicuña Mackenna 1234, Santiago',
+      address: 'Av. Vicuna Mackenna 1234, Santiago',
     },
     {
       name: 'Minera del Norte S.A.',
@@ -79,7 +79,7 @@ export const seed = async (): Promise<void> => {
       address: 'Av. Apoquindo 5678, Santiago',
     },
     {
-      name: 'Agroindustrial Los Ríos SpA.',
+      name: 'Agroindustrial Los Rios SpA.',
       rut: '76543212-1',
       email: 'operaciones@agrorios.cl',
       phone: '+56225567892',
@@ -95,12 +95,12 @@ export const seed = async (): Promise<void> => {
     )
     if (result.rows.length > 0) clientIds.push(result.rows[0].id)
   }
-  logger.info(`Clients ensured: ${clientData.length}`)
+  logger.info(`Clientes garantizados: ${clientData.length}`)
 
   // ==================== DRIVERS ====================
   const driverData = [
     {
-      name: 'Carlos Muñoz',
+      name: 'Carlos Munoz',
       email: 'carlos.munoz@transallendes.cl',
       phone: '+56911111111',
       license_type: 'A5',
@@ -108,7 +108,7 @@ export const seed = async (): Promise<void> => {
       status: 'available',
     },
     {
-      name: 'María González',
+      name: 'Maria Gonzalez',
       email: 'maria.gonzalez@transallendes.cl',
       phone: '+56922222222',
       license_type: 'A5',
@@ -116,7 +116,7 @@ export const seed = async (): Promise<void> => {
       status: 'on_trip',
     },
     {
-      name: 'José Martínez',
+      name: 'Jose Martinez',
       email: 'jose.martinez@transallendes.cl',
       phone: '+56933333333',
       license_type: 'A4',
@@ -124,7 +124,7 @@ export const seed = async (): Promise<void> => {
       status: 'available',
     },
     {
-      name: 'Ana Rodríguez',
+      name: 'Ana Rodriguez',
       email: 'ana.rodriguez@transallendes.cl',
       phone: '+56944444444',
       license_type: 'A5',
@@ -318,7 +318,7 @@ export const seed = async (): Promise<void> => {
         estimated_arrival_at: addDays(today, 2),
         actual_arrival_at: null,
         distance_km: 185,
-        cargo_description: 'Fertilizantes agrícolas',
+        cargo_description: 'Fertilizantes agricolas',
         cargo_weight_kg: 20000,
         cargo_value: 12000000,
         billing_status: 'pending',
@@ -365,20 +365,20 @@ export const seed = async (): Promise<void> => {
       rut: '76543213-8',
       email: 'contacto@vinosdelvalle.cl',
       phone: '+56225567893',
-      address: 'Camino Real 456, Viña del Mar',
-      city: 'Viña del Mar',
+      address: 'Camino Real 456, Vina del Mar',
+      city: 'Vina del Mar',
       country: 'Chile',
       contact_name: 'Roberto Fuentes',
       contact_email: 'r.fuentes@vinosdelvalle.cl',
       contact_phone: '+56966660001',
     },
     {
-      name: 'Ferretería Central SpA.',
+      name: 'Ferreteria Central SpA.',
       rut: '76543214-6',
       email: 'compras@ferretera.cl',
       phone: '+56225567894',
-      address: 'Av. Matta 890, Concepción',
-      city: 'Concepción',
+      address: 'Av. Matta 890, Concepcion',
+      city: 'Concepcion',
       country: 'Chile',
       contact_name: 'Daniela Rojas',
       contact_email: 'd.rojas@ferretera.cl',
@@ -404,7 +404,7 @@ export const seed = async (): Promise<void> => {
       address: 'Avenida Industrial 234, Antofagasta',
       city: 'Antofagasta',
       country: 'Chile',
-      contact_name: 'Paola Méndez',
+      contact_name: 'Paola Mendez',
       contact_email: 'p.mendez@cementoandino.cl',
       contact_phone: '+56966660004',
     },
@@ -463,7 +463,7 @@ export const seed = async (): Promise<void> => {
       expiry: '2027-05-01',
     },
     {
-      name: 'Carolina Díaz',
+      name: 'Carolina Diaz',
       email: 'carolina.diaz@transallendes.cl',
       phone: '+56966662222',
       license_type: 'A5',
@@ -472,7 +472,7 @@ export const seed = async (): Promise<void> => {
       expiry: '2026-11-15',
     },
     {
-      name: 'Andrés Fuentes',
+      name: 'Andres Fuentes',
       email: 'andres.fuentes@transallendes.cl',
       phone: '+56966663333',
       license_type: 'A4',
@@ -639,20 +639,20 @@ export const seed = async (): Promise<void> => {
   // ==================== extra geofences ====================
   const extraGeofenceData = [
     {
-      name: 'Planta Viña del Mar',
+      name: 'Planta Vina del Mar',
       type: 'circle',
       center_lat: -33.03,
       center_lng: -71.55,
       radius_meters: 800,
-      city: 'Viña del Mar',
+      city: 'Vina del Mar',
     },
     {
-      name: 'Terminal Concepción',
+      name: 'Terminal Concepcion',
       type: 'circle',
       center_lat: -36.82,
       center_lng: -73.05,
       radius_meters: 1200,
-      city: 'Concepción',
+      city: 'Concepcion',
     },
     {
       name: 'Puerto San Antonio Norte',
@@ -719,7 +719,7 @@ export const seed = async (): Promise<void> => {
       [p.plate, pos, COMPANY_TENANT_ID],
     )
   }
-  logger.info('Truck GPS positions ensured')
+  logger.info('Posiciones GPS de los camiones garantizadas')
 
   // ==================== EXTRA TRIPS + BILLING + GPS POSITIONS ====================
   const allClientIds = [...clientIds, ...extraClientIds]
@@ -733,7 +733,7 @@ export const seed = async (): Promise<void> => {
       driverIdx: 5,
       truckIdx: 5,
       origin: 'Santiago',
-      destination: 'Valparaíso',
+      destination: 'Valparaiso',
       status: 'completed',
       departure_at: addDays(today, -9),
       estimated_arrival_at: addDays(today, -8),
@@ -751,14 +751,14 @@ export const seed = async (): Promise<void> => {
       clientIdx: 4,
       driverIdx: 6,
       truckIdx: 1,
-      origin: 'Concepción',
+      origin: 'Concepcion',
       destination: 'Santiago',
       status: 'delayed',
       departure_at: addDays(today, -2),
       estimated_arrival_at: addDays(today, 1),
       actual_arrival_at: null,
       distance_km: 510,
-      cargo_description: 'Ferretería y herramientas',
+      cargo_description: 'Ferreteria y herramientas',
       cargo_weight_kg: 16500,
       cargo_value: 28000000,
       fuel_consumed: 168,
@@ -929,7 +929,7 @@ export const seed = async (): Promise<void> => {
       )
     }
   }
-  logger.info('Billing ensured')
+  logger.info('Facturacion garantizada')
 
   // ==================== GPS POSITIONS (telemetry / fuel KPI) ====================
   const gpsCheck = await pool.query('SELECT COUNT(*) FROM gps_positions WHERE tenant_id = $1', [COMPANY_TENANT_ID])
@@ -966,7 +966,7 @@ export const seed = async (): Promise<void> => {
       }
     }
   }
-  logger.info('GPS positions ensured')
+  logger.info('Posiciones GPS garantizadas')
 
   // ==================== MAINTENANCE ====================
   const maintCheck = await pool.query('SELECT COUNT(*) FROM maintenance WHERE tenant_id = $1', [COMPANY_TENANT_ID])
@@ -994,55 +994,55 @@ export const seed = async (): Promise<void> => {
         cost: 280000,
         provider: 'Servicio Volvo',
         status: 'completed',
-        notes: 'Aceite sintético 5W-30',
+        notes: 'Aceite sintetico 5W-30',
       },
       {
         truckPlate: 'CDEF-33',
         type: 'corrective',
-        description: 'Reparación del sistema de frenos',
+        description: 'Reparacion del sistema de frenos',
         scheduled: addDays(today, -1),
         completed: null,
         odometer: 210300,
         cost: 620000,
-        provider: 'Mecánica El Sur',
+        provider: 'Mecanica El Sur',
         status: 'in_progress',
         notes: 'Cambio discos y pastillas',
       },
       {
         truckPlate: 'DEFG-44',
         type: 'inspection',
-        description: 'Revisión técnica y alineación',
+        description: 'Revision tecnica y alineacion',
         scheduled: addDays(today, 12),
         completed: null,
         odometer: 76000,
         cost: 145000,
-        provider: 'Revisión Técnica RM',
+        provider: 'Revision Tecnica RM',
         status: 'scheduled',
-        notes: 'Alteración menor detectada',
+        notes: 'Alteracion menor detectada',
       },
       {
         truckPlate: 'GHIJ-77',
         type: 'tire_change',
-        description: 'Cambio de neumáticos traseros',
+        description: 'Cambio de neumaticos traseros',
         scheduled: addDays(today, -2),
         completed: addDays(today, -1),
         odometer: 132500,
         cost: 940000,
-        provider: 'Neumáticos Pacífico',
+        provider: 'Neumaticos Pacifico',
         status: 'completed',
         notes: '4 cubiertas 315/80 R22.5',
       },
       {
         truckPlate: 'EFGH-55',
         type: 'corrective',
-        description: 'Reparación de transmisión',
+        description: 'Reparacion de transmision',
         scheduled: addDays(today, 18),
         completed: null,
         odometer: 240000,
         cost: 1850000,
         provider: 'Maestranza Norte',
         status: 'scheduled',
-        notes: 'Fuera de servicio hasta reparación',
+        notes: 'Fuera de servicio hasta reparacion',
       },
     ]
     for (const m of maintenanceData) {
@@ -1070,7 +1070,7 @@ export const seed = async (): Promise<void> => {
       )
     }
   }
-  logger.info('Maintenance ensured')
+  logger.info('Mantenimiento garantizado')
 
   // ==================== ALERTS ====================
   const alertsCheck = await pool.query('SELECT COUNT(*) FROM alerts WHERE tenant_id = $1', [COMPANY_TENANT_ID])
@@ -1105,7 +1105,7 @@ export const seed = async (): Promise<void> => {
         type: 'speeding',
         severity: 'warning',
         title: 'Exceso de velocidad',
-        description: 'El vehículo BCDE-22 superó los 90 km/h en ruta 5',
+        description: 'El vehiculo BCDE-22 supero los 90 km/h en ruta 5',
         truck_id: t2,
         driver_id: d1,
         trip_id: inProgressTripIds[0] ?? null,
@@ -1116,7 +1116,7 @@ export const seed = async (): Promise<void> => {
         type: 'geofence_exit',
         severity: 'critical',
         title: 'Salida de geocerca',
-        description: 'Camión FGHI-66 abandonó la zona autorizada',
+        description: 'Camion FGHI-66 abandono la zona autorizada',
         truck_id: t3,
         driver_id: d2,
         trip_id: null,
@@ -1126,8 +1126,8 @@ export const seed = async (): Promise<void> => {
       {
         type: 'extended_stop',
         severity: 'info',
-        title: 'Detención prolongada',
-        description: 'IJKL-99 detenido más de 30 minutos sin motivo',
+        title: 'Detencion prolongada',
+        description: 'IJKL-99 detenido mas de 30 minutos sin motivo',
         truck_id: byPlate.get('IJKL-99') ?? allTruckIds[0],
         driver_id: null,
         trip_id: null,
@@ -1148,8 +1148,8 @@ export const seed = async (): Promise<void> => {
       {
         type: 'panic',
         severity: 'emergency',
-        title: 'Botón de pánico',
-        description: 'Se activó el botón de pánico en viaje TMS-002',
+        title: 'Boton de panico',
+        description: 'Se activo el boton de panico en viaje TMS-002',
         truck_id: t1,
         driver_id: d1,
         trip_id: inProgressTripIds[0] ?? null,
@@ -1192,7 +1192,7 @@ export const seed = async (): Promise<void> => {
       )
     }
   }
-  logger.info('Alerts ensured')
+  logger.info('Alertas garantizadas')
 
   // ==================== REPORTS ====================
   const reportsCheck = await pool.query('SELECT COUNT(*) FROM reports WHERE tenant_id = $1', [COMPANY_TENANT_ID])
@@ -1222,14 +1222,14 @@ export const seed = async (): Promise<void> => {
       )
     }
   }
-  logger.info('Reports ensured')
+  logger.info('Informes garantizados')
 
-  logger.info('Seed completed successfully')
+  logger.info('Seed completado correctamente')
 }
 
 seed()
   .catch((err) => {
-    logger.error('Seed failed', { error: (err as Error).message, stack: (err as Error).stack })
+    logger.error('El seed fallo', { error: (err as Error).message, stack: (err as Error).stack })
     process.exit(1)
   })
   .finally(async () => {

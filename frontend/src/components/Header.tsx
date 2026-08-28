@@ -27,7 +27,7 @@ export default function Header() {
   }, [])
 
   const roleLabel: Record<string, string> = {
-    superadmin: 'Super Admin',
+    superadmin: 'Super Administrador',
     admin: 'Administrador',
     client: 'Cliente',
     driver: 'Conductor',

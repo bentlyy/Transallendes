@@ -8,6 +8,15 @@ interface StatusBadgeProps {
 
 const STATUS_LABELS: Record<string, Record<string, string>> = {
   truck: {
+    active: 'Activo',
+    in_maintenance: 'En mantenimiento',
+    out_of_service: 'Fuera de servicio',
+    retired: 'Retirado',
+    available: 'Disponible',
+    on_trip: 'En viaje',
+    resting: 'Descanso',
+    inactive: 'Inactivo',
+    suspended: 'Suspendido',
     moving: 'En movimiento',
     stopped: 'Detenido',
     idle: 'Inactivo',
@@ -16,6 +25,7 @@ const STATUS_LABELS: Record<string, Record<string, string>> = {
     disconnected: 'Desconectado',
   },
   trip: {
+    pending: 'Pendiente',
     planned: 'Planificado',
     assigned: 'Asignado',
     loading: 'Cargando',
@@ -24,12 +34,26 @@ const STATUS_LABELS: Record<string, Record<string, string>> = {
     completed: 'Completado',
     cancelled: 'Cancelado',
     delayed: 'Retrasado',
+    paid: 'Pagado',
+    invoiced: 'Facturado',
+    overdue: 'Vencido',
+    generating: 'Generando',
   },
   alert: {
+    info: 'Informativa',
+    warning: 'Advertencia',
     critical: 'Crítico',
+    emergency: 'Emergencia',
     high: 'Alto',
     medium: 'Medio',
     low: 'Bajo',
+  },
+  maintenance: {
+    scheduled: 'Programado',
+    in_progress: 'En curso',
+    completed: 'Completado',
+    cancelled: 'Cancelado',
+    overdue: 'Vencido',
   },
 }
 

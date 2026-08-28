@@ -48,6 +48,14 @@ function isValidCoord(v: unknown): v is number {
 }
 
 const STATUS_LABELS: Record<string, string> = {
+  active: 'Activo',
+  in_maintenance: 'En mantenimiento',
+  out_of_service: 'Fuera de servicio',
+  retired: 'Retirado',
+  available: 'Disponible',
+  on_trip: 'En viaje',
+  resting: 'Descanso',
+  inactive: 'Inactivo',
   moving: 'En movimiento',
   stopped: 'Detenido',
   idle: 'Inactivo',

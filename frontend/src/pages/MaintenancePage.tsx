@@ -91,6 +91,9 @@ export default function MaintenancePage() {
       corrective: 'Correctivo',
       predictive: 'Predictivo',
       inspection: 'Inspección',
+      tire_change: 'Cambio de neumáticos',
+      oil_change: 'Cambio de aceite',
+      other: 'Otro',
     }[m.type] || m.type) },
     { key: 'description', header: 'Descripción' },
     { key: 'status', header: 'Estado', render: (m) => <StatusBadge status={m.status} type="maintenance" /> },
@@ -156,6 +159,9 @@ export default function MaintenancePage() {
                 <option value="corrective">Correctivo</option>
                 <option value="predictive">Predictivo</option>
                 <option value="inspection">Inspección</option>
+                <option value="tire_change">Cambio de neumáticos</option>
+                <option value="oil_change">Cambio de aceite</option>
+                <option value="other">Otro</option>
               </select>
             </div>
             <div className="form-group">

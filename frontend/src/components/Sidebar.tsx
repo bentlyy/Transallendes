@@ -39,7 +39,7 @@ const ICONS: Record<string, string> = {
 
 const ADMIN_NAV: NavEntry[] = [
   { section: 'Principal' },
-  { path: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
+  { path: '/admin/dashboard', label: 'Panel', icon: 'dashboard' },
   { path: '/admin/map', label: 'Mapa', icon: 'map' },
   { section: 'Gestión' },
   { path: '/admin/trucks', label: 'Vehículos', icon: 'truck' },
@@ -58,7 +58,7 @@ const ADMIN_NAV: NavEntry[] = [
 const CLIENT_NAV: NavEntry[] = [
   { section: 'Principal' },
   { path: '/portal/map', label: 'Mapa', icon: 'map' },
-  { path: '/portal/dashboard', label: 'Dashboard', icon: 'dashboard' },
+  { path: '/portal/dashboard', label: 'Panel', icon: 'dashboard' },
   { section: 'Gestión' },
   { path: '/portal/trips', label: 'Viajes', icon: 'trip' },
   { path: '/portal/trucks', label: 'Vehículos', icon: 'truck' },
@@ -70,7 +70,7 @@ const CLIENT_NAV: NavEntry[] = [
 ]
 
 const SUPER_ADMIN_NAV: NavEntry[] = [
-  { section: 'Super Admin' },
+  { section: 'Super Administrador' },
   { path: '/super-admin/tenants', label: 'Empresas', icon: 'tenant' },
   { path: '/super-admin/users', label: 'Usuarios', icon: 'users' },
   { section: 'Configuración' },
@@ -85,7 +85,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   let logoText = ''
   if (user?.role === USER_ROLES.SUPER_ADMIN) {
     navItems = SUPER_ADMIN_NAV
-    logoText = 'Super Admin'
+    logoText = 'Super Administrador'
   } else if (user?.role === USER_ROLES.CLIENT) {
     navItems = CLIENT_NAV
     logoText = 'Mi Portal'

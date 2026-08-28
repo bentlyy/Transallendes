@@ -75,7 +75,7 @@ export async function findById(tenant_id: string, id: number) {
   const result = await pool.query('SELECT * FROM alerts WHERE tenant_id = $1 AND id = $2', [tenant_id, id])
 
   if (!result.rows.length) {
-    throw new NotFoundError(`Alert with id ${id} not found`)
+    throw new NotFoundError(`Alerta con id ${id} no encontrada`)
   }
 
   return result.rows[0]
@@ -89,7 +89,7 @@ export async function acknowledge(tenant_id: string, id: number, userId: number)
   )
 
   if (!result.rows.length) {
-    throw new NotFoundError(`Alert with id ${id} not found`)
+    throw new NotFoundError(`Alerta con id ${id} no encontrada`)
   }
 
   return result.rows[0]
@@ -103,7 +103,7 @@ export async function resolve(tenant_id: string, id: number) {
   )
 
   if (!result.rows.length) {
-    throw new NotFoundError(`Alert with id ${id} not found`)
+    throw new NotFoundError(`Alerta con id ${id} no encontrada`)
   }
 
   return result.rows[0]

@@ -30,7 +30,7 @@ async function getAppliedMigrations(): Promise<Set<string>> {
 }
 
 async function run(): Promise<void> {
-  logger.info('Starting migrations...')
+  logger.info('Iniciando migraciones...')
   await ensureMigrationsTable()
   const applied = await getAppliedMigrations()
 
@@ -50,7 +50,7 @@ async function run(): Promise<void> {
     }
   }
 
-  logger.info('All migrations completed')
+  logger.info('Todas las migraciones completadas')
 }
 
 run()

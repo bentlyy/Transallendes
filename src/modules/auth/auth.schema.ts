@@ -2,18 +2,18 @@ import { z } from 'zod'
 
 const passwordSchema = z
   .string()
-  .min(8, 'Password must be at least 8 characters')
+  .min(8, 'La contrasena debe tener al menos 8 caracteres')
   .max(128)
-  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-  .regex(/[0-9]/, 'Password must contain at least one number')
-  .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character')
+  .regex(/[A-Z]/, 'La contrasena debe contener al menos una letra mayuscula')
+  .regex(/[a-z]/, 'La contrasena debe contener al menos una letra minuscula')
+  .regex(/[0-9]/, 'La contrasena debe contener al menos un numero')
+  .regex(/[^A-Za-z0-9]/, 'La contrasena debe contener al menos un caracter especial')
 
 export const registerSchema = z
   .object({
-    email: z.string().email('Invalid email format').min(1, 'Email is required').max(255),
+    email: z.string().email('Formato de email invalido').min(1, 'El email es obligatorio').max(255),
     password: passwordSchema,
-    name: z.string().min(1, 'Name is required'),
+    name: z.string().min(1, 'El nombre es obligatorio'),
     phone: z.string().optional(),
     company_name: z.string().optional(),
   })
@@ -21,8 +21,8 @@ export const registerSchema = z
 
 export const loginSchema = z
   .object({
-    email: z.string().email('Invalid email format'),
-    password: z.string().min(1, 'Password is required'),
+    email: z.string().email('Formato de email invalido'),
+    password: z.string().min(1, 'La contrasena es obligatoria'),
     totp_code: z.string().optional(),
     tenant_id: z.string().optional(),
   })
@@ -30,28 +30,28 @@ export const loginSchema = z
 
 export const refreshSchema = z
   .object({
-    refresh_token: z.string().min(1, 'Refresh token required'),
+    refresh_token: z.string().min(1, 'El token de refresco es obligatorio'),
   })
   .strict()
 
 export const changePasswordSchema = z
   .object({
-    current_password: z.string().min(1, 'Current password required'),
+    current_password: z.string().min(1, 'La contrasena actual es obligatoria'),
     new_password: passwordSchema,
   })
   .strict()
 
 export const forgotPasswordSchema = z
   .object({
-    email: z.string().email('Invalid email format'),
+    email: z.string().email('Formato de email invalido'),
     tenant_id: z.string().optional(),
   })
   .strict()
 
 export const resetPasswordSchema = z
   .object({
-    token: z.string().min(1, 'Reset token required'),
-    email: z.string().email('Invalid email format'),
+    token: z.string().min(1, 'El token de restablecimiento es obligatorio'),
+    email: z.string().email('Formato de email invalido'),
     password: passwordSchema,
   })
   .strict()

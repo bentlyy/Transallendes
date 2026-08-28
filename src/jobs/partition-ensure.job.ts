@@ -4,7 +4,7 @@ import { logger } from '../utils/logger.js'
 
 export function startPartitionEnsure(): void {
   cron.schedule('0 0 * * *', async () => {
-    logger.info('Partition ensure: checking next 3 months')
+    logger.info('Verificando particiones: proximos 3 meses')
     const client = await pool.connect()
     try {
       const now = new Date()
@@ -20,9 +20,9 @@ export function startPartitionEnsure(): void {
            FOR VALUES FROM ('${startDate}') TO ('${endStr}')`,
         )
       }
-      logger.info('Partition ensure complete')
+      logger.info('Garantia de particiones completada')
     } catch (err) {
-      logger.error('Partition ensure failed', { error: (err as Error).message })
+      logger.error('La garantia de particiones fallo', { error: (err as Error).message })
     } finally {
       client.release()
     }

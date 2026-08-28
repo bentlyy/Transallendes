@@ -111,7 +111,7 @@ app.use(
       if (allowedOrigins.includes(normalizeOrigin(origin))) {
         callback(null, origin)
       } else {
-        callback(new Error('Not allowed by CORS'))
+        callback(new Error('No permitido por CORS'))
       }
     },
     credentials: true,
@@ -141,7 +141,7 @@ const globalLimiter = rateLimit({
   },
   skip: (req) => req.path === '/health' || req.path === '/api/health',
   handler: (req, res) => {
-    logger.warn('Rate limit exceeded (global)', { path: req.path, ip: req.ip, tenant_id: req.tenant_id })
+    logger.warn('Limite de solicitudes excedido (global)', { path: req.path, ip: req.ip, tenant_id: req.tenant_id })
     res.status(429).json({ error: 'Too many requests, please try again later' })
   },
 })
@@ -154,7 +154,7 @@ const authLimiter = rateLimit({
   message: { error: 'Too many attempts. Try again in 15 minutes.' },
   keyGenerator: (req: Request) => `auth:${req.ip}:${(req.body?.email || '') as string}`,
   handler: (req: Request, res: Response) => {
-    logger.warn('Rate limit exceeded (auth)', { email: req.body?.email, ip: req.ip })
+    logger.warn('Limite de solicitudes excedido (auth)', { email: req.body?.email, ip: req.ip })
     res.status(429).json({ error: 'Too many attempts. Try again in 15 minutes.' })
   },
 })
@@ -247,7 +247,7 @@ const main = async (): Promise<void> => {
 
 process.on('unhandledRejection', (reason) => {
   const mem = process.memoryUsage()
-  logger.error('Unhandled Rejection', {
+  logger.error('Rechazo no manejado', {
     reason,
     memory: {
       heapUsed: `${Math.round(mem.heapUsed / 1024 / 1024)}MB`,
@@ -257,16 +257,16 @@ process.on('unhandledRejection', (reason) => {
 })
 
 process.on('SIGTERM', async () => {
-  logger.info('SIGTERM received. Shutting down gracefully...')
+  logger.info('SIGTERM recibido. Apagandose correctamente...')
   await gpsProviderRegistry.disconnectAll()
-  await pool.end().catch((err: unknown) => logger.warn('Pool close error on SIGTERM', (err as Error).message))
+  await pool.end().catch((err: unknown) => logger.warn('Error al cerrar el pool en SIGTERM', (err as Error).message))
   process.exit(0)
 })
 
 process.on('SIGINT', async () => {
-  logger.info('SIGINT received. Shutting down gracefully...')
+  logger.info('SIGINT recibido. Apagandose correctamente...')
   await gpsProviderRegistry.disconnectAll()
-  await pool.end().catch((err: unknown) => logger.warn('Pool close error on SIGINT', (err as Error).message))
+  await pool.end().catch((err: unknown) => logger.warn('Error al cerrar el pool en SIGINT', (err as Error).message))
   process.exit(0)
 })
 
@@ -274,7 +274,7 @@ export { app }
 
 if (process.env.NODE_ENV !== 'test') {
   main().catch((err) => {
-    logger.error('Fatal startup error', { error: (err as Error).message, stack: (err as Error).stack })
+    logger.error('Error fatal al iniciar', { error: (err as Error).message, stack: (err as Error).stack })
     process.exit(1)
   })
 }

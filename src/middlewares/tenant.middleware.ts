@@ -36,7 +36,8 @@ export const tenantMiddleware: RequestHandler = async (req, res, next) => {
       }
       req.tenant_id = tenantId
       req.locale = 'en'
-      return next()
+      next()
+      return
     }
 
     tenantId = req.headers['x-tenant-id'] as string | undefined
@@ -53,10 +54,11 @@ export const tenantMiddleware: RequestHandler = async (req, res, next) => {
       if (publicPath) {
         req.tenant_id = 'default'
         req.locale = 'en'
-        return next()
+        next()
+        return
       }
-      logger.error('No tenant could be resolved for request', { path: req.path })
-      return res.status(400).json({ error: 'Tenant not resolved' })
+      logger.error('No se pudo resolver el tenant para la solicitud', { path: req.path })
+      return res.status(400).json({ error: 'Tenant no resuelto' })
     }
 
     req.tenant_id = tenantId
@@ -69,13 +71,13 @@ export const tenantMiddleware: RequestHandler = async (req, res, next) => {
       }
 
       if (!tenant) {
-        logger.warn('Unknown tenant', { tenantId, path: req.path })
-        return res.status(404).json({ error: 'Tenant not found' })
+        logger.warn('Tenant desconocido', { tenantId, path: req.path })
+        return res.status(404).json({ error: 'Tenant no encontrado' })
       }
 
       if (!tenant.active) {
-        logger.warn('Inactive tenant', { tenantId })
-        return res.status(403).json({ error: 'Tenant is inactive' })
+        logger.warn('Tenant inactivo', { tenantId })
+        return res.status(403).json({ error: 'El tenant esta inactivo' })
       }
 
       req.locale = tenant.locale || 'en'
@@ -85,7 +87,7 @@ export const tenantMiddleware: RequestHandler = async (req, res, next) => {
 
     next()
   } catch (error) {
-    logger.error('Tenant middleware error', { error: (error as Error).message })
+    logger.error('Error en el middleware de tenant', { error: (error as Error).message })
     next(error)
   }
 }
