@@ -10,14 +10,15 @@ import { motion } from 'framer-motion'
 export default function TenantDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [tenant, setTenant] = useState<(Tenant & { users: unknown[] }) | null>(null)
+  const [tenant, setTenant] = useState<(Tenant & { users: Record<string, unknown>[] }) | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!id) return
+    const tenantId = id
     async function fetch() {
       try {
-        const t = await getTenant(id)
+        const t = await getTenant(tenantId)
         setTenant(t)
       } catch {
         navigate('/super-admin/tenants')
@@ -30,7 +31,7 @@ export default function TenantDetailPage() {
 
   if (loading || !tenant) return <LoadingSpinner fullPage text="Cargando..." />
 
-  const userCols: Column<unknown>[] = [
+  const userCols: Column<Record<string, unknown>>[] = [
     { key: 'name', header: 'Nombre' },
     { key: 'email', header: 'Email' },
     { key: 'role', header: 'Rol' },

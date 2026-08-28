@@ -1,0 +1,32 @@
+# Stage 1: Build frontend
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npx vite build
+
+# Stage 2: Install backend deps and build
+FROM node:20-alpine AS backend-builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev --ignore-scripts
+COPY tsconfig.json ./
+COPY src/ ./src/
+RUN npm run build
+
+# Stage 3: Runner
+FROM node:20-alpine AS runner
+WORKDIR /app
+RUN addgroup --system --gid 1001 appuser && adduser --system --uid 1001 appuser
+COPY --from=backend-builder /app/dist ./dist
+COPY --from=backend-builder /app/node_modules ./node_modules
+COPY --from=backend-builder /app/package.json ./package.json
+COPY db/ ./db/
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+COPY docker-entrypoint.prod.sh ./docker-entrypoint.prod.sh
+RUN chmod +x docker-entrypoint.prod.sh
+USER appuser
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=5 CMD node -e "require('http').get('http://localhost:3000/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"
+ENTRYPOINT ["sh", "docker-entrypoint.prod.sh"]

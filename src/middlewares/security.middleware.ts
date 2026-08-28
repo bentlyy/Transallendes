@@ -3,9 +3,16 @@ import hpp from 'hpp'
 import { RequestHandler } from 'express'
 import { logger } from '../utils/logger.js'
 
+const cloudflareDomains = [
+  'https://static.cloudflareinsights.com',
+  'https://challenges.cloudflare.com',
+  'https://ajax.cloudflare.com',
+]
+
 const scriptSrc = [
   "'self'",
   "'unsafe-inline'",
+  ...cloudflareDomains,
   'https://maps.googleapis.com',
   'https://unpkg.com',
   'https://api.mapbox.com',
@@ -26,6 +33,7 @@ const imgSrc = [
   "'self'",
   'data:',
   'blob:',
+  ...cloudflareDomains,
   'https://maps.googleapis.com',
   'https://maps.gstatic.com',
   'https://api.mapbox.com',
@@ -38,6 +46,7 @@ const fontSrc = ["'self'", 'https://fonts.gstatic.com', 'data:']
 
 const connectSrc = [
   "'self'",
+  ...cloudflareDomains,
   'https://maps.googleapis.com',
   'https://api.mapbox.com',
   'https://events.mapbox.com',

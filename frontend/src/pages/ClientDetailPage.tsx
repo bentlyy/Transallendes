@@ -13,17 +13,18 @@ export default function ClientDetailPage() {
   const navigate = useNavigate()
   const [client, setClient] = useState<Client | null>(null)
   const [stats, setStats] = useState<ClientStats | null>(null)
-  const [trips, setTrips] = useState<unknown[]>([])
+  const [trips, setTrips] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!id) return
+    const clientId = id
     async function fetch() {
       try {
         const [c, s, t] = await Promise.all([
-          getClient(id),
-          getClientStats(id).catch(() => null),
-          getClientTrips(id, { limit: '10' }).catch(() => ({ data: [] })),
+          getClient(clientId),
+          getClientStats(clientId).catch(() => null),
+          getClientTrips(clientId, { limit: '10' }).catch(() => ({ data: [] })),
         ])
         setClient(c)
         setStats(s)
@@ -39,7 +40,7 @@ export default function ClientDetailPage() {
 
   if (loading || !client) return <LoadingSpinner fullPage text="Cargando cliente..." />
 
-  const tripCols: Column<unknown>[] = [
+  const tripCols: Column<Record<string, unknown>>[] = [
     { key: 'tripNumber', header: 'Código' },
     { key: 'originCity', header: 'Origen' },
     { key: 'destinationCity', header: 'Destino' },

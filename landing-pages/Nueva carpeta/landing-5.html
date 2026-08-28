@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRANSALENDES | Conectando Latinoamérica</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', sans-serif; color: #2c2c2c; background: #fff; }
+
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px; background: #c0392b;
+      z-index: 200; width: 0; transition: width 0.3s;
+    }
+
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 5%; position: fixed; width: 100%; top: 0; z-index: 100;
+      background: transparent; transition: background 0.4s;
+    }
+    nav.scrolled { background: rgba(255,255,255,0.97); box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #fff; transition: color 0.4s; }
+    .logo span { color: #c0392b; }
+    nav.scrolled .logo { color: #1a1a1a; }
+    nav ul { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
+    nav ul li a { text-decoration: none; color: rgba(255,255,255,0.8); font-size: 0.85rem; font-weight: 500; transition: color 0.3s; }
+    nav.scrolled ul li a { color: #666; }
+    nav ul li a:hover { color: #c0392b; }
+    .nav-cta {
+      background: #c0392b; color: #fff !important; padding: 0.6rem 1.5rem;
+      text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.3s;
+    }
+    .nav-cta:hover { background: #a93226; }
+
+    .fullhero {
+      height: 100vh; position: relative; display: flex; align-items: center;
+      justify-content: center; text-align: center; overflow: hidden;
+    }
+    .fh-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1920&q=80') center/cover;
+    }
+    .fh-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); }
+    .fh-content { position: relative; z-index: 1; max-width: 800px; padding: 0 2rem; }
+    .fh-content .eyebrow {
+      font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase;
+      color: #c0392b; margin-bottom: 1.5rem; font-weight: 600;
+    }
+    .fh-content h1 {
+      font-family: 'Playfair Display', serif; font-size: 4rem; line-height: 1.15;
+      color: #fff; margin-bottom: 1.5rem; font-weight: 700;
+    }
+    .fh-content p { color: rgba(255,255,255,0.75); font-size: 1.15rem; line-height: 1.8; margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .fh-btn {
+      display: inline-block; background: #c0392b; color: #fff; padding: 1rem 3rem;
+      font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      text-decoration: none; transition: all 0.3s;
+    }
+    .fh-btn:hover { background: #a93226; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(192,57,43,0.4); }
+    .fh-scroll {
+      position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.5); font-size: 0.75rem; letter-spacing: 2px;
+      text-transform: uppercase; animation: bounce 2s infinite;
+    }
+    @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+    .chapter { padding: 7rem 6%; }
+    .chapter-intro { max-width: 750px; margin: 0 auto; text-align: center; }
+    .chapter-intro .eyebrow { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: #c0392b; margin-bottom: 1rem; font-weight: 600; }
+    .chapter-intro h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1.5rem; line-height: 1.2; }
+    .chapter-intro p { color: #777; font-size: 1.05rem; line-height: 1.9; }
+
+    .story-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0; max-width: 1400px; margin: 0 auto; }
+    .story-img { min-height: 500px; background-size: cover; background-position: center; position: relative; }
+    .story-img::after { content: ''; position: absolute; inset: 0; background: rgba(192,57,43,0.05); }
+    .story-text {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem; background: #f9f7f4;
+    }
+    .story-text .eyebrow { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: #c0392b; margin-bottom: 1rem; font-weight: 600; }
+    .story-text h3 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem; line-height: 1.3; }
+    .story-text p { color: #777; line-height: 1.9; margin-bottom: 1rem; }
+    .story-text .stat-row { display: flex; gap: 2rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e0dcd5; }
+    .stat-row .stat .num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: #c0392b; }
+    .stat-row .stat .label { font-size: 0.8rem; color: #999; margin-top: 0.2rem; }
+
+    .services { padding: 7rem 6%; background: #f9f7f4; }
+    .svc-list { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
+    .svc-row {
+      display: grid; grid-template-columns: auto 1fr; gap: 2.5rem; align-items: center;
+      padding: 2.5rem; background: #fff; border-left: 3px solid #c0392b;
+      transition: all 0.3s;
+    }
+    .svc-row:hover { transform: translateX(8px); box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+    .svc-row .svc-icon { font-size: 2.5rem; }
+    .svc-row h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .svc-row p { color: #777; font-size: 0.95rem; line-height: 1.7; }
+    .svc-row .svc-tag { display: inline-block; background: #fde8e8; color: #c0392b; padding: 0.2rem 0.7rem; border-radius: 3px; font-size: 0.75rem; font-weight: 600; margin-top: 0.5rem; }
+
+    .routes-journey { padding: 7rem 6%; }
+    .journey-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+    .journey-card {
+      position: relative; overflow: hidden; height: 420px; background: #1a1a1a;
+      cursor: pointer; group: true;
+    }
+    .journey-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9));
+      z-index: 1;
+    }
+    .journey-card .jc-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s;
+    }
+    .journey-card:hover .jc-img { transform: scale(1.05); }
+    .journey-card .jc-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; z-index: 2; }
+    .journey-card .jc-num { font-family: 'Playfair Display', serif; font-size: 3rem; color: #c0392b; font-weight: 700; opacity: 0.8; }
+    .journey-card h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; margin-bottom: 0.3rem; }
+    .journey-card p { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+    .journey-card .jc-line { width: 30px; height: 2px; background: #c0392b; margin: 0.8rem 0; }
+
+    .quote-section {
+      padding: 6rem 6%; background: #1a1a1a; text-align: center;
+    }
+    .quote-section blockquote {
+      font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #fff;
+      max-width: 800px; margin: 0 auto; line-height: 1.5; font-weight: 400;
+      font-style: italic;
+    }
+    .quote-section .attribution { color: #c0392b; margin-top: 1.5rem; font-size: 0.9rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+
+    .fleet { padding: 7rem 6%; }
+    .fleet-showcase { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .fleet-item { text-align: center; padding: 2rem; }
+    .fleet-item .fi-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .fleet-item h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .fleet-item p { color: #999; font-size: 0.85rem; }
+    .fleet-item .fi-divider { width: 30px; height: 2px; background: #c0392b; margin: 0.8rem auto; }
+
+    .testimonials { padding: 7rem 6%; background: #f9f7f4; }
+    .test-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+    .test-card { padding: 2.5rem; background: #fff; position: relative; }
+    .test-card::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 6rem; color: #c0392b; opacity: 0.15; position: absolute; top: 0.5rem; left: 1.5rem; }
+    .test-card .quote { font-style: italic; color: #555; line-height: 1.9; margin-bottom: 1.5rem; font-size: 1rem; position: relative; z-index: 1; }
+    .test-card .author { font-weight: 700; font-size: 0.95rem; }
+    .test-card .role { font-size: 0.8rem; color: #999; margin-top: 0.2rem; }
+
+    .cta-section {
+      padding: 0; position: relative;
+    }
+    .cta-full {
+      min-height: 60vh; display: flex; align-items: center; justify-content: center;
+      background: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1920&q=80') center/cover;
+      position: relative; text-align: center;
+    }
+    .cta-full::before { content: ''; position: absolute; inset: 0; background: rgba(192,57,43,0.85); }
+    .cta-full .cta-inner { position: relative; z-index: 1; padding: 4rem 2rem; }
+    .cta-full h2 {
+      font-family: 'Playfair Display', serif; font-size: 3rem; color: #fff;
+      margin-bottom: 1rem;
+    }
+    .cta-full p { color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 2.5rem; }
+    .cta-full .cta-btns { display: flex; gap: 1rem; justify-content: center; }
+    .cta-btn-white {
+      background: #fff; color: #c0392b; padding: 1rem 2.5rem; font-size: 0.85rem;
+      font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-decoration: none;
+      transition: all 0.3s;
+    }
+    .cta-btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+    .cta-btn-outline {
+      background: transparent; border: 1px solid rgba(255,255,255,0.5); color: #fff;
+      padding: 1rem 2.5rem; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; text-decoration: none; transition: all 0.3s;
+    }
+    .cta-btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; max-width: 1300px; margin: 0 auto; }
+    .contact-map { background: #e8e4de; min-height: 400px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .contact-details { padding: 4rem; }
+    .contact-details .eyebrow { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: #c0392b; margin-bottom: 1rem; font-weight: 600; }
+    .contact-details h3 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 2rem; }
+    .cd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .cd-item .cd-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
+    .cd-item .cd-label { font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem; }
+    .cd-item .cd-value { font-weight: 600; font-size: 0.95rem; }
+
+    footer { background: #1a1a1a; color: rgba(255,255,255,0.5); padding: 3rem 6% 1.5rem; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; }
+    .footer-inner .logo { color: #fff; font-size: 1.2rem; }
+    .footer-inner p { font-size: 0.8rem; }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.8rem; transition: color 0.3s; }
+    .footer-links a:hover { color: #c0392b; }
+
+    @media (max-width: 768px) {
+      .fh-content h1 { font-size: 2.3rem; }
+      .story-row, .contact-grid { grid-template-columns: 1fr; }
+      .journey-grid, .test-grid, .fleet-showcase { grid-template-columns: 1fr; }
+      .cd-grid { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+      .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar" id="progressBar"></div>
+
+  <nav id="mainNav">
+    <div class="logo">TRANSALEN<span>DES</span></div>
+    <ul>
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#rutas">Rutas</a></li>
+      <li><a href="#contacto" class="nav-cta">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <section class="fullhero">
+    <div class="fh-bg"></div>
+    <div class="fh-overlay"></div>
+    <div class="fh-content">
+      <div class="eyebrow">Transporte de Carga Terrestre Internacional</div>
+      <h1>Donde termina un camino, comienza otro</h1>
+      <p>Desde el extremo austral de Chile hasta los principales mercados de Latinoamérica. TRANSALENDES conecta distancias, negocios y personas con transporte seguro y confiable.</p>
+      <a href="#contacto" class="fh-btn">Comenzar Ahora</a>
+    </div>
+    <div class="fh-scroll">↓ Scroll</div>
+  </section>
+
+  <section class="chapter" id="historia">
+    <div class="chapter-intro">
+      <div class="eyebrow">Nuestra Historia</div>
+      <h2>Más que una empresa de transporte, somos un puente entre naciones</h2>
+      <p>Desde 2010, TRANSALENDES ha crecido desde una pequeña operación en Punta Arenas hasta convertirse en un referente del transporte terrestre internacional en el Cono Sur.</p>
+    </div>
+  </section>
+
+  <div class="story-row">
+    <div class="story-img" style="background-image:url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80')"></div>
+    <div class="story-text">
+      <div class="eyebrow">Los Inicios</div>
+      <h3>Del Sur al Mundo</h3>
+      <p>Todo comenzó en Punta Arenas, en el extremo austral de Chile. Con una visión clara y un compromiso inquebrantable con la calidad, TRANSALENDES开始 a conectar las rutas más desafiantes de la región.</p>
+      <p>Hoy, nuestras rutas abarcan Chile, Argentina, Brasil, Uruguay, Paraguay y Bolivia, transportando todo tipo de carga con la misma dedicación y profesionalismo con que empezamos.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">16+</div><div class="label">Años de trayectoria</div></div>
+        <div class="stat"><div class="num">6</div><div class="label">Países conectados</div></div>
+        <div class="stat"><div class="num">98%</div><div class="label">Satisfacción</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-row">
+    <div class="story-text">
+      <div class="eyebrow">Nuestra Misión</div>
+      <h3>Seguridad y Confianza en Cada Envío</h3>
+      <p>Cada carga que transportamos representa la confianza de un cliente. Por eso invertimos en flota moderna, tecnología de tracking en tiempo real y un equipo humano comprometido con la excelencia.</p>
+      <p>No solo movemos mercadería — construimos relaciones comerciales que trascienden fronteras y fortalecen el comercio entre las naciones de Latinoamérica.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">500+</div><div class="label">Clientes activos</div></div>
+        <div class="stat"><div class="num">24/7</div><div class="label">Soporte operativo</div></div>
+        <div class="stat"><div class="num">0</div><div class="label">Pérdidas de carga</div></div>
+      </div>
+    </div>
+    <div class="story-img" style="background-image:url('https://images.unsplash.com/photo-1586528116495-ed1c24d3c5e5?w=800&q=80')"></div>
+  </div>
+
+  <section class="services" id="servicios">
+    <div class="chapter-intro" style="margin-bottom:3rem;">
+      <div class="eyebrow">Servicios</div>
+      <h2>Soluciones para cada necesidad</h2>
+    </div>
+    <div class="svc-list">
+      <div class="svc-row">
+        <div class="svc-icon">🚛</div>
+        <div>
+          <h3>Camión Completo (FTL)</h3>
+          <p>Unidad exclusiva para su carga. Ideal para envíos grandes que requieren velocidad y seguridad con destino directo sin intermediarios.</p>
+          <span class="svc-tag">Más popular</span>
+        </div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-icon">📦</div>
+        <div>
+          <h3>Carga Consolidada (LTL)</h3>
+          <p>Comparta espacio con otros envíos y pague solo por lo que necesita. Solución económica para cargas pequeñas y medianas.</p>
+          <span class="svc-tag">Económico</span>
+        </div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-icon">❄️</div>
+        <div>
+          <h3>Transporte Refrigerado</h3>
+          <p>Cadena de frío controlada de -25°C a +25°C para productos perecibles, farmacéuticos, alimentos y bebidas con monitoreo constante.</p>
+          <span class="svc-tag">Cadena de frío</span>
+        </div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-icon">🏗️</div>
+        <div>
+          <h3>Carga Sobredimensionada</h3>
+          <p>Servicio especializado con permisos, escoltas y planificación de ruta para maquinaria pesada y equipos industriales.</p>
+          <span class="svc-tag">Especial</span>
+        </div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-icon">📋</div>
+        <div>
+          <h3>Documentación Aduanera</h3>
+          <p>Gestión completa de despacho aduanero internacional. DUS, DTA, manifiestos y toda la documentación necesaria para cruce de frontera.</p>
+          <span class="svc-tag">Incluido</span>
+        </div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-icon">🛡️</div>
+        <div>
+          <h3>Seguro de Carga</h3>
+          <p>Cobertura completa contra robo, daño y siniestros durante todo el trayecto. Su mercadería protegida de punta a punta.</p>
+          <span class="svc-tag">Full cover</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote-section">
+    <blockquote>"El transporte no es solo mover mercadería — es conectar oportunidades, fortalecer economías y construir confianza entre naciones."</blockquote>
+    <div class="attribution">— Filosofía TRANSALENDES</div>
+  </section>
+
+  <section class="routes-journey" id="rutas">
+    <div class="chapter-intro" style="margin-bottom:3rem;">
+      <div class="eyebrow">Rutas</div>
+      <h2>Los caminos que recorremos</h2>
+    </div>
+    <div class="journey-grid">
+      <div class="journey-card">
+        <img class="jc-img" src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80" alt="Ruta Chile Argentina">
+        <div class="jc-content">
+          <div class="jc-num">01</div>
+          <div class="jc-line"></div>
+          <h3>Chile ↔ Argentina</h3>
+          <p>Cruce por Cristo Redentor · 2-3 días · Documentación incluida</p>
+        </div>
+      </div>
+      <div class="journey-card">
+        <img class="jc-img" src="https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?w=600&q=80" alt="Ruta Argentina Brasil">
+        <div class="jc-content">
+          <div class="jc-num">02</div>
+          <div class="jc-line"></div>
+          <h3>Argentina ↔ Brasil</h3>
+          <p>Ruta a São Paulo · 3-4 días · Carga refrigerada disponible</p>
+        </div>
+      </div>
+      <div class="journey-card">
+        <img class="jc-img" src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=600&q=80" alt="Ruta Regional">
+        <div class="jc-content">
+          <div class="jc-num">03</div>
+          <div class="jc-line"></div>
+          <h3>Chile → Uruguay, Paraguay, Bolivia</h3>
+          <p>Cobertura regional completa · 2-5 días según destino</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fleet">
+    <div class="chapter-intro" style="margin-bottom:3rem;">
+      <div class="eyebrow">Flota</div>
+      <h2>Nuestras Unidades</h2>
+    </div>
+    <div class="fleet-showcase">
+      <div class="fleet-item"><div class="fi-icon">🚛</div><div class="fi-divider"></div><h4>Semirremolques</h4><p>Hasta 28 toneladas</p></div>
+      <div class="fleet-item"><div class="fi-icon">📦</div><div class="fi-divider"></div><h4>Furgones Secos</h4><p>Carga protegida de intemperie</p></div>
+      <div class="fleet-item"><div class="fi-icon">❄️</div><div class="fi-divider"></div><h4>Refrigerados</h4><p>-25°C a +25°C controlados</p></div>
+      <div class="fleet-item"><div class="fi-icon">🏗️</div><div class="fi-divider"></div><h4>Carretones</h4><p>Cargas sobredimensionadas</p></div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="chapter-intro" style="margin-bottom:3rem;">
+      <div class="eyebrow">Testimonios</div>
+      <h2>Voces que inspiran confianza</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <p class="quote">Excelente servicio. La documentación aduanera siempre impecable y los tiempos cumplidos al día. Muy profesionales en cada uno de los envíos que hemos realizado juntos.</p>
+        <p class="author">Roberto Méndez</p>
+        <p class="role">Gerente Logístico — Exportadora Austral</p>
+      </div>
+      <div class="test-card">
+        <p class="quote">Llevamos 5 años trabajando con TRANSALENDES. Cero incidentes y una atención personalizada que no se encuentra en empresas grandes. Son parte fundamental de nuestra operación.</p>
+        <p class="author">Claudia Fuentes</p>
+        <p class="role">Directora de Compras — Textiles del Sur</p>
+      </div>
+      <div class="test-card">
+        <p class="quote">El tracking en tiempo real nos da tranquilidad total. Nuestros clientes saben exactamente cuándo llega su mercadería. Recomiendo ampliamente sus servicios.</p>
+        <p class="author">Andrés Villalobos</p>
+        <p class="role">CEO — AgroPatagonia SpA</p>
+      </div>
+      <div class="test-card">
+        <p class="quote">La capacidad de adaptarse a nuestras necesidades especiales de carga refrigerada ha sido clave para mantener la calidad de nuestros productos frescos durante todo el trayecto internacional.</p>
+        <p class="author">María José Espinoza</p>
+        <p class="role">Directora de Operaciones — Pesca Austral</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section" id="contacto">
+    <div class="cta-full">
+      <div class="cta-inner">
+        <h2>¿Listo para enviar su carga?</h2>
+        <p>Cotización gratuita. Respuesta en 24 horas. Documentación aduanera incluida. Sin compromiso.</p>
+        <div class="cta-btns">
+          <a href="tel:+566123456789" class="cta-btn-white">📞 Llamar Ahora</a>
+          <a href="https://wa.me/56987654321" class="cta-btn-outline" target="_blank">💬 WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-grid">
+    <div class="contact-map">📍 Punta Arenas, Chile</div>
+    <div class="contact-details">
+      <div class="eyebrow">Contacto</div>
+      <h3>Hablemos de su próximo envío</h3>
+      <div class="cd-grid">
+        <div class="cd-item"><div class="cd-icon">📞</div><div class="cd-label">Teléfono</div><div class="cd-value">+56 61 2 345 6789</div></div>
+        <div class="cd-item"><div class="cd-icon">📱</div><div class="cd-label">WhatsApp</div><div class="cd-value">+56 9 8765 4321</div></div>
+        <div class="cd-item"><div class="cd-icon">✉️</div><div class="cd-label">Email</div><div class="cd-value">operaciones@transallendes.cl</div></div>
+        <div class="cd-item"><div class="cd-icon">📍</div><div class="cd-label">Oficina</div><div class="cd-value">Ruta 9 Km 7½ Norte</div></div>
+        <div class="cd-item"><div class="cd-icon">🕐</div><div class="cd-label">Horario</div><div class="cd-value">Lun - Vie: 08:00 - 18:00</div></div>
+        <div class="cd-item"><div class="cd-icon">🌐</div><div class="cd-label">Web</div><div class="cd-value">www.transallendes.cl</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div><div class="logo">TRANSALEN<span>DES</span></div><p style="margin-top:0.5rem;">© 2026 TRANSALENDES S.A. · RUT: 76.123.456-7</p></div>
+      <div class="footer-links">
+        <a href="#">Servicios</a><a href="#">Rutas</a><a href="#">Contacto</a><a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('mainNav');
+      const bar = document.getElementById('progressBar');
+      const scrolled = window.scrollY;
+      nav.classList.toggle('scrolled', scrolled > 80);
+      bar.style.width = (scrolled / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+    });
+  </script>
+
+</body>
+</html>

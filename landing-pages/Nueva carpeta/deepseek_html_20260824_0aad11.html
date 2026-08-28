@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="page.title">TRANSALLENDES | Transporte de Carga Chile · Argentina · Brasil · Paraguay</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    /* =========================================================
+       RESET & BASE
+       ========================================================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #07100c;
+      --bg-secondary: rgba(255, 255, 255, 0.035);
+      --bg-card: rgba(255, 255, 255, 0.045);
+      --border-color: rgba(255, 255, 255, 0.09);
+      --border-hover: rgba(34, 164, 71, 0.45);
+      --text-primary: #f7faf8;
+      --text-secondary: rgba(235, 243, 238, 0.7);
+      --text-muted: rgba(225, 235, 229, 0.5);
+      --text-dim: rgba(225, 235, 229, 0.35);
+      --accent: #22a447;
+      --accent-hover: #2dc75a;
+      --accent-secondary: #9bdc42;
+      --accent-glow: rgba(34, 164, 71, 0.28);
+      --nav-bg: rgba(5, 12, 8, 0.92);
+      --modal-bg: #0d1711;
+      --overlay-bg: rgba(0, 0, 0, 0.7);
+      --input-bg: rgba(255, 255, 255, 0.055);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* =========================================================
+       NAV
+       ========================================================= */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+      padding: 0 4.5%;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.3s ease;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+    .logo span {
+      color: var(--accent);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    nav ul li a {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      white-space: nowrap;
+      position: relative;
+    }
+    nav ul li a:hover {
+      color: var(--text-primary);
+    }
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 0.55rem 1.2rem;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 28px rgba(34, 164, 71, 0.14);
+    }
+    .nav-cta:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(34, 164, 71, 0.25);
+    }
+    .nav-cta::after {
+      display: none !important;
+    }
+
+    .lang-switcher {
+      display: flex;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      padding: 0.3rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+    }
+    .lang-btn:hover {
+      color: var(--text-secondary);
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 5px;
+    }
+
+    .theme-toggle {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px !important;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+    }
+    .theme-toggle svg {
+      width: 17px;
+      height: 17px;
+      fill: currentColor;
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text-secondary);
+      margin: 5px 0;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+    .hamburger.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100dvh;
+      background: var(--bg-primary);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      padding: 2rem;
+    }
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-menu a {
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    .mobile-menu a:hover {
+      color: var(--accent);
+    }
+    .mobile-menu .btn-primary {
+      padding: 0.8rem 2rem;
+    }
+
+    /* =========================================================
+       BUTTONS
+       ========================================================= */
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34, 164, 71, 0.18);
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(34, 164, 71, 0.25);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-primary);
+      padding: 0.85rem 2rem;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+    }
+
+    /* =========================================================
+       HERO V5 — CLEAN & ORGANIZED
+       ========================================================= */
+    .hero-banner.hero-v5 {
+      padding: 6.5rem 4.5% 2.5rem;
+      position: relative;
+      min-height: 780px;
+      overflow: hidden;
+      background: #07100c;
+      z-index: 1;
+    }
+
+    /* BG Layer */
+    .hero-v5-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-v5-grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.3;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    .hero-v5-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, #07100c 0%, rgba(7, 16, 12, 0.85) 35%, rgba(7, 16, 12, 0.2) 70%, #07100c 100%),
+        linear-gradient(0deg, #07100c 0%, transparent 35%, rgba(7, 16, 12, 0.3) 100%);
+    }
+
+    /* Truck Art */
+    .hero-truck-art {
+      position: absolute;
+      right: -5%;
+      bottom: 0;
+      width: 55%;
+      height: 55%;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .truck-glow {
+      position: absolute;
+      inset: 20%;
+      background: radial-gradient(ellipse, rgba(34, 164, 71, 0.45), transparent 65%);
+      filter: blur(45px);
+    }
+    .truck-body {
+      position: absolute;
+      right: 5%;
+      bottom: 13%;
+      width: 88%;
+      height: 44%;
+    }
+    .truck-cab {
+      position: absolute;
+      right: 0;
+      bottom: 18%;
+      width: 20%;
+      height: 65%;
+      border: 3px solid rgba(198, 224, 204, 0.9);
+      border-radius: 12px 18px 8px 8px;
+      transform: skewY(-4deg);
+    }
+    .truck-window {
+      position: absolute;
+      right: 3%;
+      bottom: 53%;
+      width: 13%;
+      height: 21%;
+      border: 2px solid rgba(198, 224, 204, 0.65);
+      border-radius: 4px;
+      transform: skewY(-4deg);
+    }
+    .truck-trailer {
+      position: absolute;
+      left: 3%;
+      bottom: 19%;
+      width: 73%;
+      height: 62%;
+      border: 3px solid rgba(198, 224, 204, 0.75);
+      border-radius: 5px;
+    }
+    .truck-wheel {
+      position: absolute;
+      bottom: 0;
+      width: 7%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 4px solid rgba(198, 224, 204, 0.75);
+      background: #07100c;
+    }
+    .wheel-1 {
+      left: 14%;
+    }
+    .wheel-2 {
+      left: 62%;
+    }
+    .wheel-3 {
+      right: 8%;
+    }
+
+    /* Hero Inner */
+    .hero-v5-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .hero-v5-copy {
+      padding: 0.5rem 0;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #a9c9b0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .kicker-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 0 5px rgba(34, 164, 71, 0.12);
+    }
+
+    .hero-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: rgba(239, 246, 241, 0.8);
+      margin-bottom: 0.75rem;
+    }
+    .hero-brand span {
+      color: var(--accent);
+    }
+
+    .hero-v5 h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.8rem, 4.8vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: -2.5px;
+      margin: 0 0 1.2rem;
+      color: #ffffff;
+      text-shadow: 0 2px 22px rgba(0, 0, 0, 0.18);
+      max-width: 700px;
+    }
+
+    .hero-v5-desc {
+      max-width: 620px;
+      color: rgba(239, 246, 241, 0.72);
+      font-size: 1rem;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-v5-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-route-summary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .route-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: rgba(242, 248, 244, 0.78);
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+    .route-flag {
+      font-size: 1rem;
+    }
+    .route-arrow {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    /* Hero Side */
+    .hero-v5-side {
+      position: relative;
+    }
+
+    .hero-map-v5 {
+      height: 400px;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #0b1510;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    .hero-map-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 1.2rem;
+      background: linear-gradient(rgba(5, 12, 8, 0.9), transparent);
+    }
+    .hero-map-top>div:first-child {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #b8d3bd;
+    }
+    .map-live-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #35d865;
+      margin-right: 0.45rem;
+      box-shadow: 0 0 0 4px rgba(53, 216, 101, 0.1);
+    }
+
+    .hero-map-v5 .hero-map-toggle {
+      display: flex;
+      gap: 0.3rem;
+    }
+    .hero-map-v5 .map-toggle-btn {
+      background: rgba(5, 12, 8, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      padding: 0.3rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .hero-map-v5 .map-toggle-btn:hover {
+      color: var(--text-secondary);
+    }
+    .hero-map-v5 .map-toggle-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .hero-map-v5 .hero-map-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      pointer-events: none;
+      padding: 4rem 1.25rem 1rem;
+      background: linear-gradient(transparent, rgba(4, 10, 7, 0.95));
+    }
+    .hero-map-v5 .hero-map-name {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .hero-map-v5 .hero-map-address {
+      color: rgba(235, 243, 238, 0.55);
+      font-size: 0.8rem;
+    }
+
+    /* Trust Row */
+    .hero-trust-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.025);
+    }
+    .hero-trust-row div {
+      padding: 0.7rem 1rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .hero-trust-row div:last-child {
+      border-right: 0;
+    }
+    .hero-trust-row strong {
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .hero-trust-row span {
+      display: block;
+      color: rgba(225, 235, 229, 0.4);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-top: 0.15rem;
+    }
+
+    /* Service Strip — REPLACED with clean compact version */
+    .hero-service-strip {
+      position: relative;
+      z-index: 3;
+      max-width: 1280px;
+      margin: 2.2rem auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      background: transparent;
+      border: 0;
+    }
+    .hero-service-strip>div {
+      min-height: auto;
+      padding: 0.35rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hero-service-strip>div:last-child {
+      border-right: 0;
+    }
+    .strip-icon {
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+    .hero-service-strip span:not(.strip-icon) {
+      font-size: 0.7rem;
+      color: rgba(238, 246, 240, 0.7);
+      font-weight: 600;
+    }
+    .hero-service-strip small {
+      font-size: 0.58rem;
+      color: rgba(225, 235, 229, 0.35);
+      font-weight: 400;
+      margin-left: 0.2rem;
+    }
+
+    /* =========================================================
+       LEAFLET MAP
+       ========================================================= */
+    .leaflet-container {
+      background: #0b1510 !important;
+      border-radius: var(--radius-lg);
+    }
+    .leaflet-control-zoom {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    .leaflet-control-zoom a {
+      background: rgba(5, 12, 8, 0.85) !important;
+      color: rgba(255, 255, 255, 0.95) !important;
+      border: none !important;
+      width: 32px !important;
+      height: 32px !important;
+      line-height: 32px !important;
+      font-size: 0.95rem !important;
+      border-radius: 7px !important;
+      margin-bottom: 4px !important;
+      transition: all 0.25s ease !important;
+    }
+    .leaflet-control-zoom a:hover {
+      background: var(--accent) !important;
+      transform: scale(1.06);
+    }
+    .leaflet-control-attribution {
+      display: none !important;
+    }
+
+    /* =========================================================
+       REST OF SECTIONS (minimal changes, keeping your design)
+       ========================================================= */
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.2rem;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .fleet {
+      padding: 4rem 4.5% 5rem;
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(34, 164, 71, 0.03) 50%, var(--bg-primary) 100%);
+    }
+    .fleet-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .fleet-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+    .fleet-card:hover {
+      border-color: rgba(34, 164, 71, 0.38);
+      transform: translateY(-5px);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    }
+    .fleet-card-img {
+      height: 180px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #10251a, #0b1710);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fleet-card-img svg {
+      width: 48px;
+      height: 48px;
+      fill: rgba(255, 255, 255, 0.06);
+      transition: transform 0.4s ease;
+    }
+    .fleet-card:hover .fleet-card-img svg {
+      transform: scale(1.1);
+    }
+    .fleet-card-body {
+      padding: 1.2rem 1.5rem;
+    }
+    .fleet-card h3 {
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .fleet-card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .svc-card-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.8rem;
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .svc-card-hint svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--accent);
+    }
+
+    .services {
+      padding: 4rem 4.5% 5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .svc-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .svc-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .svc-card:hover {
+      border-color: rgba(34, 164, 71, 0.38);
+      transform: translateY(-5px);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    }
+    .svc-card:hover::before {
+      opacity: 1;
+    }
+    .svc-card-photo {
+      height: 160px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #10251a, #0b1710);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .svc-card-photo svg {
+      width: 44px;
+      height: 44px;
+      fill: rgba(255, 255, 255, 0.06);
+      transition: transform 0.4s ease;
+    }
+    .svc-card:hover .svc-card-photo svg {
+      transform: scale(1.1);
+    }
+    .svc-card-body {
+      padding: 1.2rem 1.5rem 1.5rem;
+    }
+    .svc-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.8rem;
+      background: rgba(34, 164, 71, 0.1);
+      border: 1px solid rgba(34, 164, 71, 0.1);
+    }
+    .svc-icon svg {
+      fill: var(--accent);
+    }
+    .svc-card h3 {
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .svc-card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    /* Modals */
+    .svc-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-bg);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .svc-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .svc-modal {
+      width: 90%;
+      max-width: 900px;
+      max-height: 85vh;
+      border-radius: var(--radius-lg);
+      background: var(--modal-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      transform: translateY(30px) scale(0.96);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow);
+    }
+    .svc-modal-overlay.open .svc-modal {
+      transform: translateY(0) scale(1);
+    }
+    .svc-modal-photo {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #10271a, #0b1710);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-30px);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+    }
+    .svc-modal-overlay.open .svc-modal-photo {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .svc-modal-photo svg {
+      width: 72px;
+      height: 72px;
+      fill: rgba(255, 255, 255, 0.05);
+    }
+    .svc-modal-content {
+      padding: 2.5rem;
+      overflow-y: auto;
+      transform: translateX(20px);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
+    }
+    .svc-modal-overlay.open .svc-modal-content {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .svc-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .svc-modal-close:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .svc-modal-close svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+    }
+    .svc-modal-content h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+    .svc-modal-content .svc-modal-sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+    .svc-modal-content h4 {
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 1rem 0 0.4rem;
+    }
+    .svc-modal-content p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      margin-bottom: 0.6rem;
+    }
+    .svc-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .svc-tag {
+      background: rgba(34, 164, 71, 0.08);
+      border: 1px solid rgba(34, 164, 71, 0.15);
+      border-radius: 50px;
+      padding: 0.3rem 0.9rem;
+      color: #a7e5b4;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+    @media (max-width: 1050px) {
+      .hero-v5-inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .hero-v5 h1 {
+        max-width: 100%;
+      }
+      .hero-v5-side {
+        max-width: 100%;
+      }
+      .hero-map-v5 {
+        height: 360px;
+      }
+      .hero-service-strip {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.3rem;
+      }
+      .hero-service-strip>div {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 0.3rem 0.8rem;
+      }
+      .hero-service-strip>div:last-child {
+        border-bottom: 0;
+      }
+      .fleet-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        height: 64px;
+        padding: 0 4%;
+      }
+      nav ul li a:not(.nav-cta) {
+        display: none;
+      }
+      .lang-switcher {
+        margin-left: auto;
+        margin-right: 0.5rem;
+      }
+      nav ul li .lang-switcher,
+      nav ul li .theme-toggle {
+        display: none;
+      }
+      .hamburger {
+        display: block;
+      }
+
+      .hero-banner.hero-v5 {
+        padding: 4.5rem 4% 1.5rem;
+        min-height: auto;
+      }
+      .hero-v5 h1 {
+        font-size: clamp(2.2rem, 10vw, 3.2rem);
+        letter-spacing: -1.5px;
+      }
+      .hero-v5-desc {
+        font-size: 0.92rem;
+      }
+      .hero-v5-actions {
+        flex-direction: column;
+      }
+      .hero-v5-actions .btn-primary,
+      .hero-v5-actions .btn-outline {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+      }
+      .hero-map-v5 {
+        height: 300px;
+      }
+      .hero-route-summary {
+        gap: 0.3rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 0.3rem;
+      }
+      .route-item {
+        font-size: 0.68rem;
+        white-space: nowrap;
+      }
+      .route-arrow {
+        font-size: 0.65rem;
+      }
+      .hero-trust-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .hero-trust-row strong {
+        font-size: 0.95rem;
+      }
+      .hero-trust-row span {
+        font-size: 0.55rem;
+      }
+      .hero-trust-row div {
+        padding: 0.5rem 0.6rem;
+      }
+
+      .hero-service-strip {
+        margin-top: 1.2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+      .hero-service-strip>div {
+        padding: 0.25rem 0.7rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .hero-service-strip span:not(.strip-icon) {
+        font-size: 0.65rem;
+      }
+      .hero-service-strip small {
+        font-size: 0.5rem;
+      }
+
+      .fleet {
+        padding: 2.5rem 4% 3rem;
+      }
+      .fleet-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .fleet-card-img {
+        height: 140px;
+      }
+      .fleet-card-body {
+        padding: 0.8rem 1rem;
+      }
+      .fleet-card h3 {
+        font-size: 0.9rem;
+      }
+      .fleet-card p {
+        font-size: 0.78rem;
+      }
+
+      .services {
+        padding: 2.5rem 4% 3rem;
+      }
+      .services-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+      .svc-card-photo {
+        height: 120px;
+      }
+      .svc-card-body {
+        padding: 1rem 1.2rem 1.2rem;
+      }
+      .svc-card h3 {
+        font-size: 0.95rem;
+      }
+
+      .svc-modal {
+        grid-template-columns: 1fr;
+        max-height: 90vh;
+      }
+      .svc-modal-photo {
+        min-height: 160px;
+      }
+      .svc-modal-content {
+        padding: 1.2rem;
+      }
+
+      .section-header h2 {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-v5 h1 {
+        font-size: 2rem;
+      }
+      .hero-kicker {
+        font-size: 0.6rem;
+      }
+      .hero-brand {
+        font-size: 0.8rem;
+      }
+      .hero-trust-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      .hero-trust-row div:nth-child(odd) {
+        border-right: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .fleet-grid {
+        grid-template-columns: 1fr;
+      }
+      .fleet-card-img {
+        height: 120px;
+      }
+      .hero-route-summary {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    /* =========================================================
+       LIGHT MODE
+       ========================================================= */
+    body.light-mode {
+      --bg-primary: #f0f5f0;
+      --bg-secondary: rgba(0, 0, 0, 0.03);
+      --bg-card: rgba(255, 255, 255, 0.7);
+      --border-color: rgba(10, 35, 18, 0.1);
+      --border-hover: rgba(34, 164, 71, 0.35);
+      --text-primary: #101a13;
+      --text-secondary: rgba(16, 26, 19, 0.68);
+      --text-muted: rgba(16, 26, 19, 0.5);
+      --text-dim: rgba(16, 26, 19, 0.35);
+      --nav-bg: rgba(240, 245, 240, 0.94);
+      --modal-bg: #f5f8f5;
+      --overlay-bg: rgba(0, 0, 0, 0.3);
+      --input-bg: rgba(0, 0, 0, 0.04);
+      --input-border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    }
+
+    body.light-mode .hero-banner.hero-v5 {
+      background: #edf4ee;
+    }
+    body.light-mode .hero-v5-bg::after {
+      background:
+        linear-gradient(90deg, #edf4ee 0%, rgba(237, 244, 238, 0.9) 35%, rgba(237, 244, 238, 0.2) 72%, #edf4ee 100%),
+        linear-gradient(0deg, #edf4ee 0%, transparent 35%, rgba(237, 244, 238, 0.2) 100%);
+    }
+    body.light-mode .hero-v5-grid {
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(10, 55, 24, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(10, 55, 24, 0.07) 1px, transparent 1px);
+    }
+    body.light-mode .hero-kicker {
+      color: #327044;
+    }
+    body.light-mode .hero-brand {
+      color: #1d3224;
+    }
+    body.light-mode .hero-v5 h1 {
+      color: #101a13;
+      text-shadow: none;
+    }
+    body.light-mode .hero-v5-desc {
+      color: #415148;
+    }
+    body.light-mode .hero-route-summary {
+      border-color: rgba(10, 45, 20, 0.12);
+    }
+    body.light-mode .route-item {
+      color: #263a2c;
+    }
+    body.light-mode .route-arrow {
+      color: #16823a;
+    }
+    body.light-mode .hero-map-v5 {
+      border-color: rgba(12, 45, 22, 0.14);
+      box-shadow: 0 22px 55px rgba(24, 60, 34, 0.1);
+    }
+    body.light-mode .hero-trust-row {
+      background: rgba(255, 255, 255, 0.5);
+      border-color: rgba(10, 45, 20, 0.1);
+    }
+    body.light-mode .hero-trust-row div {
+      border-color: rgba(10, 45, 20, 0.08);
+    }
+    body.light-mode .hero-trust-row strong {
+      color: #142118;
+    }
+    body.light-mode .hero-trust-row span {
+      color: #617066;
+    }
+    body.light-mode .hero-service-strip>div {
+      border-color: rgba(10, 45, 20, 0.12);
+    }
+    body.light-mode .hero-service-strip span:not(.strip-icon) {
+      color: #33483a;
+    }
+    body.light-mode .hero-service-strip small {
+      color: #738078;
+    }
+    body.light-mode .hero-truck-art {
+      opacity: 0.04;
+    }
+    body.light-mode .truck-cab,
+    body.light-mode .truck-trailer,
+    body.light-mode .truck-window {
+      border-color: rgba(20, 75, 35, 0.7);
+    }
+    body.light-mode .truck-wheel {
+      background: #edf4ee;
+      border-color: rgba(20, 75, 35, 0.7);
+    }
+    body.light-mode .btn-outline {
+      color: #17301f;
+      border-color: rgba(15, 55, 27, 0.2);
+      background: rgba(255, 255, 255, 0.5);
+    }
+    body.light-mode .btn-outline:hover {
+      border-color: #22a447;
+      background: #fff;
+    }
+    body.light-mode .fleet-card,
+    body.light-mode .svc-card {
+      background: rgba(255, 255, 255, 0.6);
+    }
+    body.light-mode .fleet-card:hover,
+    body.light-mode .svc-card:hover {
+      background: #fff;
+    }
+    body.light-mode .svc-tag {
+      color: #1a7a3a;
+    }
+    body.light-mode .svc-modal-close svg {
+      fill: #101a13;
+    }
+    body.light-mode .svc-modal-photo {
+      background: linear-gradient(135deg, #dce8dd, #c5d6c7);
+    }
+
+    /* =========================================================
+       REVEAL
+       ========================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================================================
+       REDUCED MOTION
+       ========================================================= */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav>
+    <a href="#" class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">TRANS<span>ALLENDES</span></a>
+
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul>
+      <li><a href="#flota" data-i18n="nav.fleet">Flota</a></li>
+      <li><a href="#servicios" data-i18n="nav.services">Servicios</a></li>
+      <li><a href="#por-que" data-i18n="nav.why">Por qué nosotros</a></li>
+      <li><a href="#testimonios" data-i18n="nav.clients">Clientes</a></li>
+      <li>
+        <div class="lang-switcher">
+          <button class="lang-btn active" onclick="setLang('es')">ES</button>
+          <button class="lang-btn" onclick="setLang('pt')">PT</button>
+          <button class="lang-btn" onclick="setLang('en')">EN</button>
+        </div>
+      </li>
+      <li>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
+          <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+        </button>
+      </li>
+      <li><a href="#contacto" class="nav-cta" data-i18n="nav.cta">Cotizar →</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== MOBILE MENU ===== -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#servicios" onclick="toggleMobileMenu()" data-i18n="nav.services">Servicios</a>
+    <a href="#flota" onclick="toggleMobileMenu()" data-i18n="nav.fleet">Flota</a>
+    <a href="#por-que" onclick="toggleMobileMenu()" data-i18n="nav.why">Por qué nosotros</a>
+    <a href="#testimonios" onclick="toggleMobileMenu()" data-i18n="nav.clients">Clientes</a>
+    <a href="#faq" onclick="toggleMobileMenu()">FAQ</a>
+    <a href="#contacto" onclick="toggleMobileMenu()" class="btn-primary" data-i18n="nav.cta">Cotizar →</a>
+    <div style="display:flex;gap:0.8rem;margin-top:1rem;align-items:center;">
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" onclick="setLang('pt')">PT</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
+        <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== HERO V5 ===== -->
+  <section class="hero-banner hero-v5">
+    <!-- BG -->
+    <div class="hero-v5-bg">
+      <div class="hero-v5-grid"></div>
+      <div class="hero-truck-art" aria-hidden="true">
+        <div class="truck-glow"></div>
+        <div class="truck-body">
+          <div class="truck-cab"></div>
+          <div class="truck-window"></div>
+          <div class="truck-trailer"></div>
+          <div class="truck-wheel wheel-1"></div>
+          <div class="truck-wheel wheel-2"></div>
+          <div class="truck-wheel wheel-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inner -->
+    <div class="hero-v5-inner">
+      <!-- Left Copy -->
+      <div class="hero-v5-copy">
+        <div class="hero-kicker">
+          <span class="kicker-dot"></span>
+          <span data-i18n="hero.tagline">Transporte de carga internacional</span>
+        </div>
+
+        <div class="hero-brand">TRANS<span>ALLENDES</span></div>
+
+        <h1 data-i18n="hero.v5.title">Transporte de carga que cruza fronteras.</h1>
+
+        <p class="hero-v5-desc" data-i18n="hero.v5.desc">
+          Soluciones de transporte terrestre internacional entre Chile, Argentina, Brasil y Paraguay.
+          Carga general y refrigerada con gestión aduanera.
+        </p>
+
+        <div class="hero-v5-actions">
+          <a href="#contacto" class="btn-primary" data-i18n="hero.cta1">Cotizar Envío <span>↗</span></a>
+          <a href="#servicios" class="btn-outline" data-i18n="hero.cta2">Ver Servicios</a>
+        </div>
+
+        <div class="hero-route-summary">
+          <span class="route-item"><span class="route-flag">🇨🇱</span>Chile</span>
+          <span class="route-arrow">→</span>
+          <span class="route-item"><span class="route-flag">🇦🇷</span>Argentina</span>
+          <span class="route-arrow">→</span>
+          <span class="route-item"><span class="route-flag">🇧🇷</span>Brasil</span>
+          <span class="route-arrow">→</span>
+          <span class="route-item"><span class="route-flag">🇵🇾</span>Paraguay</span>
+        </div>
+      </div>
+
+      <!-- Right Side: Map + Trust -->
+      <div class="hero-v5-side">
+        <div class="hero-map-v5">
+          <div class="hero-map-top">
+            <div>
+              <span class="map-live-dot"></span>
+              <span data-i18n="hero.v5.coverage">Cobertura internacional</span>
+            </div>
+            <div class="hero-map-toggle">
+              <button class="map-toggle-btn active" onclick="switchOffice('cl')">🇨🇱 Chile</button>
+              <button class="map-toggle-btn" onclick="switchOffice('br')">🇧🇷 Brasil</button>
+            </div>
+          </div>
+          <div id="leafletMap" style="width:100%;height:100%;"></div>
+          <div class="hero-map-overlay" id="mapOverlayCl">
+            <div class="hero-map-name" data-i18n="hero.mapCL">Oficina Central — Chile</div>
+            <div class="hero-map-address">Mar del Sur 7240, Pudahuel, Santiago</div>
+          </div>
+          <div class="hero-map-overlay" id="mapOverlayBr" style="display:none;">
+            <div class="hero-map-name" data-i18n="hero.mapBR">Oficina — Brasil</div>
+            <div class="hero-map-address" data-i18n="hero.mapBRCity">Próximamente</div>
+          </div>
+        </div>
+
+        <div class="hero-trust-row">
+          <div><strong>26+</strong><span data-i18n="stat.years">Años de experiencia</span></div>
+          <div><strong>4</strong><span data-i18n="stat.countries">Países conectados</span></div>
+          <div><strong>24/7</strong><span data-i18n="hero.v5.tracking">Seguimiento</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Strip — compact, clean -->
+    <div class="hero-service-strip">
+      <div><span class="strip-icon">▣</span><span data-i18n="hsb.ftl">Camión Completo</span><small>FTL</small></div>
+      <div><span class="strip-icon">◫</span><span data-i18n="hsb.ltl">Carga Consolidada</span><small>LTL</small></div>
+      <div><span class="strip-icon">❄</span><span data-i18n="hsb.refrigerated">Refrigerado</span><small data-i18n="hsb.temp">-25°C a +25°C</small></div>
+      <div><span class="strip-icon">✓</span><span data-i18n="hsb.docs">Documentación</span><small data-i18n="hsb.docsSub">Aduanera</small></div>
+    </div>
+  </section>
+
+  <!-- ===== FLEET ===== -->
+  <section class="fleet" id="flota">
+    <div class="section-header reveal">
+      <h2 data-i18n="fleet.title">Nuestra Flota</h2>
+      <p data-i18n="fleet.subtitle">Unidades equipadas para cada tipo de carga</p>
+    </div>
+    <div class="fleet-grid">
+      <div class="fleet-card" onclick="openFleet(0)">
+        <div class="fleet-card-img">
+          <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H1v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        </div>
+        <div class="fleet-card-body">
+          <h3 data-i18n="fleet.truck.title">Camión Tractocamión</h3>
+          <p data-i18n="fleet.truck.desc">Unidades de alta potencia para carga pesada y larga distancia. Motor Euro VI, rastreo GPS y frenos ABS.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="fleet-card" onclick="openFleet(1)">
+        <div class="fleet-card-img">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM6 6h5v5H6V6zm0 7h12v2H6v-2zm0 4h12v2H6v-2z"/></svg>
+        </div>
+        <div class="fleet-card-body">
+          <h3 data-i18n="fleet.ramp48.title">Rampa 48 Pies</h3>
+          <p data-i18n="fleet.ramp48.desc">Plataforma de carga estándar para mercadería general. Capacidad de hasta 26 toneladas.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="fleet-card" onclick="openFleet(2)">
+        <div class="fleet-card-img">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM6 6h12v4H6V6zm0 6h12v2H6v-2zm0 4h12v4H6v-4z"/></svg>
+        </div>
+        <div class="fleet-card-body">
+          <h3 data-i18n="fleet.ramp53.title">Rampa 53 Pies</h3>
+          <p data-i18n="fleet.ramp53.desc">Plataforma extendida para carga sobredimensionada y volúmenes grandes. Mayor capacidad.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="fleet-card" onclick="openFleet(3)">
+        <div class="fleet-card-img">
+          <svg viewBox="0 0 24 24"><path d="M22 11h-4.17l-3.59-3.59L14 6l-4 4-2.83-2.83L6 8.17l4.24 4.24L6 16.66l1.41 1.41L12 13.41l4 4 1.41-1.41L13.83 12H18v-1z"/></svg>
+        </div>
+        <div class="fleet-card-body">
+          <h3 data-i18n="fleet.fridge.title">Unidad Refrigerada</h3>
+          <p data-i18n="fleet.fridge.desc">Camiones con control de temperatura -25°C a +25°C. Monitoreo continuo con sensores.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FLEET MODAL ===== -->
+  <div class="svc-modal-overlay" id="fleetModal" onclick="closeFleet(event)">
+    <div class="svc-modal" onclick="event.stopPropagation()">
+      <button class="svc-modal-close" onclick="closeFleet(event)"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+      <div class="svc-modal-photo" id="fleetPhoto"></div>
+      <div class="svc-modal-content" id="fleetContent"></div>
+    </div>
+  </div>
+
+  <!-- ===== SERVICES ===== -->
+  <section class="services" id="servicios">
+    <div class="section-header reveal">
+      <h2 data-i18n="services.title">Servicios</h2>
+      <p data-i18n="services.subtitle">Soluciones completas para cada tipo de carga</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card" onclick="openService(0)">
+        <div class="svc-card-photo"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H1v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div>
+        <div class="svc-card-body">
+          <div class="svc-icon"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M20 8h-3V4H1v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div>
+          <h3 data-i18n="svc.ftl.title">Camión Completo (FTL)</h3>
+          <p data-i18n="svc.ftl.desc">Unidad exclusiva para tu carga. Ideal para envíos grandes con seguridad directa al destino.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="svc-card" onclick="openService(1)">
+        <div class="svc-card-photo"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v3h2V4h16v16H4v-3H2v3c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-9 10H7l4-4 4 4h-4v4h-2v-4z"/></svg></div>
+        <div class="svc-card-body">
+          <div class="svc-icon"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M20 2H4c-1.1 0-2 .9-2 2v3h2V4h16v16H4v-3H2v3c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-9 10H7l4-4 4 4h-4v4h-2v-4z"/></svg></div>
+          <h3 data-i18n="svc.ltl.title">Carga Consolidada (LTL)</h3>
+          <p data-i18n="svc.ltl.desc">Comparte espacio con otros envíos y pagás solo por lo que necesitás.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="svc-card" onclick="openService(2)">
+        <div class="svc-card-photo"><svg viewBox="0 0 24 24"><path d="M22 11h-4.17l-3.59-3.59L14 6l-4 4-2.83-2.83L6 8.17l4.24 4.24L6 16.66l1.41 1.41L12 13.41l4 4 1.41-1.41L13.83 12H18v-1z"/></svg></div>
+        <div class="svc-card-body">
+          <div class="svc-icon"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M22 11h-4.17l-3.59-3.59L14 6l-4 4-2.83-2.83L6 8.17l4.24 4.24L6 16.66l1.41 1.41L12 13.41l4 4 1.41-1.41L13.83 12H18v-1z"/></svg></div>
+          <h3 data-i18n="svc.ref.title">Transporte Refrigerado</h3>
+          <p data-i18n="svc.ref.desc">Cadena de frío controlada de -25°C a +25°C para todo tipo de productos.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="svc-card" onclick="openService(3)">
+        <div class="svc-card-photo"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-6h8v2H8v-2zm0-4h8v2H8v-2z"/></svg></div>
+        <div class="svc-card-body">
+          <div class="svc-icon"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-6h8v2H8v-2zm0-4h8v2H8v-2z"/></svg></div>
+          <h3 data-i18n="svc.docs.title">Documentación Aduanera</h3>
+          <p data-i18n="svc.docs.desc">Manejo completo de despacho aduanero y documentación para cruce internacional.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="svc-card" onclick="openService(4)">
+        <div class="svc-card-photo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+        <div class="svc-card-body">
+          <div class="svc-icon"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+          <h3 data-i18n="svc.ins.title">Seguro de Carga</h3>
+          <p data-i18n="svc.ins.desc">Cobertura full contra robo, daño y siniestros. Tu mercadería protegida.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="svc-card" onclick="openService(5)">
+        <div class="svc-card-photo"><svg viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/></svg></div>
+        <div class="svc-card-body">
+          <div class="svc-icon"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/></svg></div>
+          <h3 data-i18n="svc.advice.title">Asesoría Personalizada</h3>
+          <p data-i18n="svc.advice.desc">Ejecutivo dedicado que conoce tu operación y te asesora en cada envío.</p>
+          <div class="svc-card-hint" data-i18n="svc.more">Ver más <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES MODAL ===== -->
+  <div class="svc-modal-overlay" id="svcModal" onclick="closeService(event)">
+    <div class="svc-modal" onclick="event.stopPropagation()">
+      <button class="svc-modal-close" onclick="closeService(event)"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+      <div class="svc-modal-photo" id="modalPhoto"></div>
+      <div class="svc-modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features reveal" id="por-que" style="padding:4rem 4.5% 5rem;position:relative;z-index:1;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;max-width:1280px;margin:0 auto;align-items:center;">
+      <div>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,3.5vw,3.2rem);color:var(--text-primary);letter-spacing:-1.5px;margin-bottom:1.2rem;" data-i18n="feat.title">Más de 26 años conectando Latinoamérica</h2>
+        <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:0.8rem;" data-i18n="feat.desc1">Desde 1999 somos el puente logístico entre Chile, Argentina, Brasil y Paraguay. Conocemos cada ruta, cada aduana y cada necesidad de nuestros clientes.</p>
+        <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:1rem;" data-i18n="feat.desc2">Nuestro proceso de cotización es simple: contanos tu carga y te damos una respuesta en menos de 24 horas con precio, tiempo y documentación incluida.</p>
+        <ul style="list-style:none;margin-top:1.5rem;">
+          <li style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;color:var(--text-secondary);font-size:0.95rem;" data-i18n="feat.li1"><span style="color:var(--accent);font-weight:700;font-size:1.1rem;">✓</span> Cotización sin compromiso en 24 horas</li>
+          <li style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;color:var(--text-secondary);font-size:0.95rem;" data-i18n="feat.li2"><span style="color:var(--accent);font-weight:700;font-size:1.1rem;">✓</span> Documentación aduanera incluida en el precio</li>
+          <li style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;color:var(--text-secondary);font-size:0.95rem;" data-i18n="feat.li3"><span style="color:var(--accent);font-weight:700;font-size:1.1rem;">✓</span> Seguro de carga full cover</li>
+          <li style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;color:var(--text-secondary);font-size:0.95rem;" data-i18n="feat.li4"><span style="color:var(--accent);font-weight:700;font-size:1.1rem;">✓</span> Seguimiento GPS en tiempo real 24/7</li>
+          <li style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;color:var(--text-secondary);font-size:0.95rem;" data-i18n="feat.li5"><span style="color:var(--accent);font-weight:700;font-size:1.1rem;">✓</span> Soporte por WhatsApp y teléfono</li>
+          <li style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;color:var(--text-secondary);font-size:0.95rem;" data-i18n="feat.li6"><span style="color:var(--accent);font-weight:700;font-size:1.1rem;">✓</span> Ejecutivo dedicado para cada cliente</li>
+        </ul>
+      </div>
+      <div style="height:100%;min-height:320px;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,rgba(34,164,71,0.12),rgba(155,220,66,0.08));display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 24 24" width="72" height="72" fill="rgba(255,255,255,0.04)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== METRICS ===== -->
+  <section class="metrics reveal" style="padding:4rem 4.5%;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);background:transparent;">
+    <div class="section-header">
+      <h2 data-i18n="metrics.title">Números que hablan</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:1280px;margin:0 auto;text-align:center;">
+      <div style="padding:1.2rem;border-right:1px solid rgba(255,255,255,0.06);"><div class="m-num" data-count="26" data-suffix="+" style="font-family:'Space Grotesk',sans-serif;font-size:3.2rem;font-weight:700;color:var(--text-primary);">0+</div><div style="color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-top:0.2rem;" data-i18n="stat.years">Años de experiencia</div></div>
+      <div style="padding:1.2rem;border-right:1px solid rgba(255,255,255,0.06);"><div class="m-num" data-count="4" data-suffix="" style="font-family:'Space Grotesk',sans-serif;font-size:3.2rem;font-weight:700;color:var(--text-primary);">0</div><div style="color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-top:0.2rem;" data-i18n="stat.countries">Países conectados</div></div>
+      <div style="padding:1.2rem;border-right:1px solid rgba(255,255,255,0.06);"><div class="m-num" data-count="120" data-suffix="+" style="font-family:'Space Grotesk',sans-serif;font-size:3.2rem;font-weight:700;color:var(--text-primary);">0</div><div style="color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-top:0.2rem;" data-i18n="stat.ontime">Envíos al mes</div></div>
+      <div style="padding:1.2rem;border-right:0;"><div class="m-num" data-count="30" data-suffix="+" style="font-family:'Space Grotesk',sans-serif;font-size:3.2rem;font-weight:700;color:var(--text-primary);">0+</div><div style="color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-top:0.2rem;" data-i18n="stat.fleet">Camiones propios</div></div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials reveal" id="testimonios" style="padding:4rem 4.5% 5rem;position:relative;z-index:1;">
+    <div class="section-header">
+      <h2 data-i18n="testimonials.title">Opiniones de clientes</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;max-width:1280px;margin:0 auto;">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:1.8rem;transition:all 0.3s ease;">
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;margin-bottom:1.2rem;font-style:italic;" data-i18n="test1.quote">"Excelente servicio. La documentación aduanera siempre impecable y los tiempos cumplidos al día. Muy profesionales."</p>
+        <div style="display:flex;align-items:center;gap:0.8rem;"><div style="width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;flex-shrink:0;">RM</div><div><div style="color:var(--text-primary);font-weight:600;font-size:0.9rem;">Roberto Méndez</div><div style="color:var(--text-muted);font-size:0.75rem;" data-i18n="test1.role">Gerente Logístico — Exportadora Austral</div></div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:1.8rem;transition:all 0.3s ease;">
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;margin-bottom:1.2rem;font-style:italic;" data-i18n="test2.quote">"Llevamos 5 años trabajando con ellos. Cero incidentes y una atención personalizada que no se encuentra en empresas grandes."</p>
+        <div style="display:flex;align-items:center;gap:0.8rem;"><div style="width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;flex-shrink:0;">CF</div><div><div style="color:var(--text-primary);font-weight:600;font-size:0.9rem;">Claudia Fuentes</div><div style="color:var(--text-muted);font-size:0.75rem;" data-i18n="test2.role">Directora de Compras — Textiles del Sur</div></div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:1.8rem;transition:all 0.3s ease;">
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;margin-bottom:1.2rem;font-style:italic;" data-i18n="test3.quote">"El tracking en tiempo real nos da tranquilidad total. Nuestros clientes saben exactamente cuándo llega su mercadería."</p>
+        <div style="display:flex;align-items:center;gap:0.8rem;"><div style="width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;flex-shrink:0;">AV</div><div><div style="color:var(--text-primary);font-weight:600;font-size:0.9rem;">Andrés Villalobos</div><div style="color:var(--text-muted);font-size:0.75rem;" data-i18n="test3.role">CEO — AgroPatagonia SpA</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq reveal" id="faq" style="padding:4rem 4.5% 5rem;position:relative;z-index:1;">
+    <div class="section-header">
+      <h2 data-i18n="faq.title">Preguntas Frecuentes</h2>
+      <p data-i18n="faq.subtitle">Resolvemos tus dudas</p>
+    </div>
+    <div style="max-width:820px;margin:0 auto;">
+      <div style="border:1px solid var(--border-color);border-radius:var(--radius);margin-bottom:0.8rem;overflow:hidden;background:rgba(255,255,255,0.03);">
+        <input type="checkbox" id="faq1" style="display:none;">
+        <label for="faq1" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;cursor:pointer;color:var(--text-primary);font-weight:600;font-size:0.95rem;transition:color 0.3s ease;" data-i18n="faq.q1">¿Cuáles son los tiempos de tránsito?</label>
+        <div style="max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease;"><p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.8;padding:0 1.5rem;" data-i18n="faq.a1">Los tiempos varían según la ruta: Chile-Argentina 2-4 días, Chile-Brasil 5-7 días, Chile-Paraguay 6-8 días. Te damos un tiempo exacto al cotizar tu envío.</p></div>
+        <style>.faq-item input:checked ~ .faq-answer { max-height: 300px; padding: 0 1.5rem 1.2rem; }</style>
+        <script>
+          document.querySelectorAll('.faq-item input[type="checkbox"]').forEach(el => {
+            el.addEventListener('change', function() {
+              const answer = this.nextElementSibling.nextElementSibling;
+              if (this.checked) {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                answer.style.padding = '0 1.5rem 1.2rem';
+              } else {
+                answer.style.maxHeight = '0';
+                answer.style.padding = '0 1.5rem';
+              }
+            });
+          });
+        </script>
+      </div>
+      <!-- Repeat for other FAQs -->
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta" id="contacto" style="padding:4rem 4.5% 5rem;text-align:center;position:relative;z-index:1;">
+    <div style="max-width:960px;margin:0 auto;padding:3rem 3.5rem;border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(34,164,71,0.08),rgba(7,16,12,0.6));border:1px solid rgba(34,164,71,0.15);text-align:left;">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,3.5vw,3rem);color:var(--text-primary);margin-bottom:0.8rem;letter-spacing:-1.5px;" data-i18n="cta.title">Cotizá tu envío sin compromiso</h2>
+      <p style="color:var(--text-secondary);font-size:1rem;margin-bottom:2rem;" data-i18n="cta.desc">Contanos tu carga y te respondemos en 24 horas con precio, tiempos y documentación aduanera incluida.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:2rem;">
+        <div style="background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:1.2rem 1rem;text-align:center;transition:all 0.3s ease;">
+          <div style="width:40px;height:40px;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;background:rgba(34,164,71,0.08);border-radius:10px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="var(--accent)"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1v3.49a1 1 0 01-1 1C10.07 22 2 13.93 2 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg></div>
+          <div style="color:var(--text-muted);font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;font-weight:600;" data-i18n="cta.phone">Teléfono</div>
+          <div style="color:var(--text-primary);font-size:0.9rem;font-weight:500;">+56 61 2 345 6789</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:1.2rem 1rem;text-align:center;transition:all 0.3s ease;">
+          <div style="width:40px;height:40px;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;background:rgba(34,164,71,0.08);border-radius:10px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="var(--accent)"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+          <div style="color:var(--text-muted);font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;font-weight:600;" data-i18n="cta.email">Email</div>
+          <div style="color:var(--text-primary);font-size:0.9rem;font-weight:500;">operaciones@transallendes.cl</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:1.2rem 1rem;text-align:center;transition:all 0.3s ease;">
+          <div style="width:40px;height:40px;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;background:rgba(34,164,71,0.08);border-radius:10px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="var(--accent)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.627.616l4.584-1.202A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.37 0-4.567-.82-6.293-2.192l-.44-.357-2.72.714.726-2.656-.36-.436A9.935 9.935 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg></div>
+          <div style="color:var(--text-muted);font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;font-weight:600;" data-i18n="cta.whatsapp">WhatsApp</div>
+          <div style="color:var(--text-primary);font-size:0.9rem;font-weight:500;">+56 9 8765 4321</div>
+        </div>
+      </div>
+      <form style="max-width:560px;margin:0 auto;text-align:left;" onsubmit="event.preventDefault(); alert('Mensaje enviado. Te contactaremos en 24 horas.');">
+        <input type="text" placeholder="Nombre" required style="width:100%;padding:0.8rem 1.2rem;border-radius:7px;border:1px solid var(--input-border);background:rgba(0,0,0,0.15);color:var(--text-primary);font-family:'Inter',sans-serif;font-size:0.9rem;margin-bottom:0.8rem;outline:none;transition:border-color 0.3s ease;">
+        <input type="email" placeholder="Email" required style="width:100%;padding:0.8rem 1.2rem;border-radius:7px;border:1px solid var(--input-border);background:rgba(0,0,0,0.15);color:var(--text-primary);font-family:'Inter',sans-serif;font-size:0.9rem;margin-bottom:0.8rem;outline:none;transition:border-color 0.3s ease;">
+        <input type="tel" placeholder="Teléfono" style="width:100%;padding:0.8rem 1.2rem;border-radius:7px;border:1px solid var(--input-border);background:rgba(0,0,0,0.15);color:var(--text-primary);font-family:'Inter',sans-serif;font-size:0.9rem;margin-bottom:0.8rem;outline:none;transition:border-color 0.3s ease;">
+        <textarea placeholder="Describe tu carga (peso, volumen, origen, destino)" style="width:100%;padding:0.8rem 1.2rem;border-radius:7px;border:1px solid var(--input-border);background:rgba(0,0,0,0.15);color:var(--text-primary);font-family:'Inter',sans-serif;font-size:0.9rem;margin-bottom:0.8rem;outline:none;transition:border-color 0.3s ease;min-height:100px;resize:vertical;"></textarea>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;border-radius:7px;">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:3rem 4.5% 1.5rem;position:relative;z-index:1;background:#040906;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2rem;max-width:1280px;margin-left:auto;margin-right:auto;">
+      <div>
+        <a href="#" class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">TRANS<span>ALLENDES</span></a>
+        <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.7;margin-top:0.6rem;max-width:320px;" data-i18n="footer.desc">Transporte de carga terrestre internacional. Conectamos Latinoamérica con seguridad y puntualidad, desde 1999.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--text-primary);font-size:0.9rem;margin-bottom:1rem;font-weight:600;" data-i18n="footer.services">Servicios</h4>
+        <ul style="list-style:none;"><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Camión Completo</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Carga Consolidada</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Refrigerado</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Documentación Aduanera</a></li></ul>
+      </div>
+      <div>
+        <h4 style="color:var(--text-primary);font-size:0.9rem;margin-bottom:1rem;font-weight:600;" data-i18n="footer.routes">Rutas</h4>
+        <ul style="list-style:none;"><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Chile → Argentina</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Chile → Brasil</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Argentina → Brasil</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">Chile → Paraguay</a></li></ul>
+      </div>
+      <div>
+        <h4 style="color:var(--text-primary);font-size:0.9rem;margin-bottom:1rem;font-weight:600;" data-i18n="footer.contact">Contacto</h4>
+        <ul style="list-style:none;"><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">+56 61 2 345 6789</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">+56 9 8765 4321</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">operaciones@transallendes.cl</a></li><li style="margin-bottom:0.4rem;"><a href="#" style="color:var(--text-muted);font-size:0.85rem;transition:color 0.3s ease;">www.transallendes.cl</a></li></ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem;text-align:center;color:var(--text-dim);font-size:0.8rem;">
+      <p>&copy; 2026 TRANSALLENDES S.A. · RUT: 76.123.456-7 · Santiago, Chile</p>
+    </div>
+  </footer>
+
+  <!-- ===== WHATSAPP FLOAT ===== -->
+  <a href="https://wa.me/56987654321" target="_blank" style="position:fixed;bottom:1.8rem;right:1.8rem;width:52px;height:52px;background:#20b858;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:100;box-shadow:0 10px 30px rgba(32,184,88,0.28);transition:transform 0.3s ease;">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.627.616l4.584-1.202A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.37 0-4.567-.82-6.293-2.192l-.44-.357-2.72.714.726-2.656-.36-.436A9.935 9.935 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+  </a>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // ===== TRANSLATIONS =====
+    const T = {
+      es: {
+        'nav.services': 'Servicios',
+        'nav.fleet': 'Flota',
+        'nav.why': 'Por qué nosotros',
+        'nav.clients': 'Clientes',
+        'nav.cta': 'Cotizar →',
+        'hero.tagline': 'Transporte de carga internacional',
+        'hero.v5.title': 'Transporte de carga que cruza fronteras.',
+        'hero.v5.desc': 'Soluciones de transporte terrestre internacional entre Chile, Argentina, Brasil y Paraguay. Carga general y refrigerada con gestión aduanera.',
+        'hero.v5.coverage': 'Cobertura internacional',
+        'hero.v5.tracking': 'Seguimiento 24/7',
+        'hero.cta1': 'Cotizar Envío',
+        'hero.cta2': 'Ver Servicios',
+        'hero.mapCL': 'Oficina Central — Chile',
+        'hero.mapBR': 'Oficina — Brasil',
+        'hero.mapBRCity': 'Próximamente',
+        'stat.years': 'Años de experiencia',
+        'stat.countries': 'Países conectados',
+        'stat.ontime': 'Envíos al mes',
+        'stat.fleet': 'Camiones propios',
+        'hsb.ftl': 'Camión Completo',
+        'hsb.ltl': 'Carga Consolidada',
+        'hsb.refrigerated': 'Refrigerado',
+        'hsb.temp': '-25°C a +25°C',
+        'hsb.docs': 'Documentación',
+        'hsb.docsSub': 'Aduanera',
+        'services.title': 'Servicios',
+        'services.subtitle': 'Soluciones completas para cada tipo de carga',
+        'svc.ftl.title': 'Camión Completo (FTL)',
+        'svc.ftl.desc': 'Unidad exclusiva para tu carga. Ideal para envíos grandes con seguridad directa al destino.',
+        'svc.ltl.title': 'Carga Consolidada (LTL)',
+        'svc.ltl.desc': 'Comparte espacio con otros envíos y pagás solo por lo que necesitás.',
+        'svc.ref.title': 'Transporte Refrigerado',
+        'svc.ref.desc': 'Cadena de frío controlada de -25°C a +25°C para todo tipo de productos.',
+        'svc.docs.title': 'Documentación Aduanera',
+        'svc.docs.desc': 'Manejo completo de despacho aduanero y documentación para cruce internacional.',
+        'svc.ins.title': 'Seguro de Carga',
+        'svc.ins.desc': 'Cobertura full contra robo, daño y siniestros. Tu mercadería protegida.',
+        'svc.advice.title': 'Asesoría Personalizada',
+        'svc.advice.desc': 'Ejecutivo dedicado que conoce tu operación y te asesora en cada envío.',
+        'svc.more': 'Ver más',
+        'feat.title': 'Más de 26 años conectando Latinoamérica',
+        'feat.desc1': 'Desde 1999 somos el puente logístico entre Chile, Argentina, Brasil y Paraguay. Conocemos cada ruta, cada aduana y cada necesidad de nuestros clientes.',
+        'feat.desc2': 'Nuestro proceso de cotización es simple: contanos tu carga y te damos una respuesta en menos de 24 horas con precio, tiempo y documentación incluida.',
+        'feat.li1': 'Cotización sin compromiso en 24 horas',
+        'feat.li2': 'Documentación aduanera incluida en el precio',
+        'feat.li3': 'Seguro de carga full cover',
+        'feat.li4': 'Seguimiento GPS en tiempo real 24/7',
+        'feat.li5': 'Soporte por WhatsApp y teléfono',
+        'feat.li6': 'Ejecutivo dedicado para cada cliente',
+        'metrics.title': 'Números que hablan',
+        'testimonials.title': 'Opiniones de clientes',
+        'test1.quote': '"Excelente servicio. La documentación aduanera siempre impecable y los tiempos cumplidos al día. Muy profesionales."',
+        'test1.role': 'Gerente Logístico — Exportadora Austral',
+        'test2.quote': '"Llevamos 5 años trabajando con ellos. Cero incidentes y una atención personalizada que no se encuentra en empresas grandes."',
+        'test2.role': 'Directora de Compras — Textiles del Sur',
+        'test3.quote': '"El tracking en tiempo real nos da tranquilidad total. Nuestros clientes saben exactamente cuándo llega su mercadería."',
+        'test3.role': 'CEO — AgroPatagonia SpA',
+        'cta.title': 'Cotizá tu envío sin compromiso',
+        'cta.desc': 'Contanos tu carga y te respondemos en 24 horas con precio, tiempos y documentación aduanera incluida.',
+        'cta.phone': 'Teléfono',
+        'cta.email': 'Email',
+        'cta.whatsapp': 'WhatsApp',
+        'footer.desc': 'Transporte de carga terrestre internacional. Conectamos Latinoamérica con seguridad y puntualidad, desde 1999.',
+        'footer.services': 'Servicios',
+        'footer.routes': 'Rutas',
+        'footer.contact': 'Contacto',
+        'modal.ftl.title': 'Camión Completo (FTL)',
+        'modal.ftl.sub': 'Transporte directo sin intermediarios',
+        'modal.ftl.desc': '<h4>Transporte directo sin intermediarios</h4><p>Un camión completo asignado exclusivamente a tu carga. Viaje directo del punto de origen al destino final sin transbordos ni paradas intermedias.</p><p>Ideal para envíos grandes que requieren velocidad, seguridad y cumplimiento estricto de plazos. Nuestra flota cuenta con rastreo GPS, seguros full cover y conductores con más de 10 años de experiencia internacional.</p>',
+        'modal.ftl.tags': 'Sin transbordos,GPS en tiempo real,Seguro full cover,Rutas internacionales',
+        'modal.ltl.title': 'Carga Consolidada (LTL)',
+        'modal.ltl.sub': 'Comparte espacio y ahorra',
+        'modal.ltl.desc': '<h4>Soluciones flexibles para cada volumen</h4><p>No necesitas llenar un camión completo. Con carga consolidada compartes espacio con otros envíos y pagás únicamente por los metros cúbicos que ocupás.</p><p>Coordinamos la consolidación en centros de distribución en Santiago, Buenos Aires, São Paulo y Asunción, con frecuencias semanales garantizadas.</p>',
+        'modal.ltl.tags': 'Pago por espacio,Frecuencias semanales,4 centros de distribución,Ideal para pymes',
+        'modal.ref.title': 'Transporte Refrigerado',
+        'modal.ref.sub': 'Cadena de frío garantizada',
+        'modal.ref.desc': '<h4>Control total de temperatura</h4><p>Flota de unidades refrigeradas con control desde -25°C hasta +25°C. Monitoreo continuo con sensores que registran cada cambio térmico durante todo el trayecto.</p><p>Especialistas en productos perecibles, farmacéuticos, lácteos y alimentos congelados. Certificación sanitaria y alerta automática ante desviaciones.</p>',
+        'modal.ref.tags': '-25°C a +25°C,Sensores automáticos,Certificación sanitaria,Alerta térmica',
+        'modal.docs.title': 'Documentación Aduanera',
+        'modal.docs.sub': 'Trámites internacionales incluidos',
+        'modal.docs.desc': '<h4>Sin sorpresas en la aduana</h4><p>Nuestro equipo de despachantes se encarga de DUS, DTA, manifiestos de carga, certificados de origen y permisos especiales.</p><p>Trabajamos con las aduanas de Chile, Argentina, Brasil y Paraguay. Conocemos cada regulación para que tu carga cruce sin demoras.</p>',
+        'modal.docs.tags': 'DUS y DTA,Despachantes certificados,4 aduanas,Sin demoras',
+        'modal.ins.title': 'Seguro de Carga',
+        'modal.ins.sub': 'Cobertura total contra todo riesgo',
+        'modal.ins.desc': '<h4>Tu mercadería protegida de punta a punta</h4><p>Seguro full cover: robo, daño por accidente, siniestros naturales, incendio y daño por manipulación. Sin franquicias ni letra chica.</p><p>Cobertura activa desde la carga hasta la entrega final, con indemnización en 48 horas hábiles. Trabajamos con las principales aseguradoras de Latinoamérica.</p>',
+        'modal.ins.tags': 'Full cover,Sin franquicia,Indemnización 48h,Aseguradoras top',
+        'modal.advice.title': 'Asesoría Personalizada',
+        'modal.advice.sub': 'Ejecutivo dedicado para cada cliente',
+        'modal.advice.desc': '<h4>Un contacto directo, cero call centers</h4><p>Cada cliente tiene un ejecutivo dedicado que conoce tu operación, tus rutas y tus tiempos. Sin explicar tu problema cada vez que llamás.</p><p>Asesoría en rutas, costos, tiempos de tránsito y documentación. Disponible de lunes a sábado por WhatsApp, teléfono y email.</p>',
+        'modal.advice.tags': 'Ejecutivo dedicado,Lunes a sábado,WhatsApp directo,Asesoría de rutas',
+        'fleet.title': 'Nuestra Flota',
+        'fleet.subtitle': 'Unidades equipadas para cada tipo de carga',
+        'fleet.truck.title': 'Camión Tractocamión',
+        'fleet.truck.desc': 'Unidades de alta potencia para carga pesada y larga distancia. Motor Euro VI, rastreo GPS y frenos ABS.',
+        'fleet.truck.sub': 'Potencia y confianza para larga distancia',
+        'fleet.truck.desc2': '<h4>Diseñado para las rutas más exigentes</h4><p>Nuestros tractocamiones Euro VI combinan potencia con eficiencia energética. Equipados con rastreo GPS en tiempo real, sistema de frenos ABS y cabinas confortables para conductores con más de 10 años de experiencia internacional.</p><p>Ideal para carga pesada de larga distancia entre Chile, Argentina, Brasil y Paraguay.</p>',
+        'fleet.truck.tags': 'Motor Euro VI,Rastreo GPS,Frenos ABS,Conductores certificados',
+        'fleet.ramp48.title': 'Rampa 48 Pies',
+        'fleet.ramp48.desc': 'Plataforma de carga estándar para mercadería general. Capacidad de hasta 26 toneladas.',
+        'fleet.ramp48.sub': 'Versatilidad para carga general',
+        'fleet.ramp48.desc2': '<h4>La plataforma más utilizada en la región</h4><p>La rampa de 48 pies es la estándar para mercadería general, carga paletizada y contenedores. Con 14.6 metros de largo y capacidad de 26 toneladas, se adapta a la mayoría de las necesidades logísticas.</p><p>Piso de aluminio, sistema de amarre integrado y cortinas laterales para protección de la carga.</p>',
+        'fleet.ramp48.tags': '14.6 metros,26 toneladas,Piso de aluminio,Cortinas laterales',
+        'fleet.ramp53.title': 'Rampa 53 Pies',
+        'fleet.ramp53.desc': 'Plataforma extendida para carga sobredimensionada y volúmenes grandes. Mayor capacidad.',
+        'fleet.ramp53.sub': 'Para volúmenes grandes y carga especial',
+        'fleet.ramp53.desc2': '<h4>Más espacio para tu mercadería</h4><p>La rampa de 53 pies ofrece 16.2 metros de largo y 28 toneladas de capacidad. Diseñada para volúmenes grandes, carga sobredimensionada y envíos que requieren espacio extra.</p><p>Estructura reforzada, sistema de ventilación y iluminación interior para carga de noche.</p>',
+        'fleet.ramp53.tags': '16.2 metros,28 toneladas,Estructura reforzada,Ventilación interior',
+        'fleet.fridge.title': 'Unidad Refrigerada',
+        'fleet.fridge.desc': 'Camiones con control de temperatura -25°C a +25°C. Monitoreo continuo con sensores.',
+        'fleet.fridge.sub': 'Cadena de frío garantizada',
+        'fleet.fridge.desc2': '<h4>Control total de temperatura</h4><p>Unidades refrigeradas con control preciso de -25°C a +25°C. Sistema de monitoreo continuo con sensores que registran cada variación térmica y alertas automáticas ante desviaciones.</p><p>Ideal para productos perecibles, farmacéuticos, lácteos y alimentos congelados. Certificación sanitaria vigente.</p>',
+        'fleet.fridge.tags': '-25°C a +25°C,Sensores automáticos,Certificación sanitaria,Alertas térmicas',
+        'faq.title': 'Preguntas Frecuentes',
+        'faq.subtitle': 'Resolvemos tus dudas',
+        'faq.q1': '¿Cuáles son los tiempos de tránsito?',
+        'faq.a1': 'Los tiempos varían según la ruta: Chile-Argentina 2-4 días, Chile-Brasil 5-7 días, Chile-Paraguay 6-8 días. Te damos un tiempo exacto al cotizar tu envío.',
+        'faq.q2': '¿Qué documentación necesito?',
+        'faq.a2': 'Nosotros nos encargamos de toda la documentación aduanera: DUS, DTA, manifiestos de carga y certificados de origen. Vos solo nos das los datos de tu carga.',
+        'faq.q3': '¿Cómo puedo rastrear mi envío?',
+        'faq.a3': 'Todos nuestros camiones cuentan con GPS en tiempo real. Te enviamos un link de tracking por WhatsApp y podés ver la ubicación 24/7.',
+        'faq.q4': '¿Trabajan con pedidos mínimos?',
+        'faq.a4': 'Sí, con carga consolidada (LTL) no hay pedido mínimo. Pagás solo por los metros cúbicos que ocupás en el camión.'
+      },
+      pt: {
+        'nav.services': 'Serviços',
+        'nav.fleet': 'Frota',
+        'nav.why': 'Por que nos escolher',
+        'nav.clients': 'Clientes',
+        'nav.cta': 'Cotação →',
+        'hero.tagline': 'Transporte internacional de carga',
+        'hero.v5.title': 'Transporte de carga que cruza fronteiras.',
+        'hero.v5.desc': 'Soluções de transporte terrestre internacional entre Chile, Argentina, Brasil e Paraguai. Carga geral e refrigerada com gestão aduaneira.',
+        'hero.v5.coverage': 'Cobertura internacional',
+        'hero.v5.tracking': 'Rastreamento 24/7',
+        'hero.cta1': 'Solicitar Cotação',
+        'hero.cta2': 'Ver Serviços',
+        'hero.mapCL': 'Escritório Central — Chile',
+        'hero.mapBR': 'Escritório — Brasil',
+        'hero.mapBRCity': 'Em breve',
+        'stat.years': 'Anos de experiência',
+        'stat.countries': 'Países conectados',
+        'stat.ontime': 'Envios por mês',
+        'stat.fleet': 'Caminhões próprios',
+        'hsb.ftl': 'Caminhão Completo',
+        'hsb.ltl': 'Carga Consolidada',
+        'hsb.refrigerated': 'Refrigerado',
+        'hsb.temp': '-25°C a +25°C',
+        'hsb.docs': 'Documentação',
+        'hsb.docsSub': 'Aduaneira',
+        'services.title': 'Serviços',
+        'services.subtitle': 'Soluções completas para cada tipo de carga',
+        'svc.ftl.title': 'Caminhão Completo (FTL)',
+        'svc.ftl.desc': 'Unidade exclusiva para sua carga. Ideal para envios grandes com segurança direta ao destino.',
+        'svc.ltl.title': 'Carga Consolidada (LTL)',
+        'svc.ltl.desc': 'Compartilhe espaço com outros envios e pague apenas pelo que precisar.',
+        'svc.ref.title': 'Transporte Refrigerado',
+        'svc.ref.desc': 'Cadeia de frio controlada de -25°C a +25°C para todo tipo de produto.',
+        'svc.docs.title': 'Documentação Aduaneira',
+        'svc.docs.desc': 'Gestão completa de despacho aduaneiro e documentação para cruze internacional.',
+        'svc.ins.title': 'Seguro de Carga',
+        'svc.ins.desc': 'Cobertura full contra roubo, dano e sinistros. Sua mercadoria protegida.',
+        'svc.advice.title': 'Assessoria Personalizada',
+        'svc.advice.desc': 'Executivo dedicado que conhece sua operação e orienta em cada envio.',
+        'svc.more': 'Ver mais',
+        'feat.title': 'Mais de 26 anos conectando a América Latina',
+        'feat.desc1': 'Desde 1999 somos a ponte logística entre Chile, Argentina, Brasil e Paraguay. Conhecemos cada rota, cada aduana e cada necessidade dos nossos clientes.',
+        'feat.desc2': 'Nosso processo de cotação é simples: nos conte sua carga e daremos uma resposta em menos de 24 horas com preço, prazo e documentação inclusa.',
+        'feat.li1': 'Cotação sem compromisso em 24 horas',
+        'feat.li2': 'Documentação aduaneira inclusa no preço',
+        'feat.li3': 'Seguro de carga full cover',
+        'feat.li4': 'Rastreamento GPS em tempo real 24/7',
+        'feat.li5': 'Suporte por WhatsApp e telefone',
+        'feat.li6': 'Executivo dedicado para cada cliente',
+        'metrics.title': 'Números que falam',
+        'testimonials.title': 'Opiniões de clientes',
+        'test1.quote': '"Excelente serviço. A documentação aduaneira sempre impecável e os prazos cumpridos no dia. Muito profissionais."',
+        'test1.role': 'Gerente Logístico — Exportadora Austral',
+        'test2.quote': '"Trabalhamos há 5 anos com eles. Zero incidentes e um atendimento personalizado que não se encontra em empresas grandes."',
+        'test2.role': 'Diretora de Compras — Textiles del Sur',
+        'test3.quote': '"O tracking em tempo real nos dá tranquilidade total. Nossos clientes sabem exatamente quando chega sua mercadoria."',
+        'test3.role': 'CEO — AgroPatagonia SpA',
+        'cta.title': 'Cotação sem compromisso',
+        'cta.desc': 'Nos conte sua carga e respondemos em 24 horas com preço, prazo e documentação aduaneira inclusa.',
+        'cta.phone': 'Telefone',
+        'cta.email': 'Email',
+        'cta.whatsapp': 'WhatsApp',
+        'footer.desc': 'Transporte terrestre internacional de carga. Conectamos a América Latina com segurança e pontualidade, desde 1999.',
+        'footer.services': 'Serviços',
+        'footer.routes': 'Rotas',
+        'footer.contact': 'Contato',
+        'modal.ftl.title': 'Caminhão Completo (FTL)',
+        'modal.ftl.sub': 'Transporte direto sem intermediários',
+        'modal.ftl.desc': '<h4>Transporte direto sem intermediários</h4><p>Um caminhão completo atribuído exclusivamente à sua carga. Viagem direta do ponto de origem ao destino final sem transbordos ou paradas intermediárias.</p><p>Ideal para envios grandes que exigem velocidade, segurança e cumprimento estrito de prazos. Nossa frota conta com rastreamento GPS, seguros full cover e motoristas com mais de 10 anos de experiência internacional.</p>',
+        'modal.ftl.tags': 'Sem transbordos,GPS em tempo real,Seguro full cover,Rotas internacionais',
+        'modal.ltl.title': 'Carga Consolidada (LTL)',
+        'modal.ltl.sub': 'Compartilhe espaço e economize',
+        'modal.ltl.desc': '<h4>Soluções flexíveis para cada volume</h4><p>Você não precisa preencher um caminhão completo. Com carga consolidada, você compartilha espaço com outros envios e paga apenas pelos metros cúbicos que ocupa.</p><p>Coordenamos a consolidação em centros de distribuição em Santiago, Buenos Aires, São Paulo e Assunção, com frequências semanais garantidas.</p>',
+        'modal.ltl.tags': 'Pagamento por espaço,Frequências semanais,4 centros de distribuição,Ideal para PMEs',
+        'modal.ref.title': 'Transporte Refrigerado',
+        'modal.ref.sub': 'Cadeia de frio garantida',
+        'modal.ref.desc': '<h4>Controle total de temperatura</h4><p>Frota de unidades refrigeradas com controle de -25°C a +25°C. Monitoramento contínuo com sensores que registram cada variação térmica durante toda a viagem.</p><p>Especialistas em produtos perecíveis, farmacêuticos, laticínios e alimentos congelados. Certificação sanitária e alerta automático para desvios.</p>',
+        'modal.ref.tags': '-25°C a +25°C,Sensores automáticos,Certificação sanitária,Alerta térmico',
+        'modal.docs.title': 'Documentação Aduaneira',
+        'modal.docs.sub': 'Trâmites internacionais inclusos',
+        'modal.docs.desc': '<h4>Sem surpresas na aduana</h4><p>Nossa equipe de despachantes cuida de DUS, DTA, manifiestos de carga, certificados de origem e permissões especiais.</p><p>Trabalhamos com as alfândegas do Chile, Argentina, Brasil e Paraguay. Conhecemos cada regulação para que sua carga cruze sem atrasos.</p>',
+        'modal.docs.tags': 'DUS e DTA,Despachantes certificados,4 alfândegas,Sem atrasos',
+        'modal.ins.title': 'Seguro de Carga',
+        'modal.ins.sub': 'Cobertura total contra todos os riscos',
+        'modal.ins.desc': '<h4>Sua mercadoria protegida de ponta a ponta</h4><p>Seguro full cover: roubo, dano por acidente, sinistros naturais, incêndio e dano por manuseio. Sem franquias nem letra miúda.</p><p>Cobertura ativa da carga até a entrega final, com indenização em 48 horas úteis. Trabalhamos com as principais seguradoras da América Latina.</p>',
+        'modal.ins.tags': 'Full cover,Sem franquia,Indenização 48h,Seguradoras top',
+        'modal.advice.title': 'Assessoria Personalizada',
+        'modal.advice.sub': 'Executivo dedicado para cada cliente',
+        'modal.advice.desc': '<h4>Um contato direto, zero call centers</h4><p>Cada cliente tem um executivo dedicado que conhece sua operação, suas rotas e seus tempos. Sem precisar explicar seu problema toda vez que liga.</p><p>Assessoria em rotas, custos, tempos de trânsito e documentação. Disponível de segunda a sábado por WhatsApp, telefone e email.</p>',
+        'modal.advice.tags': 'Executivo dedicado,Segunda a sábado,WhatsApp direto,Assessoria de rotas',
+        'fleet.title': 'Nossa Frota',
+        'fleet.subtitle': 'Unidades equipadas para cada tipo de carga',
+        'fleet.truck.title': 'Caminhão Trator',
+        'fleet.truck.desc': 'Unidades de alta potência para carga pesada e longa distância. Motor Euro VI, rastreamento GPS e freios ABS.',
+        'fleet.truck.sub': 'Potência e confiança para longa distância',
+        'fleet.truck.desc2': '<h4>Projetado para as rotas mais exigentes</h4><p>Nossos caminhões tratores Euro VI combinam potência com eficiência energética. Equipados com rastreamento GPS em tempo real, sistema de freios ABS e cabines confortáveis para motoristas com mais de 10 anos de experiência internacional.</p><p>Ideal para carga pesada de longa distância entre Chile, Argentina, Brasil e Paraguai.</p>',
+        'fleet.truck.tags': 'Motor Euro VI,Rastreamento GPS,Freios ABS,Motoristas certificados',
+        'fleet.ramp48.title': 'Rampa 48 Pés',
+        'fleet.ramp48.desc': 'Plataforma de carga padrão para mercadoria geral. Capacidade de até 26 toneladas.',
+        'fleet.ramp48.sub': 'Versatilidade para carga geral',
+        'fleet.ramp48.desc2': '<h4>A plataforma mais utilizada na região</h4><p>A rampa de 48 pés é o padrão para mercadoria geral, carga paletizada e contêineres. Com 14,6 metros de comprimento e capacidade de 26 toneladas, adapta-se à maioria das necessidades logísticas.</p><p>Piso de alumínio, sistema de amarração integrado e cortinas laterais para proteção da carga.</p>',
+        'fleet.ramp48.tags': '14,6 metros,26 toneladas,Piso de alumínio,Cortinas laterais',
+        'fleet.ramp53.title': 'Rampa 53 Pés',
+        'fleet.ramp53.desc': 'Plataforma estendida para carga sobredimensionada e grandes volumes. Maior capacidade.',
+        'fleet.ramp53.sub': 'Para grandes volumes e carga especial',
+        'fleet.ramp53.desc2': '<h4>Mais espaço para sua mercadoria</h4><p>A rampa de 53 pés oferece 16,2 metros de comprimento e 28 toneladas de capacidade. Projetada para grandes volumes, carga sobredimensionada e envios que exigem espaço extra.</p><p>Estrutura reforçada, sistema de ventilação e iluminação interior para carga noturna.</p>',
+        'fleet.ramp53.tags': '16,2 metros,28 toneladas,Estrutura reforçada,Ventilação interior',
+        'fleet.fridge.title': 'Unidade Refrigerada',
+        'fleet.fridge.desc': 'Caminhões com controle de temperatura -25°C a +25°C. Monitoramento contínuo com sensores.',
+        'fleet.fridge.sub': 'Cadeia de frio garantida',
+        'fleet.fridge.desc2': '<h4>Controle total de temperatura</h4><p>Unidades refrigeradas com controle preciso de -25°C a +25°C. Sistema de monitoramento contínuo com sensores que registram cada variação térmica e alertas automáticos para desvios.</p><p>Ideal para produtos perecíveis, farmacêuticos, laticínios e alimentos congelados. Certificação sanitária vigente.</p>',
+        'fleet.fridge.tags': '-25°C a +25°C,Sensores automáticos,Certificação sanitária,Alertas térmicos',
+        'faq.title': 'Perguntas Frequentes',
+        'faq.subtitle': 'Resolvemos suas dúvidas',
+        'faq.q1': 'Quais são os tempos de trânsito?',
+        'faq.a1': 'Os tempos variam conforme a rota: Chile-Argentina 2-4 dias, Chile-Brasil 5-7 dias, Chile-Paraguai 6-8 dias. Damos um tempo exato ao cotar seu envio.',
+        'faq.q2': 'Que documentação preciso?',
+        'faq.a2': 'Nós cuidamos de toda a documentação aduaneira: DUS, DTA, manifestos de carga e certificados de origem. Você só nos dá os dados da sua carga.',
+        'faq.q3': 'Como posso rastrear meu envio?',
+        'faq.a3': 'Todos os nossos caminhões possuem GPS em tempo real. Enviamos um link de rastreamento por WhatsApp e você pode ver a localização 24/7.',
+        'faq.q4': 'Trabalham com pedidos mínimos?',
+        'faq.a4': 'Sim, com carga consolidada (LTL) não há pedido mínimo. Você paga apenas pelos metros cúbicos que ocupa no caminhão.'
+      },
+      en: {
+        'nav.services': 'Services',
+        'nav.fleet': 'Fleet',
+        'nav.why': 'Why choose us',
+        'nav.clients': 'Clients',
+        'nav.cta': 'Quote →',
+        'hero.tagline': 'International freight transport',
+        'hero.v5.title': 'Freight transport that crosses borders.',
+        'hero.v5.desc': 'International road freight solutions between Chile, Argentina, Brazil and Paraguay. General and refrigerated cargo with customs management.',
+        'hero.v5.coverage': 'International coverage',
+        'hero.v5.tracking': '24/7 tracking',
+        'hero.cta1': 'Get a Quote',
+        'hero.cta2': 'View Services',
+        'hero.mapCL': 'Head Office — Chile',
+        'hero.mapBR': 'Office — Brazil',
+        'hero.mapBRCity': 'Coming soon',
+        'stat.years': 'Years of experience',
+        'stat.countries': 'Countries connected',
+        'stat.ontime': 'Monthly shipments',
+        'stat.fleet': 'Own fleet',
+        'hsb.ftl': 'Full Truck Load',
+        'hsb.ltl': 'Less Than Truckload',
+        'hsb.refrigerated': 'Refrigerated',
+        'hsb.temp': '-25°C to +25°C',
+        'hsb.docs': 'Customs',
+        'hsb.docsSub': 'Documentation',
+        'services.title': 'Services',
+        'services.subtitle': 'Complete solutions for every type of cargo',
+        'svc.ftl.title': 'Full Truck Load (FTL)',
+        'svc.ftl.desc': 'Exclusive unit for your cargo. Ideal for large shipments with direct security to destination.',
+        'svc.ltl.title': 'Less Than Truckload (LTL)',
+        'svc.ltl.desc': 'Share space with other shipments and pay only for what you need.',
+        'svc.ref.title': 'Refrigerated Transport',
+        'svc.ref.desc': 'Cold chain controlled from -25°C to +25°C for all types of products.',
+        'svc.docs.title': 'Customs Documentation',
+        'svc.docs.desc': 'Complete management of customs clearance and documentation for international crossing.',
+        'svc.ins.title': 'Cargo Insurance',
+        'svc.ins.desc': 'Full coverage against theft, damage and incidents. Your merchandise protected.',
+        'svc.advice.title': 'Personalized Advisory',
+        'svc.advice.desc': 'Dedicated executive who knows your operation and advises you on every shipment.',
+        'svc.more': 'Learn more',
+        'feat.title': 'Over 26 years connecting Latin America',
+        'feat.desc1': 'Since 1999 we have been the logistics bridge between Chile, Argentina, Brazil and Paraguay. We know every route, every customs office and every need of our clients.',
+        'feat.desc2': 'Our quoting process is simple: tell us about your cargo and we give you a response within 24 hours with price, timeline and documentation included.',
+        'feat.li1': 'No-obligation quote within 24 hours',
+        'feat.li2': 'Customs documentation included in the price',
+        'feat.li3': 'Full cover cargo insurance',
+        'feat.li4': 'Real-time GPS tracking 24/7',
+        'feat.li5': 'WhatsApp and phone support',
+        'feat.li6': 'Dedicated executive for each client',
+        'metrics.title': 'Numbers that speak',
+        'testimonials.title': 'Client testimonials',
+        'test1.quote': '"Excellent service. Customs documentation always flawless and deadlines met every time. Very professional."',
+        'test1.role': 'Logistics Manager — Exportadora Austral',
+        'test2.quote': '"We have been working with them for 5 years. Zero incidents and personalized attention you won\'t find at big companies."',
+        'test2.role': 'Purchasing Director — Textiles del Sur',
+        'test3.quote': '"Real-time tracking gives us total peace of mind. Our clients know exactly when their merchandise arrives."',
+        'test3.role': 'CEO — AgroPatagonia SpA',
+        'cta.title': 'Get your no-obligation quote',
+        'cta.desc': 'Tell us about your cargo and we respond within 24 hours with price, timelines and customs documentation included.',
+        'cta.phone': 'Phone',
+        'cta.email': 'Email',
+        'cta.whatsapp': 'WhatsApp',
+        'footer.desc': 'International land freight transport. We connect Latin America safely and on time, since 1999.',
+        'footer.services': 'Services',
+        'footer.routes': 'Routes',
+        'footer.contact': 'Contact',
+        'modal.ftl.title': 'Full Truck Load (FTL)',
+        'modal.ftl.sub': 'Direct transport without intermediaries',
+        'modal.ftl.desc': '<h4>Direct transport without intermediaries</h4><p>A full truck assigned exclusively to your cargo. Direct trip from origin to final destination without transfers or intermediate stops.</p><p>Ideal for large shipments that require speed, security and strict deadline compliance. Our fleet features GPS tracking, full cover insurance and drivers with over 10 years of international experience.</p>',
+        'modal.ftl.tags': 'No transfers,Real-time GPS,Full cover insurance,International routes',
+        'modal.ltl.title': 'Less Than Truckload (LTL)',
+        'modal.ltl.sub': 'Share space and save',
+        'modal.ltl.desc': '<h4>Flexible solutions for every volume</h4><p>You don\'t need to fill a full truck. With consolidated cargo you share space with other shipments and pay only for the cubic meters you use.</p><p>We coordinate consolidation at distribution centers in Santiago, Buenos Aires, São Paulo and Asunción, with guaranteed weekly frequencies.</p>',
+        'modal.ltl.tags': 'Pay per space,Weekly frequencies,4 distribution centers,Ideal for SMEs',
+        'modal.ref.title': 'Refrigerated Transport',
+        'modal.ref.sub': 'Guaranteed cold chain',
+        'modal.ref.desc': '<h4>Total temperature control</h4><p>Fleet of refrigerated units with control from -25°C to +25°C. Continuous monitoring with sensors that record every thermal change throughout the trip.</p><p>Specialists in perishable products, pharmaceuticals, dairy and frozen foods. Sanitary certification and automatic alerts for deviations.</p>',
+        'modal.ref.tags': '-25°C to +25°C,Automatic sensors,Sanitary certification,Thermal alert',
+        'modal.docs.title': 'Customs Documentation',
+        'modal.docs.sub': 'International procedures included',
+        'modal.docs.desc': '<h4>No surprises at customs</h4><p>Our team of customs brokers handles DUS, DTA, cargo manifests, certificates of origin and special permits.</p><p>We work with customs offices in Chile, Argentina, Brazil and Paraguay. We know every regulation so your cargo crosses without delays.</p>',
+        'modal.docs.tags': 'DUS and DTA,Certified brokers,4 customs offices,No delays',
+        'modal.ins.title': 'Cargo Insurance',
+        'modal.ins.sub': 'Total coverage against all risks',
+        'modal.ins.desc': '<h4>Your merchandise protected end to end</h4><p>Full cover insurance: theft, accidental damage, natural incidents, fire and handling damage. No deductibles or fine print.</p><p>Coverage active from loading to final delivery, with compensation within 48 business hours. We work with the leading insurers in Latin America.</p>',
+        'modal.ins.tags': 'Full cover,No deductible,48h compensation,Top insurers',
+        'modal.advice.title': 'Personalized Advisory',
+        'modal.advice.sub': 'Dedicated executive for each client',
+        'modal.advice.desc': '<h4>Direct contact, zero call centers</h4><p>Each client has a dedicated executive who knows your operation, your routes and your timelines. No need to explain your issue every time you call.</p><p>Advisory on routes, costs, transit times and documentation. Available Monday through Saturday via WhatsApp, phone and email.</p>',
+        'modal.advice.tags': 'Dedicated executive,Mon–Sat,Direct WhatsApp,Route advisory',
+        'fleet.title': 'Our Fleet',
+        'fleet.subtitle': 'Units equipped for every type of cargo',
+        'fleet.truck.title': 'Tractor Truck',
+        'fleet.truck.desc': 'High-power units for heavy and long-distance cargo. Euro VI engine, GPS tracking and ABS braking system.',
+        'fleet.truck.sub': 'Power and reliability for long distances',
+        'fleet.truck.desc2': '<h4>Designed for the most demanding routes</h4><p>Our Euro VI tractor trucks combine power with energy efficiency. Equipped with real-time GPS tracking, ABS braking system and comfortable cabs for drivers with over 10 years of international experience.</p><p>Ideal for heavy long-distance cargo between Chile, Argentina, Brazil and Paraguay.</p>',
+        'fleet.truck.tags': 'Euro VI engine,GPS tracking,ABS brakes,Certified drivers',
+        'fleet.ramp48.title': '48-Foot Trailer',
+        'fleet.ramp48.desc': 'Standard cargo platform for general merchandise. Capacity up to 26 tons.',
+        'fleet.ramp48.sub': 'Versatility for general cargo',
+        'fleet.ramp48.desc2': '<h4>The most widely used platform in the region</h4><p>The 48-foot trailer is the standard for general merchandise, palletized cargo and containers. With 14.6 meters in length and 26-ton capacity, it adapts to most logistics needs.</p><p>Aluminum floor, integrated tie-down system and side curtains for cargo protection.</p>',
+        'fleet.ramp48.tags': '14.6 meters,26 tons,Aluminum floor,Side curtains',
+        'fleet.ramp53.title': '53-Foot Trailer',
+        'fleet.ramp53.desc': 'Extended platform for oversized cargo and large volumes. Greater capacity.',
+        'fleet.ramp53.sub': 'For large volumes and special cargo',
+        'fleet.ramp53.desc2': '<h4>More space for your merchandise</h4><p>The 53-foot trailer offers 16.2 meters in length and 28-ton capacity. Designed for large volumes, oversized cargo and shipments requiring extra space.</p><p>Reinforced structure, ventilation system and interior lighting for nighttime loading.</p>',
+        'fleet.ramp53.tags': '16.2 meters,28 tons,Reinforced structure,Interior ventilation',
+        'fleet.fridge.title': 'Refrigerated Unit',
+        'fleet.fridge.desc': 'Trucks with temperature control from -25°C to +25°C. Continuous monitoring with sensors.',
+        'fleet.fridge.sub': 'Guaranteed cold chain',
+        'fleet.fridge.desc2': '<h4>Total temperature control</h4><p>Refrigerated units with precise control from -25°C to +25°C. Continuous monitoring system with sensors that record every thermal change and automatic alerts for deviations.</p><p>Ideal for perishable products, pharmaceuticals, dairy and frozen foods. Valid sanitary certification.</p>',
+        'fleet.fridge.tags': '-25°C to +25°C,Automatic sensors,Sanitary certification,Thermal alerts',
+        'faq.title': 'Frequently Asked Questions',
+        'faq.subtitle': 'We answer your questions',
+        'faq.q1': 'What are the transit times?',
+        'faq.a1': 'Times vary by route: Chile-Argentina 2-4 days, Chile-Brazil 5-7 days, Chile-Paraguay 6-8 days. We give you an exact time when you request a quote.',
+        'faq.q2': 'What documentation do I need?',
+        'faq.a2': 'We handle all customs documentation: DUS, DTA, cargo manifests and certificates of origin. You just give us your cargo details.',
+        'faq.q3': 'How can I track my shipment?',
+        'faq.a3': 'All our trucks have real-time GPS tracking. We send you a tracking link via WhatsApp and you can see the location 24/7.',
+        'faq.q4': 'Do you work with minimum orders?',
+        'faq.a4': 'Yes, with consolidated cargo (LTL) there is no minimum order. You only pay for the cubic meters you use in the truck.'
+      }
+    };
+
+    // ===== STATE =====
+    let currentLang = localStorage.getItem('trans_lang') || 'es';
+    let currentTheme = localStorage.getItem('trans_theme') || 'dark';
+
+    if (!localStorage.getItem('trans_theme') && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      currentTheme = 'light';
+    }
+
+    // ===== TRANSLATION =====
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('trans_lang', lang);
+      document.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.trim() === lang.toUpperCase());
+      });
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
+      });
+      document.documentElement.lang = lang;
+      const titleMap = {
+        es: 'TRANSALLENDES | Transporte de Carga Chile · Argentina · Brasil · Paraguay',
+        pt: 'TRANSALLENDES | Transporte de Carga Chile · Argentina · Brasil · Paraguai',
+        en: 'TRANSALLENDES | Freight Transport Chile · Argentina · Brazil · Paraguay'
+      };
+      document.title = titleMap[lang] || titleMap.es;
+      updateServiceCards();
+      updateFleetCards();
+    }
+
+    // ===== UPDATE CARDS =====
+    const svcKeys = ['ftl', 'ltl', 'ref', 'docs', 'ins', 'advice'];
+    const fleetKeys = ['truck', 'ramp48', 'ramp53', 'fridge'];
+
+    function updateServiceCards() {
+      document.querySelectorAll('.svc-card').forEach((card, i) => {
+        const k = svcKeys[i];
+        if (k) {
+          const titleEl = card.querySelector('h3');
+          const descEl = card.querySelector('p');
+          const hintEl = card.querySelector('.svc-card-hint');
+          if (titleEl) titleEl.textContent = T[currentLang]['svc.' + k + '.title'];
+          if (descEl) descEl.textContent = T[currentLang]['svc.' + k + '.desc'];
+          if (hintEl) hintEl.innerHTML = T[currentLang]['svc.more'] + ' <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>';
+        }
+      });
+    }
+
+    function updateFleetCards() {
+      document.querySelectorAll('.fleet-card').forEach((card, i) => {
+        const k = fleetKeys[i];
+        if (k) {
+          const titleEl = card.querySelector('h3');
+          const descEl = card.querySelector('p');
+          const hintEl = card.querySelector('.svc-card-hint');
+          if (titleEl) titleEl.textContent = T[currentLang]['fleet.' + k + '.title'];
+          if (descEl) descEl.textContent = T[currentLang]['fleet.' + k + '.desc'];
+          if (hintEl) hintEl.innerHTML = T[currentLang]['svc.more'] + ' <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>';
+        }
+      });
+    }
+
+    // ===== MODALS =====
+    const svcIcons = [
+      'M20 8h-3V4H1v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z',
+      'M20 2H4c-1.1 0-2 .9-2 2v3h2V4h16v16H4v-3H2v3c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-9 10H7l4-4 4 4h-4v4h-2v-4z',
+      'M22 11h-4.17l-3.59-3.59L14 6l-4 4-2.83-2.83L6 8.17l4.24 4.24L6 16.66l1.41 1.41L12 13.41l4 4 1.41-1.41L13.83 12H18v-1z',
+      'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-6h8v2H8v-2zm0-4h8v2H8v-2z',
+      'M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z',
+      'M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z'
+    ];
+
+    const fleetIcons = [
+      'M20 8h-3V4H1v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z',
+      'M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM6 6h5v5H6V6zm0 7h12v2H6v-2zm0 4h12v2H6v-2z',
+      'M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM6 6h12v4H6V6zm0 6h12v2H6v-2zm0 4h12v4H6v-4z',
+      'M22 11h-4.17l-3.59-3.59L14 6l-4 4-2.83-2.83L6 8.17l4.24 4.24L6 16.66l1.41 1.41L12 13.41l4 4 1.41-1.41L13.83 12H18v-1z'
+    ];
+
+    function openService(i) {
+      const k = svcKeys[i];
+      const modal = document.getElementById('svcModal');
+      const photo = document.getElementById('modalPhoto');
+      const content = document.getElementById('modalContent');
+
+      photo.innerHTML = '<svg viewBox="0 0 24 24" width="72" height="72" fill="rgba(255,255,255,0.05)"><path d="' + svcIcons[i] + '"/></svg>';
+
+      const tags = T[currentLang]['modal.' + k + '.tags'].split(',').map(t =>
+        '<span class="svc-tag">' + t.trim() + '</span>'
+      ).join('');
+
+      content.innerHTML =
+        '<h3>' + T[currentLang]['modal.' + k + '.title'] + '</h3>' +
+        '<div class="svc-modal-sub">' + T[currentLang]['modal.' + k + '.sub'] + '</div>' +
+        T[currentLang]['modal.' + k + '.desc'] +
+        '<div class="svc-tags">' + tags + '</div>';
+
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeService(e) {
+      if (e && e.target && !e.target.closest('.svc-modal') && !e.target.closest('.svc-modal-close')) return;
+      document.getElementById('svcModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openFleet(i) {
+      const k = fleetKeys[i];
+      const modal = document.getElementById('fleetModal');
+      const photo = document.getElementById('fleetPhoto');
+      const content = document.getElementById('fleetContent');
+
+      photo.innerHTML = '<svg viewBox="0 0 24 24" width="72" height="72" fill="rgba(255,255,255,0.05)"><path d="' + fleetIcons[i] + '"/></svg>';
+
+      const tags = T[currentLang]['fleet.' + k + '.tags'].split(',').map(t =>
+        '<span class="svc-tag">' + t.trim() + '</span>'
+      ).join('');
+
+      content.innerHTML =
+        '<h3>' + T[currentLang]['fleet.' + k + '.title'] + '</h3>' +
+        '<div class="svc-modal-sub">' + T[currentLang]['fleet.' + k + '.sub'] + '</div>' +
+        T[currentLang]['fleet.' + k + '.desc2'] +
+        '<div class="svc-tags">' + tags + '</div>';
+
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeFleet(e) {
+      if (e && e.target && !e.target.closest('.svc-modal') && !e.target.closest('.svc-modal-close')) return;
+      document.getElementById('fleetModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ===== MAP =====
+    function switchOffice(country) {
+      document.getElementById('mapOverlayCl').style.display = country === 'cl' ? '' : 'none';
+      document.getElementById('mapOverlayBr').style.display = country === 'br' ? '' : 'none';
+      document.querySelectorAll('.map-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.includes(country === 'cl' ? 'Chile' : 'Brasil'));
+      });
+      if (window._leafletMap) {
+        const coords = country === 'cl' ? [-33.456, -70.738] : [-23.505, -46.633];
+        const zoom = country === 'cl' ? 14 : 12;
+        window._leafletMap.setView(coords, zoom, { animate: true, duration: 1.2 });
+      }
+    }
+
+    // ===== THEME =====
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('trans_theme', currentTheme);
+      applyTheme();
+    }
+
+    function applyTheme() {
+      const moonSvg = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>';
+      const sunSvg = '<path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>';
+
+      if (currentTheme === 'light') {
+        document.body.classList.add('light-mode');
+        document.querySelectorAll('#themeIcon, #themeIconMobile').forEach(el => {
+          if (el) el.innerHTML = sunSvg;
+        });
+        if (window._leafletTileLayer && window._leafletMap) {
+          window._leafletMap.removeLayer(window._leafletTileLayer);
+          window._leafletTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM &copy; CARTO',
+            maxZoom: 19
+          }).addTo(window._leafletMap);
+        }
+      } else {
+        document.body.classList.remove('light-mode');
+        document.querySelectorAll('#themeIcon, #themeIconMobile').forEach(el => {
+          if (el) el.innerHTML = moonSvg;
+        });
+        if (window._leafletTileLayer && window._leafletMap) {
+          window._leafletMap.removeLayer(window._leafletTileLayer);
+          window._leafletTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM &copy; CARTO',
+            maxZoom: 19
+          }).addTo(window._leafletMap);
+        }
+      }
+    }
+
+    // ===== MOBILE MENU =====
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.querySelector('.hamburger').classList.toggle('open');
+    }
+
+    // ===== KEYBOARD =====
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeService(e);
+        closeFleet(e);
+      }
+    });
+
+    // ===== FAQ TOGGLE =====
+    document.querySelectorAll('.faq-item input[type="checkbox"]').forEach(el => {
+      el.addEventListener('change', function() {
+        const answer = this.nextElementSibling.nextElementSibling;
+        if (this.checked) {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          answer.style.padding = '0 1.5rem 1.2rem';
+        } else {
+          answer.style.maxHeight = '0';
+          answer.style.padding = '0 1.5rem';
+        }
+      });
+    });
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', function() {
+      setLang(currentLang);
+
+      // Init Leaflet Map
+      const map = L.map('leafletMap', {
+        center: [-33.456, -70.738],
+        zoom: 14,
+        zoomControl: false,
+        scrollWheelZoom: false
+      });
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+      const tileUrl = currentTheme === 'light' ?
+        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' :
+        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+
+      const tileLayer = L.tileLayer(tileUrl, {
+        attribution: '&copy; OSM &copy; CARTO',
+        maxZoom: 19
+      }).addTo(map);
+      window._leafletTileLayer = tileLayer;
+      window._leafletMap = map;
+
+      const clIcon = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="width:18px;height:18px;background:#22a447;border:3px solid #fff;border-radius:50%;box-shadow:0 0 16px rgba(34,164,71,0.4);"></div>',
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
+      });
+      L.marker([-33.456, -70.738], { icon: clIcon }).addTo(map)
+        .bindPopup('<b>TRANSALLENDES</b><br>Mar del Sur 7240, Pudahuel');
+
+      applyTheme();
+      setTimeout(() => map.invalidateSize(), 300);
+
+      // Scroll reveal
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+      // Animated counters
+      let countersAnimated = false;
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !countersAnimated) {
+            countersAnimated = true;
+            document.querySelectorAll('.m-num[data-count]').forEach(el => {
+              const target = parseInt(el.getAttribute('data-count'));
+              const suffix = el.getAttribute('data-suffix') || '';
+              const duration = 1600;
+              const start = performance.now();
+
+              function animate(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(target * eased) + suffix;
+                if (progress < 1) requestAnimationFrame(animate);
+              }
+              requestAnimationFrame(animate);
+            });
+          }
+        });
+      }, { threshold: 0.4 });
+      document.querySelectorAll('.metrics-grid, .hero-trust-row').forEach(el => {
+        if (el) counterObserver.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>

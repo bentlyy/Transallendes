@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgis/postgis:15-3.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: transallendes
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: transallendes
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U transallendes -d transallendes"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "127.0.0.1:3004:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DATABASE_URL: postgresql://transallendes:${DB_PASSWORD}@db:5432/transallendes
+      FRONTEND_URL: https://Transporte.amgdeveloper.cl
+      DEFAULT_TENANT_ID: transallendes
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      AUDIT_HMAC_SECRET: ${AUDIT_HMAC_SECRET}
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 30d
+      LOG_LEVEL: info
+      EMAIL_PROVIDER: log
+      SEED_PASSWORD: ${SEED_PASSWORD:-Admin123!}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  pgdata:
+
+networks:
+  app-net:

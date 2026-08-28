@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRANSALENDES | Cotiza tu Envío en Minutos</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; }
+
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 5%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+    .logo span { color: #1565c0; }
+    nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
+    nav ul li a { text-decoration: none; color: #555; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+    nav ul li a:hover { color: #1565c0; }
+    .nav-btn {
+      background: #1565c0; color: #fff; padding: 0.6rem 1.4rem; border-radius: 50px;
+      text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: background 0.3s;
+    }
+    .nav-btn:hover { background: #0d47a1; }
+
+    .announcement {
+      background: linear-gradient(90deg, #1565c0, #42a5f5); color: #fff;
+      text-align: center; padding: 0.6rem; font-size: 0.85rem; font-weight: 500;
+    }
+
+    .hero {
+      min-height: 90vh; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+      padding: 4rem 5%; max-width: 1300px; margin: 0 auto; align-items: center;
+    }
+    .hero-content h1 {
+      font-size: 3rem; line-height: 1.15; font-weight: 800; margin-bottom: 1.2rem;
+      letter-spacing: -1px; color: #0d47a1;
+    }
+    .hero-content p { font-size: 1.1rem; color: #666; line-height: 1.7; margin-bottom: 2rem; }
+    .hero-form {
+      background: #fff; border-radius: 16px; padding: 2rem;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.1); border: 1px solid #eee;
+    }
+    .hero-form h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.2rem; color: #0d47a1; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 0.3rem; }
+    .form-group input, .form-group select {
+      padding: 0.7rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px;
+      font-size: 0.9rem; font-family: inherit; transition: border-color 0.3s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: #1565c0; }
+    .form-submit {
+      width: 100%; background: #1565c0; color: #fff; padding: 0.9rem; border: none;
+      border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer;
+      font-family: inherit; transition: background 0.3s; margin-top: 0.5rem;
+    }
+    .form-submit:hover { background: #0d47a1; }
+    .form-note { text-align: center; font-size: 0.75rem; color: #999; margin-top: 0.5rem; }
+    .hero-tags { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.5rem; }
+    .hero-tag {
+      background: #e3f2fd; color: #1565c0; padding: 0.35rem 0.9rem; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 600;
+    }
+
+    .services-bar {
+      display: flex; justify-content: center; gap: 3rem; padding: 3rem 5%;
+      background: #f8f9fa; border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+    }
+    .sb-item { display: flex; align-items: center; gap: 0.8rem; }
+    .sb-icon {
+      width: 45px; height: 45px; border-radius: 10px; display: flex;
+      align-items: center; justify-content: center; font-size: 1.2rem; background: #e3f2fd;
+    }
+    .sb-text .sb-title { font-weight: 700; font-size: 0.9rem; }
+    .sb-text .sb-sub { font-size: 0.75rem; color: #999; }
+
+    .routes { padding: 5rem 5%; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-header h2 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; }
+    .section-header p { color: #888; margin-top: 0.5rem; font-size: 1.05rem; }
+    .routes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .route-card {
+      background: #f8f9fa; border-radius: 14px; padding: 1.8rem;
+      border: 2px solid transparent; transition: all 0.3s; cursor: pointer;
+    }
+    .route-card:hover { border-color: #1565c0; background: #fff; transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+    .route-card .rc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .route-card .rc-route { font-weight: 800; font-size: 1rem; }
+    .route-card .rc-flag { font-size: 1.5rem; }
+    .route-card .rc-desc { font-size: 0.85rem; color: #888; line-height: 1.6; margin-bottom: 1rem; }
+    .route-card .rc-meta { display: flex; justify-content: space-between; align-items: center; }
+    .route-card .rc-days { font-size: 0.8rem; color: #1565c0; font-weight: 600; background: #e3f2fd; padding: 0.3rem 0.8rem; border-radius: 50px; }
+    .route-card .rc-price { font-weight: 800; font-size: 1.1rem; color: #1a1a1a; }
+
+    .how { padding: 5rem 5%; background: #f8f9fa; }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; max-width: 1100px; margin: 0 auto; }
+    .step { text-align: center; position: relative; }
+    .step:not(:last-child)::after {
+      content: '→'; position: absolute; right: -1.5rem; top: 2rem;
+      font-size: 1.5rem; color: #ccc;
+    }
+    .step-num {
+      width: 50px; height: 50px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800;
+      margin: 0 auto 1rem; color: #fff; background: #1565c0;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .step p { color: #888; font-size: 0.85rem; line-height: 1.6; }
+
+    .fleet { padding: 5rem 5%; }
+    .fleet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .fleet-card {
+      background: #fff; border: 1px solid #eee; border-radius: 14px; padding: 1.5rem;
+      text-align: center; transition: transform 0.3s;
+    }
+    .fleet-card:hover { transform: translateY(-4px); }
+    .fleet-card .fc-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .fleet-card h4 { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .fleet-card p { font-size: 0.8rem; color: #888; }
+
+    .testimonials { padding: 5rem 5%; background: #f8f9fa; }
+    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .test-card {
+      background: #fff; padding: 1.8rem; border-radius: 14px;
+      border: 1px solid #eee; transition: transform 0.3s;
+    }
+    .test-card:hover { transform: translateY(-4px); }
+    .test-card .stars { color: #ffc107; font-size: 0.9rem; margin-bottom: 0.8rem; }
+    .test-card .quote { font-size: 0.9rem; color: #555; line-height: 1.7; margin-bottom: 1rem; font-style: italic; }
+    .test-card .author { font-weight: 700; font-size: 0.85rem; }
+    .test-card .role { font-size: 0.75rem; color: #999; }
+
+    .cta {
+      padding: 5rem 5%; text-align: center;
+      background: linear-gradient(135deg, #1565c0, #42a5f5); color: #fff;
+    }
+    .cta h2 { font-size: 2.4rem; margin-bottom: 1rem; font-weight: 800; letter-spacing: -0.5px; }
+    .cta p { font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.95; }
+    .cta-btn {
+      display: inline-block; background: #fff; color: #1565c0; padding: 1rem 2.5rem;
+      border-radius: 50px; font-size: 1.05rem; font-weight: 700; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+
+    .contact-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+      max-width: 1200px; margin: -3rem auto 0; position: relative; z-index: 2;
+      padding: 0 5%;
+    }
+    .cb-card {
+      background: #fff; border-radius: 12px; padding: 1.3rem; text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .cb-card .cb-icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+    .cb-card .cb-label { font-size: 0.75rem; color: #999; }
+    .cb-card .cb-value { font-weight: 700; font-size: 0.9rem; margin-top: 0.2rem; }
+
+    footer { background: #1a1a2e; color: #ccc; padding: 5rem 5% 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+    .footer-brand .logo { color: #fff; font-size: 1.3rem; margin-bottom: 0.8rem; display: block; }
+    .footer-brand p { font-size: 0.9rem; line-height: 1.7; }
+    footer h4 { color: #fff; margin-bottom: 1rem; font-size: 1rem; }
+    footer ul { list-style: none; }
+    footer ul li { margin-bottom: 0.5rem; }
+    footer ul li a { color: #aaa; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+    footer ul li a:hover { color: #42a5f5; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; text-align: center; font-size: 0.85rem; }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-content h1 { font-size: 2rem; }
+      .routes-grid, .steps-grid, .fleet-grid, .test-grid { grid-template-columns: 1fr; }
+      .services-bar { flex-wrap: wrap; gap: 1.5rem; }
+      .contact-bar { grid-template-columns: 1fr 1fr; }
+      .step:not(:last-child)::after { display: none; }
+      .footer-grid { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announcement">🎉 Cotización sin compromiso en 24 horas. Llámanos al +56 61 2 345 6789</div>
+
+  <nav>
+    <div class="logo">TRANSALEN<span>DES</span></div>
+    <ul>
+      <li><a href="#rutas">Rutas</a></li>
+      <li><a href="#flota">Flota</a></li>
+      <li><a href="#testimonios">Clientes</a></li>
+      <li><a href="#hero" class="nav-btn">Cotizar</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1>Envía tu carga a cualquier destino en Latinoamérica</h1>
+      <p>TRANSALENDES conecta Chile, Argentina, Brasil, Uruguay, Paraguay y Bolivia con transporte terrestre de carga seguro, puntual y con documentación aduanera incluida.</p>
+      <div class="hero-tags">
+        <span class="hero-tag">🚛 FTL</span>
+        <span class="hero-tag">📦 LTL</span>
+        <span class="hero-tag">❄️ Refrigerado</span>
+        <span class="hero-tag">📋 Aduana incluida</span>
+        <span class="hero-tag">📍 GPS 24/7</span>
+      </div>
+    </div>
+    <div class="hero-form">
+      <h3>📦 Cotiza tu envío gratis</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Ciudad de origen</label>
+          <select><option>Punta Arenas</option><option>Santiago</option><option>Concepción</option><option>Temuco</option><option>Otra ciudad Chile</option></select>
+        </div>
+        <div class="form-group"><label>Ciudad de destino</label>
+          <select><option>Buenos Aires</option><option>São Paulo</option><option>Montevideo</option><option>Asunción</option><option>La Paz</option><option>Otra ciudad</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Tipo de carga</label>
+          <select><option>Carga general</option><option>Refrigerada</option><option>Sobredimensionada</option><option>Peligrosa</option></select>
+        </div>
+        <div class="form-group"><label>Peso aproximado (kg)</label><input type="number" placeholder="Ej: 5000"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Nombre</label><input type="text" placeholder="Tu nombre"></div>
+        <div class="form-group"><label>Teléfono</label><input type="tel" placeholder="+56 9 XXXX XXXX"></div>
+      </div>
+      <button class="form-submit">Solicitar Cotización →</button>
+      <p class="form-note">Te respondemos en menos de 24 horas. Sin compromiso.</p>
+    </div>
+  </section>
+
+  <section class="services-bar">
+    <div class="sb-item"><div class="sb-icon">🚛</div><div class="sb-text"><div class="sb-title">FTL</div><div class="sb-sub">Camión completo</div></div></div>
+    <div class="sb-item"><div class="sb-icon">📦</div><div class="sb-text"><div class="sb-title">LTL</div><div class="sb-sub">Consolidado</div></div></div>
+    <div class="sb-item"><div class="sb-icon">❄️</div><div class="sb-text"><div class="sb-title">Refrigerado</div><div class="sb-sub">Cadena de frío</div></div></div>
+    <div class="sb-item"><div class="sb-icon">📋</div><div class="sb-text"><div class="sb-title">Aduana</div><div class="sb-sub">Documentación</div></div></div>
+    <div class="sb-item"><div class="sb-icon">🛡️</div><div class="sb-text"><div class="sb-title">Seguro</div><div class="sb-sub">Full cover</div></div></div>
+  </section>
+
+  <section class="routes" id="rutas">
+    <div class="section-header">
+      <h2>Rutas más solicitadas</h2>
+      <p>Conectamos los principales mercados de la región</p>
+    </div>
+    <div class="routes-grid">
+      <div class="route-card">
+        <div class="rc-header"><span class="rc-route">Santiago → Buenos Aires</span><span class="rc-flag">🇨🇱🇦🇷</span></div>
+        <p class="rc-desc">La ruta más transitada entre Chile y Argentina. Cruce por Cristo Redentor con toda la documentación incluida.</p>
+        <div class="rc-meta"><span class="rc-days">2-3 días</span><span class="rc-price">Desde $1.800.000</span></div>
+      </div>
+      <div class="route-card">
+        <div class="rc-header"><span class="rc-route">Buenos Aires → São Paulo</span><span class="rc-flag">🇦🇷🇧🇷</span></div>
+        <p class="rc-desc">Conectamos Argentina con la capital económica de Brasil por la ruta más eficiente.</p>
+        <div class="rc-meta"><span class="rc-days">3-4 días</span><span class="rc-price">Desde $2.200.000</span></div>
+      </div>
+      <div class="route-card">
+        <div class="rc-header"><span class="rc-route">Santiago → Montevideo</span><span class="rc-flag">🇨🇱🇺🇾</span></div>
+        <p class="rc-desc">Ruta directa a Uruguay. Ideal para comercio bilateral y exportaciones.</p>
+        <div class="rc-meta"><span class="rc-days">2-3 días</span><span class="rc-price">Desde $1.600.000</span></div>
+      </div>
+      <div class="route-card">
+        <div class="rc-header"><span class="rc-route">Punta Arenas → Santiago</span><span class="rc-flag">🇨🇱</span></div>
+        <p class="rc-desc">Ruta austral completa. Conectamos el extremo sur con la capital del país.</p>
+        <div class="rc-meta"><span class="rc-days">3-4 días</span><span class="rc-price">Desde $1.200.000</span></div>
+      </div>
+      <div class="route-card">
+        <div class="rc-header"><span class="rc-route">Santiago → Asunción</span><span class="rc-flag">🇨🇱🇵🇾</span></div>
+        <p class="rc-desc">Expandimos tu negocio hacia Paraguay con servicios de transporte directo.</p>
+        <div class="rc-meta"><span class="rc-days">3-4 días</span><span class="rc-price">Desde $2.000.000</span></div>
+      </div>
+      <div class="route-card">
+        <div class="rc-header"><span class="rc-route">Santiago → La Paz</span><span class="rc-flag">🇨🇱🇧🇴</span></div>
+        <p class="rc-desc">Conectamos Chile con Bolivia. Ruta por el norte con documentación completa.</p>
+        <div class="rc-meta"><span class="rc-days">4-5 días</span><span class="rc-price">Desde $2.400.000</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="como-funciona">
+    <div class="section-header">
+      <h2>¿Cómo funciona?</h2>
+      <p>4 pasos simples para enviar tu carga</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step"><div class="step-num">1</div><h3>Cotiza</h3><p>Cuenta qué necesitas enviar y te damos precio en 24 horas.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Coordinamos</h3><p>Acordamos fecha y lugar de recolección de la carga.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Enviamos</h3><p>Tu carga viaja con tracking GPS por toda la ruta.</p></div>
+      <div class="step"><div class="step-num">4</div><h3>Entregamos</h3><p>Entrega puerta a puerta con confirmación de receipt.</p></div>
+    </div>
+  </section>
+
+  <section class="fleet" id="flota">
+    <div class="section-header">
+      <h2>Nuestra Flota</h2>
+      <p>Unidades modernas y mantenidas para garantizar la seguridad de tu carga</p>
+    </div>
+    <div class="fleet-grid">
+      <div class="fleet-card"><div class="fc-icon">🚛</div><h4>Semirremolque</h4><p>Hasta 28 toneladas</p></div>
+      <div class="fleet-card"><div class="fc-icon">📦</div><h4>Furgón Seco</h4><p>Carga protegida de lluvia</p></div>
+      <div class="fleet-card"><div class="fc-icon">❄️</div><h4>Refrigerado</h4><p>-25°C a +25°C</p></div>
+      <div class="fleet-card"><div class="fc-icon">🏗️</div><h4>Carretón</h4><p>Cargas sobredimensionadas</p></div>
+    </div>
+  </section>
+
+  <section class="testimonials" id="testimonios">
+    <div class="section-header">
+      <h2>Lo que dicen nuestros clientes</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"Excelente servicio. La documentación aduanera siempre impecable y los tiempos cumplidos al día. Muy profesionales."</p>
+        <p class="author">Roberto Méndez</p>
+        <p class="role">Gerente Logístico — Exportadora Austral</p>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"Llevamos 5 años trabajando con ellos. Cero incidentes y una atención personalizada que no se encuentra en empresas grandes."</p>
+        <p class="author">Claudia Fuentes</p>
+        <p class="role">Directora de Compras — Textiles del Sur</p>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"El tracking en tiempo real nos da tranquilidad total. Nuestros clientes saben exactamente cuándo llega su mercadería."</p>
+        <p class="author">Andrés Villalobos</p>
+        <p class="role">CEO — AgroPatagonia SpA</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>¿Listo para enviar tu carga?</h2>
+    <p>Cotización gratuita. Respuesta en 24 horas. Sin compromiso.</p>
+    <a href="#hero" class="cta-btn">Cotizar Gratis Ahora →</a>
+  </section>
+
+  <section class="contact-bar">
+    <div class="cb-card"><div class="cb-icon">📞</div><div class="cb-label">Teléfono</div><div class="cb-value">+56 61 2 345 6789</div></div>
+    <div class="cb-card"><div class="cb-icon">📱</div><div class="cb-label">WhatsApp</div><div class="cb-value">+56 9 8765 4321</div></div>
+    <div class="cb-card"><div class="cb-icon">✉️</div><div class="cb-label">Email</div><div class="cb-value">operaciones@transallendes.cl</div></div>
+    <div class="cb-card"><div class="cb-icon">📍</div><div class="cb-label">Oficina</div><div class="cb-value">Punta Arenas, Chile</div></div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo">TRANSALEN<span style="color:#42a5f5">DES</span></span>
+        <p>Transporte de carga terrestre internacional. Conectamos Latinoamérica con seguridad y puntualidad desde 2010.</p>
+      </div>
+      <div>
+        <h4>Servicios</h4>
+        <ul><li><a href="#">Camión Completo</a></li><li><a href="#">Carga Consolidada</a></li><li><a href="#">Refrigerado</a></li><li><a href="#">Sobredimensionada</a></li></ul>
+      </div>
+      <div>
+        <h4>Rutas</h4>
+        <ul><li><a href="#">Chile → Argentina</a></li><li><a href="#">Chile → Brasil</a></li><li><a href="#">Argentina → Brasil</a></li><li><a href="#">Uruguay</a></li></ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul><li><a href="#">+56 61 2 345 6789</a></li><li><a href="#">+56 9 8765 4321</a></li><li><a href="#">operaciones@transallendes.cl</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 TRANSALENDES S.A. Todos los derechos reservados. RUT: 76.123.456-7</p></div>
+  </footer>
+
+</body>
+</html>

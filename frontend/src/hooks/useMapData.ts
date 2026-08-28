@@ -15,7 +15,7 @@ export function useMapData(options: UseMapDataOptions = {}) {
   const [clusters, setClusters] = useState<MapCluster[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const intervalRef = useRef<ReturnType<typeof setInterval>>()
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   useEffect(() => {
     async function fetchData() {

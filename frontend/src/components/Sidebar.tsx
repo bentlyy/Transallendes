@@ -13,6 +13,8 @@ interface NavItem {
   icon: string
 }
 
+type NavEntry = (NavItem & { section?: undefined }) | { section: string }
+
 const ICONS: Record<string, string> = {
   dashboard: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`,
   map: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>`,
@@ -35,7 +37,7 @@ const ICONS: Record<string, string> = {
   moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
 }
 
-const ADMIN_NAV: (NavItem & { section?: string })[] = [
+const ADMIN_NAV: NavEntry[] = [
   { section: 'Principal' },
   { path: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
   { path: '/admin/map', label: 'Mapa', icon: 'map' },
@@ -53,7 +55,7 @@ const ADMIN_NAV: (NavItem & { section?: string })[] = [
   { path: '/admin/settings', label: 'Ajustes', icon: 'settings' },
 ]
 
-const CLIENT_NAV: (NavItem & { section?: string })[] = [
+const CLIENT_NAV: NavEntry[] = [
   { section: 'Principal' },
   { path: '/portal/map', label: 'Mapa', icon: 'map' },
   { path: '/portal/dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -67,7 +69,7 @@ const CLIENT_NAV: (NavItem & { section?: string })[] = [
   { path: '/portal/settings', label: 'Ajustes', icon: 'settings' },
 ]
 
-const SUPER_ADMIN_NAV: (NavItem & { section?: string })[] = [
+const SUPER_ADMIN_NAV: NavEntry[] = [
   { section: 'Super Admin' },
   { path: '/super-admin/tenants', label: 'Empresas', icon: 'tenant' },
   { path: '/super-admin/users', label: 'Usuarios', icon: 'users' },
@@ -79,7 +81,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const { user } = useAuth()
   const location = useLocation()
 
-  let navItems: (NavItem & { section?: string })[]
+  let navItems: NavEntry[]
   let logoText = ''
   if (user?.role === USER_ROLES.SUPER_ADMIN) {
     navItems = SUPER_ADMIN_NAV
@@ -113,14 +115,14 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               <span className="sidebar-logo-text">{logoText}</span>
             </div>
             <button onClick={onToggle} className="icon-btn" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              <span dangerouslySetInnerHTML={{ __html: ICONS.collapseLeft }} />
+              <span dangerouslySetInnerHTML={{ __html: ICONS.collapseLeft! }} />
             </button>
           </>
         ) : (
           <>
             <div className="sidebar-logo-icon" style={{ margin: '0 auto' }}>T</div>
             <button onClick={onToggle} className="icon-btn" style={{ position: 'absolute', right: -12, top: 20, color: 'rgba(255,255,255,0.4)' }}>
-              <span dangerouslySetInnerHTML={{ __html: ICONS.collapseRight }} />
+              <span dangerouslySetInnerHTML={{ __html: ICONS.collapseRight! }} />
             </button>
           </>
         )}
@@ -128,7 +130,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       <nav className="sidebar-nav">
         {navItems.map((item, idx) => {
-          if (item.section) {
+          if ('section' in item) {
             return collapsed ? null : (
               <div key={`section-${idx}`} className="sidebar-section-label">{item.section}</div>
             )
@@ -141,7 +143,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               className={isActive ? 'sidebar-link sidebar-link--active' : 'sidebar-link'}
               title={collapsed ? item.label : undefined}
             >
-              <span className="sidebar-link-icon" dangerouslySetInnerHTML={{ __html: ICONS[item.icon] }} />
+              <span className="sidebar-link-icon" dangerouslySetInnerHTML={{ __html: ICONS[item.icon]! }} />
               {!collapsed && <span>{item.label}</span>}
             </NavLink>
           )
@@ -155,7 +157,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           style={{ width: '100%', border: 'none', cursor: 'pointer', background: 'transparent', fontFamily: 'inherit', fontSize: 14 }}
           title={isDark ? 'Modo claro' : 'Modo oscuro'}
         >
-          <span className="sidebar-link-icon" dangerouslySetInnerHTML={{ __html: isDark ? ICONS.sun : ICONS.moon }} />
+          <span className="sidebar-link-icon" dangerouslySetInnerHTML={{ __html: (isDark ? ICONS.sun : ICONS.moon)! }} />
           {!collapsed && <span>{isDark ? 'Modo claro' : 'Modo oscuro'}</span>}
         </button>
       </div>

@@ -54,7 +54,7 @@ export default function TruckMarker({
       iconAnchor: [16, 16],
     })
 
-    const marker = L.marker([lat, lng], { icon, rotationAngle: heading || 0 })
+    const marker = L.marker([lat, lng], { icon })
       .addTo(map)
       .bindPopup(`
         <div style="font-family: system-ui; min-width: 180px;">

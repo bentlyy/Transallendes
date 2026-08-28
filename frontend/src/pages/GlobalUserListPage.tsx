@@ -6,7 +6,7 @@ import { formatDate } from '@/utils/formatters'
 import { motion } from 'framer-motion'
 
 export default function GlobalUserListPage() {
-  const [users, setUsers] = useState<unknown[]>([])
+  const [users, setUsers] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const pag = usePagination()
@@ -26,7 +26,7 @@ export default function GlobalUserListPage() {
 
   useEffect(() => { fetch() }, [pag.page, pag.pageSize, search])
 
-  const columns: Column<unknown>[] = [
+  const columns: Column<Record<string, unknown>>[] = [
     { key: 'name', header: 'Nombre', sortable: true },
     { key: 'email', header: 'Email', sortable: true },
     { key: 'role', header: 'Rol', sortable: true },

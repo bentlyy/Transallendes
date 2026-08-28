@@ -84,6 +84,13 @@ app.get('/api/health', healthHandler)
 app.use(securityMiddleware)
 app.use(compression())
 
+// Serve static frontend assets BEFORE auth/tenant/rate-limit middlewares so
+// that /assets/* and index.html are served directly from disk without hitting
+// the database or counting against the global rate limiter.
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(resolve(process.cwd(), 'frontend/dist')))
+}
+
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
 const allowedOrigins = ['http://localhost:5173', frontendUrl].filter((origin): origin is string => Boolean(origin))
 
@@ -91,10 +98,12 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) {
-        return callback(null, true)
+        callback(null, true)
+        return
       }
       if (allowedOrigins.length === 0 && process.env.NODE_ENV === 'production') {
-        return callback(new Error('CORS misconfigured: no allowed origins in production'))
+        callback(new Error('CORS misconfigured: no allowed origins in production'))
+        return
       }
       if (allowedOrigins.includes(origin)) {
         callback(null, origin)
@@ -110,7 +119,10 @@ app.use(
 app.use(cookieParser())
 app.use(express.json({ limit: '10mb' }))
 app.use(optionalAuth)
-app.use(tenantMiddleware)
+// Tenant resolution and session activity only apply to API routes. The SPA and
+// its static assets must never depend on the database (avoids 500/JSON errors
+// for /assets/* and client-side routes when the tenant lookup fails).
+app.use('/api', tenantMiddleware)
 app.use(trackActivity)
 app.use(requestLogger)
 
@@ -164,9 +176,8 @@ app.use('/api/notifications', notificationRoutes)
 app.use('/api/super-admin', superAdminRoutes)
 
 if (process.env.NODE_ENV === 'production') {
-  const frontendPath = resolve(__dirname, '../../frontend/dist')
+  const frontendPath = resolve(process.cwd(), 'frontend/dist')
   const indexPath = resolve(frontendPath, 'index.html')
-  app.use(express.static(frontendPath))
   app.get(/^\/(?!api\/)/, (_req, res) => {
     res.sendFile(indexPath, (err) => {
       if (err) {

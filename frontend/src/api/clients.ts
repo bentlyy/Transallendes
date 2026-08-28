@@ -50,12 +50,15 @@ export async function deleteClient(id: string): Promise<void> {
   await api.delete(`/clients/${id}`)
 }
 
-export async function getClientTrips(clientId: string, params?: Record<string, string>): Promise<{ data: unknown[]; total: number }> {
+export async function getClientTrips(
+  clientId: string,
+  params?: Record<string, string>,
+): Promise<{ data: Record<string, unknown>[]; total: number }> {
   const res = await api.get(`/clients/${clientId}/trips`, { params })
   return res.data
 }
 
-export async function getClientTrucks(clientId: string): Promise<{ data: unknown[]; total: number }> {
+export async function getClientTrucks(clientId: string): Promise<{ data: Record<string, unknown>[]; total: number }> {
   const res = await api.get(`/clients/${clientId}/trucks`)
   return res.data
 }

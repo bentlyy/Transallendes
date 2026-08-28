@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { getClientDashboard } from '@/api/analytics'
-import { getTripStats } from '@/api/trips'
+import { getTripStats, type TripStats } from '@/api/trips'
 import StatCard from '@/components/StatCard'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import { useAuth } from '@/hooks/useAuth'
 import { motion } from 'framer-motion'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
@@ -16,15 +17,16 @@ const MONTHLY_DATA = [
 ]
 
 export default function ClientDashboardPage() {
+  const { user } = useAuth()
   const [stats, setStats] = useState<Record<string, unknown> | null>(null)
-  const [tripStats, setTripStats] = useState<Record<string, unknown> | null>(null)
+  const [tripStats, setTripStats] = useState<TripStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetch() {
       try {
         const [dash, ts] = await Promise.all([
-          getClientDashboard().catch(() => null),
+          getClientDashboard(user?.tenantId ?? '').catch(() => null),
           getTripStats().catch(() => null),
         ])
         setStats(dash)
@@ -36,7 +38,7 @@ export default function ClientDashboardPage() {
       }
     }
     fetch()
-  }, [])
+  }, [user?.tenantId])
 
   if (loading) return <LoadingSpinner fullPage text="Cargando dashboard..." />
 
@@ -45,9 +47,9 @@ export default function ClientDashboardPage() {
       <h2 style={{ margin: 0, fontSize: 20 }}>Mi Dashboard</h2>
 
       <div className="grid-4">
-        <StatCard icon="🛣️" label="Viajes totales" value={tripStats ? (tripStats as Record<string, number>).total ?? 0 : 0} />
-        <StatCard icon="🚛" label="En curso" value={tripStats ? (tripStats as Record<string, number>).inProgress ?? 0 : 0} color="#22c55e" />
-        <StatCard icon="✅" label="Completados" value={tripStats ? (tripStats as Record<string, number>).completed ?? 0 : 0} color="#10b981" />
+        <StatCard icon="🛣️" label="Viajes totales" value={tripStats?.total ?? 0} />
+        <StatCard icon="🚛" label="En curso" value={tripStats?.inProgress ?? 0} color="#22c55e" />
+        <StatCard icon="✅" label="Completados" value={tripStats?.completed ?? 0} color="#10b981" />
         <StatCard icon="📏" label="Total km" value={(stats as Record<string, number>)?.totalDistance ? `${(stats as Record<string, number>).totalDistance} km` : '—'} />
       </div>
 

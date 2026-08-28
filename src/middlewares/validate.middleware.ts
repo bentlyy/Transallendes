@@ -19,8 +19,7 @@ export const validateZod = (schema: ZodSchema, source: 'body' | 'query' | 'param
         ? `Validation failed: ${details.map((d) => `${d.field}: ${d.message}`).join('; ')}`
         : 'Validation failed'
 
-      const error = new BadRequestError(message)
-      ;(error as Record<string, unknown>).details = isDev ? details : undefined
+      const error = new BadRequestError(message, isDev ? details : undefined)
       next(error)
       return
     }

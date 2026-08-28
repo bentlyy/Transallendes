@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Transporte terrestre internacional entre Chile, Argentina, Brasil y Paraguay. Soluciones FTL, LTL, carga refrigerada y gestión aduanera.">
+<meta name="theme-color" content="#0b1726">
+<title>TRANSALLENDES | Transporte Internacional de Carga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#081522;--navy2:#0d2031;--navy3:#132b3f;--steel:#607286;--line:#dbe2e8;
+  --paper:#f5f6f7;--white:#fff;--ink:#101d29;--muted:#657484;--accent:#e87522;
+  --accent2:#f59b48;--shadow:0 18px 50px rgba(8,21,34,.12);--radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:86px}
+body{font-family:"DM Sans",sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font:inherit}
+img{display:block;max-width:100%}
+.container{width:min(1180px,92%);margin:auto}
+.eyebrow{display:flex;align-items:center;gap:10px;color:var(--accent);font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.eyebrow:before{content:"";width:28px;height:2px;background:var(--accent)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:46px}
+.section-head h2{font:800 clamp(2rem,4vw,3.2rem)/1.05 "Manrope",sans-serif;letter-spacing:-.045em;color:var(--navy);max-width:650px}
+.section-head p{max-width:510px;color:var(--muted)}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 0;transition:.3s}
+.nav.scrolled{background:rgba(255,255,255,.96);box-shadow:0 1px 0 rgba(8,21,34,.08);padding:12px 0;backdrop-filter:blur(14px)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:25px}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;font:800 1.2rem "Manrope",sans-serif;letter-spacing:-.04em}
+.nav.scrolled .brand{color:var(--navy)}
+.brand-mark{width:38px;height:38px;border:2px solid currentColor;display:grid;place-items:center;position:relative}
+.brand-mark:after{content:"";width:12px;height:12px;background:var(--accent);position:absolute;right:-6px;bottom:-6px}
+.nav-links{display:flex;align-items:center;gap:25px;color:rgba(255,255,255,.82);font-size:.88rem;font-weight:600}
+.nav.scrolled .nav-links{color:var(--navy)}
+.nav-links a:hover{color:var(--accent)}
+.nav-actions{display:flex;align-items:center;gap:9px}
+.lang,.theme{border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;padding:8px 10px;border-radius:6px;cursor:pointer}
+.nav.scrolled .lang,.nav.scrolled .theme{color:var(--navy);border-color:var(--line)}
+.lang.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav-cta{background:var(--accent);color:#fff;padding:11px 18px;border-radius:5px;font-weight:800;font-size:.82rem}
+.menu-btn{display:none;background:none;border:0;color:#fff;font-size:1.5rem}
+.nav.scrolled .menu-btn{color:var(--navy)}
+.mobile-nav{display:none}
+/* HERO */
+.hero{min-height:92vh;position:relative;color:#fff;background:
+linear-gradient(90deg,rgba(4,15,25,.93) 0%,rgba(4,15,25,.75) 43%,rgba(4,15,25,.3) 100%),
+url("https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=2200&q=88") center/cover;}
+.hero:after{content:"";position:absolute;inset:auto 0 0;height:160px;background:linear-gradient(transparent,var(--paper))}
+.hero-inner{min-height:92vh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:50px;padding-top:90px;padding-bottom:90px;position:relative;z-index:1}
+.hero-copy{max-width:700px}
+.hero .eyebrow{color:#f7a35d}
+.hero h1{font:800 clamp(3.3rem,7vw,6.4rem)/.92 "Manrope",sans-serif;letter-spacing:-.065em;margin:22px 0}
+.hero h1 span{display:block;color:#fff}
+.hero h1 em{font-style:normal;color:var(--accent2)}
+.hero-copy>p{font-size:1.08rem;color:rgba(255,255,255,.76);max-width:620px}
+.hero-actions{display:flex;gap:12px;margin:32px 0 30px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 21px;border-radius:5px;font-weight:800;font-size:.88rem;border:1px solid transparent;cursor:pointer;transition:.25s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#d86616;transform:translateY(-2px)}
+.btn-light{background:#fff;color:var(--navy)}.btn-light:hover{background:#f2f3f4;transform:translateY(-2px)}
+.btn-outline-light{border-color:rgba(255,255,255,.35);color:#fff}.btn-outline-light:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.route-line{display:flex;align-items:center;gap:0;max-width:650px;margin-top:24px}
+.route-node{display:flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.route-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 5px rgba(232,117,34,.16)}
+.route-segment{height:1px;background:linear-gradient(90deg,var(--accent),rgba(255,255,255,.25));flex:1;margin:0 10px;position:relative}
+.route-segment:after{content:"›";position:absolute;right:-2px;top:-10px;color:var(--accent)}
+.hero-panel{background:rgba(8,21,34,.76);border:1px solid rgba(255,255,255,.18);padding:26px;backdrop-filter:blur(7px);box-shadow:0 25px 70px rgba(0,0,0,.25)}
+.panel-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.panel-top strong{font:700 1.05rem "Manrope",sans-serif}.live{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:#8ee2ae}
+
+
+
+
+.operation{width:68%;left:14%;top:62%;transform:rotate(-14deg)}
+.operation{width:43%;left:42%;top:49%;transform:rotate(-38deg)}
+
+
+
+
+
+@media(max-width:760px){.coverage-showcase{grid-template-columns:1fr}.corridors{min-height:280px}}
+
+.operation-visual{height:330px;background:linear-gradient(145deg,#0a1927,#173248);border:1px solid rgba(255,255,255,.12);padding:28px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}.operation-visual:before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(255,255,255,.07);right:-130px;bottom:-140px}.operation-visual:after{content:"";position:absolute;left:-70px;top:-80px;width:190px;height:190px;border:1px solid rgba(232,117,34,.12);border-radius:50%}.op-header,.op-status,.op-metrics{position:relative;z-index:1}.op-header{display:flex;justify-content:space-between;align-items:center;font-size:.6rem;letter-spacing:.13em;color:rgba(255,255,255,.48);font-weight:800}.op-header b{color:var(--accent)}.op-track{display:flex;align-items:center;gap:0;margin:20px 0}.op-track i{height:3px;flex:1;background:#2c4658;position:relative}.op-track i:not(:last-child):after{content:"";position:absolute;right:-3px;top:-4px;width:11px;height:11px;border-radius:50%;background:#2c4658;border:2px solid #173248}.op-track i:first-child{background:var(--accent)}.op-track i:first-child:after{background:var(--accent)}.op-status{border-left:2px solid var(--accent);padding-left:15px}.op-status strong{display:block;color:#fff;font:800 1.35rem "Manrope";letter-spacing:-.04em}.op-status span{display:block;margin-top:5px;color:rgba(255,255,255,.48);font-size:.68rem}.op-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.op-metrics div{border-top:1px solid rgba(255,255,255,.1);padding-top:12px}.op-metrics small{display:block;font-size:.55rem;color:rgba(255,255,255,.38);letter-spacing:.12em}.op-metrics b{display:block;color:#fff;font:800 .8rem "Manrope";margin-top:4px}
+.panel-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.12);margin-top:18px}
+.panel-stat{background:rgba(8,21,34,.86);padding:16px}.panel-stat b{font:800 1.45rem "Manrope",sans-serif;display:block}.panel-stat small{color:rgba(255,255,255,.55);font-size:.7rem}
+/* TRUST */
+.trust{background:#fff;border-bottom:1px solid var(--line)}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.trust-item{padding:30px 24px;border-right:1px solid var(--line)}
+.trust-item:last-child{border:0}.trust-item b{font:800 2rem "Manrope";color:var(--navy);display:block}.trust-item span{color:var(--muted);font-size:.78rem}
+/* SECTIONS */
+section:not(.hero){padding:100px 0}
+.network{background:#fff}.network-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:70px;align-items:center}
+.network-copy h3{font:800 2.1rem/1.1 "Manrope";color:var(--navy);margin:18px 0}
+.network-copy>p{color:var(--muted);max-width:520px}
+.network-list{margin-top:30px;border-top:1px solid var(--line)}
+.network-row{display:grid;grid-template-columns:90px 1fr auto;align-items:center;gap:15px;padding:18px 0;border-bottom:1px solid var(--line)}
+.network-row b{color:var(--navy)}.network-row span{font-size:.82rem;color:var(--muted)}
+.services{background:var(--paper)}
+.service-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--navy)}
+.service{background:#fff;min-height:330px;position:relative;overflow:hidden;padding:36px;display:flex;flex-direction:column;justify-content:flex-end}
+.service:before{content:"";position:absolute;inset:0;background:var(--img) center/cover;opacity:.08;transition:.4s}.service:hover:before{opacity:.22;transform:scale(1.04)}
+.service>*{position:relative;z-index:1}.service-number{font:800 4.5rem/.8 "Manrope";color:#dce2e7;position:absolute;right:26px;top:28px}
+.service h3{font:800 1.45rem "Manrope";color:var(--navy);margin-bottom:10px}.service p{color:var(--muted);max-width:470px;font-size:.9rem}.service-link{color:var(--accent);font-size:.8rem;font-weight:800;margin-top:18px}
+.process{background:var(--navy);color:#fff}.process .section-head h2{color:#fff}.process .section-head p{color:rgba(255,255,255,.55)}
+.process-grid{display:grid;grid-template-columns:repeat(6,1fr);position:relative}
+.process-grid:before{content:"";height:1px;background:rgba(255,255,255,.2);position:absolute;top:18px;left:5%;right:5%}
+.step{position:relative;z-index:1}.step-num{width:36px;height:36px;border-radius:50%;background:var(--navy3);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;color:var(--accent);font-size:.7rem;font-weight:800;margin-bottom:24px}.step h3{font:700 .9rem "Manrope";margin-bottom:8px}.step p{font-size:.78rem;color:rgba(255,255,255,.52);max-width:150px}
+.fleet{background:#fff}.fleet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fleet-card{border:1px solid var(--line);background:#fff;transition:.25s;cursor:pointer}.fleet-card:hover{box-shadow:var(--shadow);transform:translateY(-4px)}
+.fleet-img{height:230px;overflow:hidden}.fleet-img img{width:100%;height:100%;object-fit:cover;transition:.5s}.fleet-card:hover img{transform:scale(1.04)}
+.fleet-body{padding:20px}.fleet-body small{color:var(--accent);font-weight:800;text-transform:uppercase;font-size:.68rem;letter-spacing:.1em}.fleet-body h3{font:800 1.08rem "Manrope";color:var(--navy);margin:7px 0}.fleet-body p{font-size:.8rem;color:var(--muted)}
+.why{background:var(--paper)}.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.why-photo{min-height:520px;background:url("https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&fit=crop&w=1300&q=85") center/cover;position:relative}
+.why-photo:after{content:"TRANSALLENDES";position:absolute;bottom:24px;left:24px;color:#fff;font:800 2rem "Manrope";letter-spacing:-.05em}
+.reason-list{border-top:1px solid var(--line);margin-top:28px}.reason{display:grid;grid-template-columns:50px 1fr;gap:15px;padding:22px 0;border-bottom:1px solid var(--line)}.reason b{font:800 1.15rem "Manrope";color:var(--accent)}.reason h3{font:800 1rem "Manrope";color:var(--navy)}.reason p{font-size:.82rem;color:var(--muted);margin-top:3px}
+.experience{background:var(--navy);color:#fff}.experience-grid{display:grid;grid-template-columns:1fr 1fr;min-height:450px}.experience-photo{background:url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1400&q=85") center/cover}.experience-copy{padding:70px;background:var(--navy2);display:flex;flex-direction:column;justify-content:center}.experience-copy h2{font:800 clamp(2rem,4vw,3.4rem)/1.05 "Manrope";letter-spacing:-.05em;margin:18px 0}.experience-copy p{color:rgba(255,255,255,.6);max-width:520px}
+.testimonials{background:#fff}.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.quote{border:1px solid var(--line);padding:30px;position:relative}.quote:before{content:"“";font:800 5rem/.6 "Manrope";color:#e7ebee;position:absolute;top:30px;right:25px}.quote p{font-size:.9rem;color:#445361;min-height:110px;position:relative}.quote footer{margin-top:25px}.quote b{font:800 .88rem "Manrope";color:var(--navy);display:block}.quote span{font-size:.72rem;color:var(--muted)}
+.faq{background:var(--paper)}.faq-list{max-width:900px;margin:auto;border-top:1px solid var(--line)}details{border-bottom:1px solid var(--line);padding:0}summary{cursor:pointer;list-style:none;padding:23px 5px;font:700 1rem "Manrope";color:var(--navy);display:flex;justify-content:space-between;gap:20px}summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:1.4rem;color:var(--accent)}details[open] summary:after{content:"−"}details p{padding:0 45px 24px 5px;color:var(--muted);font-size:.88rem}
+.contact{background:#e9edf0}.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px}.contact-copy h2{font:800 clamp(2.2rem,4vw,3.7rem)/1.02 "Manrope";letter-spacing:-.055em;color:var(--navy);margin:18px 0}.contact-copy p{color:var(--muted);max-width:450px}.contact-details{margin-top:35px;display:grid;gap:13px}.contact-detail b{display:block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--steel)}.contact-detail span{font-weight:700;color:var(--navy)}
+.form{background:#fff;padding:35px;box-shadow:var(--shadow)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--steel)}.field input,.field select,.field textarea{border:1px solid #d5dde4;padding:12px 13px;background:#fff;color:var(--ink);outline:none;border-radius:3px}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,117,34,.1)}textarea{min-height:110px;resize:vertical}.form-note{font-size:.7rem;color:var(--muted);margin-top:12px}
+footer.site-footer{background:var(--navy);color:#fff;padding:55px 0 25px}.footer-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:35px}.footer-brand p{color:rgba(255,255,255,.48);font-size:.8rem;max-width:360px;margin-top:15px}.site-footer h4{font:800 .8rem "Manrope";margin-bottom:15px}.site-footer ul{list-style:none;display:grid;gap:9px}.site-footer li,.site-footer a{font-size:.78rem;color:rgba(255,255,255,.5)}.site-footer a:hover{color:#fff}.footer-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:40px;padding-top:20px;display:flex;justify-content:space-between;gap:20px;font-size:.7rem;color:rgba(255,255,255,.4)}
+.whatsapp{position:fixed;right:22px;bottom:22px;width:55px;height:55px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;z-index:900;box-shadow:0 10px 30px rgba(0,0,0,.2);font-size:1.45rem;font-weight:800}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
+.modal{position:fixed;inset:0;background:rgba(4,12,19,.72);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:1200;padding:20px}.modal.open{display:flex}.modal-box{background:#fff;width:min(900px,100%);max-height:90vh;overflow:auto;display:grid;grid-template-columns:.9fr 1.1fr;position:relative}.modal-img{min-height:430px;background:#ddd}.modal-img img{width:100%;height:100%;object-fit:cover}.modal-content{padding:42px}.modal-content h2{font:800 2rem "Manrope";color:var(--navy);margin:10px 0}.modal-content p{color:var(--muted);font-size:.9rem}.close{position:absolute;right:15px;top:15px;border:0;background:#fff;width:38px;height:38px;cursor:pointer;font-size:1.4rem;z-index:2;box-shadow:0 4px 15px rgba(0,0,0,.12)}
+@media(max-width:1050px){.nav-links{gap:15px}.hero-inner{grid-template-columns:1fr}.hero-panel{max-width:700px}.network-grid,.why-grid,.contact-grid{grid-template-columns:1fr}.fleet-grid{grid-template-columns:repeat(2,1fr)}.process-grid{grid-template-columns:repeat(3,1fr);gap:30px}.process-grid:before{display:none}.test-grid{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:2fr 1fr 1fr}}
+@media(max-width:760px){section:not(.hero){padding:72px 0}.nav-links,.nav-actions .nav-cta{display:none}.menu-btn{display:block}.mobile-nav{position:absolute;top:70px;left:4%;right:4%;background:#fff;color:var(--navy);padding:18px;box-shadow:var(--shadow);display:none;flex-direction:column;gap:14px}.mobile-nav.open{display:flex}.mobile-nav a{font-weight:700;padding:8px}.hero-inner{padding-top:120px}.hero{min-height:auto}.hero h1{font-size:3.2rem}.route-line{overflow:auto}.route-node{font-size:.62rem}.hero-panel{padding:18px}.coverage-showcase{grid-template-columns:1fr}.corridors{min-height:280px}.trust-grid{grid-template-columns:1fr 1fr}.trust-item{padding:20px 15px}.trust-item:nth-child(2){border-right:0}.trust-item b{font-size:1.5rem}.section-head{display:block;margin-bottom:30px}.section-head p{margin-top:15px}.service-grid{grid-template-columns:1fr}.service{min-height:300px}.process-grid{grid-template-columns:1fr 1fr}.fleet-grid,.test-grid{grid-template-columns:1fr}.why-photo{min-height:360px}.experience-grid{grid-template-columns:1fr}.experience-photo{min-height:300px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.form{padding:22px}.footer-grid{grid-template-columns:1fr 1fr}.footer-bottom{display:block}.footer-bottom span{display:block;margin-top:8px}.modal-box{grid-template-columns:1fr}.modal-img{min-height:220px}.modal-content{padding:28px}}
+@media(max-width:450px){.corridor-destinations{grid-template-columns:1fr}.coverage-intro{padding:30px}.coverage-stats{flex-wrap:wrap}.coverage-showcase{gap:10px}.corridors{padding:14px}.hero h1{font-size:2.65rem}.hero-actions .btn{width:100%}.panel-bottom{grid-template-columns:1fr}.trust-grid{grid-template-columns:1fr}.trust-item{border-right:0;border-bottom:1px solid var(--line)}.process-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.coverage-stats{gap:18px}.coverage-footer{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<header class="nav" id="nav">
+<div class="container nav-inner">
+<a class="brand" href="#inicio"><span class="brand-mark">T</span>TRANSALLENDES</a>
+<nav class="nav-links">
+<a href="#servicios" data-t="nav.services">Servicios</a><a href="#cobertura" data-t="nav.coverage">Cobertura</a><a href="#flota" data-t="nav.fleet">Flota</a><a href="#nosotros" data-t="nav.about">Nosotros</a><a href="#faq">FAQ</a>
+</nav>
+<div class="nav-actions"><button class="lang active" data-lang="es">ES</button><button class="lang" data-lang="pt">PT</button><button class="lang" data-lang="en">EN</button><button class="theme" id="theme" aria-label="Cambiar tema">◐</button><a class="nav-cta" href="#contacto" data-t="nav.quote">Cotizar</a></div>
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+</div>
+<div class="mobile-nav" id="mobileNav">
+<a href="#servicios" data-t="nav.services">Servicios</a><a href="#cobertura" data-t="nav.coverage">Cobertura</a><a href="#flota" data-t="nav.fleet">Flota</a><a href="#nosotros" data-t="nav.about">Nosotros</a><a href="#faq">FAQ</a><a href="#contacto" class="btn btn-primary" data-t="nav.quote">Solicitar cotización</a>
+</div>
+</header>
+
+<main id="inicio">
+<section class="hero">
+<div class="container hero-inner">
+<div class="hero-copy">
+<div class="eyebrow" data-t="hero.eyebrow">Transporte terrestre internacional</div>
+<h1><span>Movemos tu carga.</span><em>Conectamos fronteras.</em></h1>
+<p data-t="hero.desc">Soluciones de transporte para operaciones que cruzan Chile, Argentina, Brasil y Paraguay. Carga general, refrigerada, gestión aduanera y atención personalizada.</p>
+<div class="hero-actions"><a href="#contacto" class="btn btn-primary" data-t="hero.cta">Solicitar cotización →</a><a href="#servicios" class="btn btn-outline-light" data-t="hero.services">Conocer servicios</a></div>
+<div class="route-line"><span class="route-node"><i class="route-dot"></i>Chile</span><span class="route-segment"></span><span class="route-node">Argentina</span><span class="route-segment"></span><span class="route-node">Brasil</span><span class="route-segment"></span><span class="route-node">Paraguay</span></div>
+</div>
+<div class="hero-panel">
+<div class="panel-top"><strong data-t="hero.panel">Red internacional</strong><span class="live">● Operación regional</span></div>
+<div class="operation-visual">
+  <div class="op-header"><span>OPERACIÓN ACTIVA</span><b>TRUCK / 04</b></div>
+  <div class="op-track"><i></i><i></i><i></i><i></i></div>
+  <div class="op-status"><strong>CONTROL LOGÍSTICO</strong><span>Seguimiento · Documentación · Entrega</span></div>
+  <div class="op-metrics">
+    <div><small>MODALIDAD</small><b>FTL / LTL</b></div>
+    <div><small>COBERTURA</small><b>4 PAÍSES</b></div>
+    <div><small>CONTROL</small><b>GPS</b></div>
+  </div>
+</div>
+<div class="panel-bottom"><div class="panel-stat"><b>26+</b><small data-t="stats.years">Años de experiencia</small></div><div class="panel-stat"><b>4</b><small data-t="stats.countries">Países conectados</small></div><div class="panel-stat"><b>FTL / LTL</b><small data-t="stats.solutions">Soluciones de carga</small></div></div>
+</div>
+</div>
+</section>
+
+<section class="trust"><div class="container trust-grid">
+<div class="trust-item"><b>1999</b><span data-t="trust.since">Inicio de operaciones informado en el sitio</span></div>
+<div class="trust-item"><b>4</b><span data-t="trust.countries">Chile · Argentina · Brasil · Paraguay</span></div>
+<div class="trust-item"><b>FTL / LTL</b><span data-t="trust.load">Carga completa y consolidada</span></div>
+<div class="trust-item"><b>-25°C / +25°C</b><span data-t="trust.cold">Rango informado para transporte refrigerado</span></div>
+</div></section>
+
+<section class="network reveal" id="cobertura">
+<div class="container">
+<div class="section-head">
+  <div><div class="eyebrow" data-t="network.eyebrow">Nuestra cobertura</div>
+  <h2 data-t="network.title">Conectamos operaciones entre los principales corredores del Cono Sur.</h2></div>
+  <p data-t="network.desc">Una propuesta de transporte terrestre internacional diseñada para mantener tu carga en movimiento, con coordinación desde el origen hasta la entrega.</p>
+</div>
+<div class="coverage-showcase">
+  <div class="coverage-intro">
+    <div class="coverage-kicker">TRANSALLENDES / INTERNATIONAL FREIGHT</div>
+    <h3 data-t="network.subtitle">Una sola operación. Múltiples destinos.</h3>
+    <p data-t="network.text">La cobertura y las condiciones de cada operación se definen según origen, destino, tipo de carga y requerimientos documentales.</p>
+    <div class="coverage-stats">
+      <div><strong>04</strong><span>países conectados</span></div>
+      <div><strong>FTL</strong><span>carga exclusiva</span></div>
+      <div><strong>LTL</strong><span>carga consolidada</span></div>
+    </div>
+  </div>
+  <div class="corridors">
+    <article class="corridor corridor-main">
+      <div class="corridor-top"><span>01</span><b>CHILE</b><em>ORIGEN</em></div>
+      <div class="corridor-line"><i></i><span>Corredor internacional</span><i></i></div>
+      <div class="corridor-destinations">
+        <div><strong>AR</strong><span>Argentina</span><small>Conexión internacional</small></div>
+        <div><strong>BR</strong><span>Brasil</span><small>Operación regional</small></div>
+        <div><strong>PY</strong><span>Paraguay</span><small>Operación regional</small></div>
+      </div>
+    </article>
+    <div class="coverage-footer">
+      <span>LOGÍSTICA TERRESTRE</span><span>COORDINACIÓN · CONTROL · CONTINUIDAD</span>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<section class="services reveal" id="servicios"><div class="container">
+<div class="section-head"><div><div class="eyebrow" data-t="services.eyebrow">Servicios</div><h2 data-t="services.title">Soluciones para cada tipo de carga.</h2></div><p data-t="services.desc">Una propuesta integral para transportar, coordinar y proteger tu operación internacional.</p></div>
+<div class="service-grid">
+<article class="service" style="--img:url('https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1000&q=80')" data-service="0"><span class="service-number">01</span><h3 data-t="svc.0.title">Transporte FTL</h3><p data-t="svc.0.desc">Unidad exclusiva para tu carga, orientada a operaciones de mayor volumen y continuidad directa al destino.</p><span class="service-link" data-t="more">Ver detalles →</span></article>
+<article class="service" style="--img:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80')" data-service="1"><span class="service-number">02</span><h3 data-t="svc.1.title">Carga consolidada LTL</h3><p data-t="svc.1.desc">Alternativa para compartir espacio de carga y pagar según el volumen utilizado.</p><span class="service-link" data-t="more">Ver detalles →</span></article>
+<article class="service" style="--img:url('https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=1000&q=80')" data-service="2"><span class="service-number">03</span><h3 data-t="svc.2.title">Transporte refrigerado</h3><p data-t="svc.2.desc">Cadena de frío con rango informado de -25°C a +25°C para cargas que requieren control térmico.</p><span class="service-link" data-t="more">Ver detalles →</span></article>
+<article class="service" style="--img:url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1000&q=80')" data-service="3"><span class="service-number">04</span><h3 data-t="svc.3.title">Gestión aduanera</h3><p data-t="svc.3.desc">Coordinación de documentación y procesos asociados al cruce internacional.</p><span class="service-link" data-t="more">Ver detalles →</span></article>
+<article class="service" style="--img:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1000&q=80')" data-service="4"><span class="service-number">05</span><h3 data-t="svc.4.title">Seguro de carga</h3><p data-t="svc.4.desc">Protección de la mercadería de acuerdo con las condiciones y cobertura contratadas.</p><span class="service-link" data-t="more">Ver detalles →</span></article>
+<article class="service" style="--img:url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1000&q=80')" data-service="5"><span class="service-number">06</span><h3 data-t="svc.5.title">Asesoría personalizada</h3><p data-t="svc.5.desc">Acompañamiento para coordinar cada operación y sus requerimientos.</p><span class="service-link" data-t="more">Ver detalles →</span></article>
+</div></div></section>
+
+<section class="process reveal"><div class="container">
+<div class="section-head"><div><div class="eyebrow">WORKFLOW</div><h2 data-t="process.title">Control en cada etapa del viaje.</h2></div><p data-t="process.desc">Una secuencia clara para reducir fricciones y mantener la operación coordinada desde la cotización hasta el destino.</p></div>
+<div class="process-grid">
+<div class="step"><div class="step-num">01</div><h3 data-t="step.1">Cotizamos</h3><p data-t="step.1d">Recibimos origen, destino y tipo de carga.</p></div>
+<div class="step"><div class="step-num">02</div><h3 data-t="step.2">Planificamos</h3><p data-t="step.2d">Definimos la alternativa logística.</p></div>
+<div class="step"><div class="step-num">03</div><h3 data-t="step.3">Documentamos</h3><p data-t="step.3d">Coordinamos los antecedentes necesarios.</p></div>
+<div class="step"><div class="step-num">04</div><h3 data-t="step.4">Transportamos</h3><p data-t="step.4d">Ejecutamos el traslado internacional.</p></div>
+<div class="step"><div class="step-num">05</div><h3 data-t="step.5">Seguimos</h3><p data-t="step.5d">Monitoreamos la operación.</p></div>
+<div class="step"><div class="step-num">06</div><h3 data-t="step.6">Entregamos</h3><p data-t="step.6d">Coordinamos la llegada a destino.</p></div>
+</div></div></section>
+
+<section class="fleet reveal" id="flota"><div class="container">
+<div class="section-head"><div><div class="eyebrow" data-t="fleet.eyebrow">Flota</div><h2 data-t="fleet.title">Unidades para distintos escenarios de carga.</h2></div><p data-t="fleet.desc">La información técnica disponible se mantiene sin agregar capacidades no presentes en el sitio original.</p></div>
+<div class="fleet-grid">
+<article class="fleet-card" data-fleet="0"><div class="fleet-img"><img loading="lazy" src="https://images.unsplash.com/photo-1586191582151-1f3f9f0f7f2a?auto=format&fit=crop&w=900&q=80" alt="Tractocamión en carretera"></div><div class="fleet-body"><small>01</small><h3>Camión tractocamión</h3><p>Unidades para carga pesada y larga distancia. El sitio original informa rastreo GPS y sistema ABS.</p></div></article>
+<article class="fleet-card" data-fleet="1"><div class="fleet-img"><img loading="lazy" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=900&q=80" alt="Semirremolque de carga"></div><div class="fleet-body"><small>02</small><h3>Rampa 48 pies</h3><p>Plataforma para mercadería general. El sitio original informa hasta 26 toneladas.</p></div></article>
+<article class="fleet-card" data-fleet="2"><div class="fleet-img"><img loading="lazy" src="https://images.unsplash.com/photo-1591768793355-74d04bb6608f?auto=format&fit=crop&w=900&q=80" alt="Remolque para transporte de carga"></div><div class="fleet-body"><small>03</small><h3>Rampa 53 pies</h3><p>Plataforma extendida para cargas de mayor volumen, según la información existente.</p></div></article>
+<article class="fleet-card" data-fleet="3"><div class="fleet-img"><img loading="lazy" src="https://images.unsplash.com/photo-1542296332-2e4473faf563?auto=format&fit=crop&w=900&q=80" alt="Transporte refrigerado"></div><div class="fleet-body"><small>04</small><h3>Unidad refrigerada</h3><p>Control de temperatura informado entre -25°C y +25°C, con monitoreo continuo.</p></div></article>
+</div></div></section>
+
+<section class="why reveal" id="nosotros"><div class="container why-grid"><div class="why-photo"></div><div><div class="eyebrow" data-t="why.eyebrow">Por qué TRANSALLENDES</div><h2 class="section-title" data-t="why.title">Más que transportar carga, conectamos operaciones que no pueden detenerse.</h2><div class="reason-list">
+<div class="reason"><b>01</b><div><h3 data-t="why.1">Experiencia desde 1999</h3><p data-t="why.1d">Una trayectoria comunicada en el contenido original.</p></div></div>
+<div class="reason"><b>02</b><div><h3 data-t="why.2">Operación internacional</h3><p data-t="why.2d">Cobertura entre Chile, Argentina, Brasil y Paraguay.</p></div></div>
+<div class="reason"><b>03</b><div><h3 data-t="why.3">Seguimiento GPS</h3><p data-t="why.3d">El sitio original informa seguimiento en tiempo real.</p></div></div>
+<div class="reason"><b>04</b><div><h3 data-t="why.4">Gestión y protección</h3><p data-t="why.4d">Gestión aduanera, seguro de carga y asesoría personalizada.</p></div></div>
+</div></div></div></section>
+
+<section class="experience reveal" id="experiencia"><div class="experience-grid"><div class="experience-photo"></div><div class="experience-copy"><div class="eyebrow">DESDE 1999</div><h2 data-t="exp.title">Una operación construida alrededor de la continuidad.</h2><p data-t="exp.desc">TRANSALLENDES se presenta como un operador de transporte terrestre internacional para cargas entre Chile, Argentina, Brasil y Paraguay. La propuesta combina transporte, coordinación documental, refrigeración, seguro y acompañamiento.</p></div></div></section>
+
+<section class="testimonials reveal"><div class="container"><div class="section-head"><div><div class="eyebrow" data-t="test.eyebrow">Clientes</div><h2 data-t="test.title">Experiencias que hablan de la operación.</h2></div></div>
+<div class="test-grid"><article class="quote"><p>“Excelente servicio. La documentación aduanera siempre impecable y los tiempos cumplidos al día. Muy profesionales.”</p><footer><b>Roberto Méndez</b><span>Gerente Logístico — Exportadora Austral</span></footer></article><article class="quote"><p>“Llevamos 5 años trabajando con ellos. Cero incidentes y una atención personalizada que no se encuentra en empresas grandes.”</p><footer><b>Claudia Fuentes</b><span>Directora de Compras — Textiles del Sur</span></footer></article><article class="quote"><p>“El tracking en tiempo real nos da tranquilidad total. Nuestros clientes saben exactamente cuándo llega su mercadería.”</p><footer><b>Andrés Villalobos</b><span>CEO — AgroPatagonia SpA</span></footer></article></div></div></section>
+
+<section class="faq reveal" id="faq"><div class="container"><div class="section-head"><div><div class="eyebrow">FAQ</div><h2 data-t="faq.title">Preguntas frecuentes.</h2></div><p data-t="faq.desc">Información basada en las respuestas que ya existían en el sitio.</p></div><div class="faq-list">
+<details><summary data-t="faq.q1">¿Cuáles son los tiempos de tránsito?</summary><p>Los tiempos varían según la ruta. El sitio original informa referencias para Chile–Argentina, Chile–Brasil y Chile–Paraguay; el tiempo exacto se confirma al cotizar.</p></details>
+<details><summary data-t="faq.q2">¿Qué documentación necesito?</summary><p>El contenido original indica gestión de documentación aduanera como DUS, DTA, manifiestos de carga y certificados de origen.</p></details>
+<details><summary data-t="faq.q3">¿Cómo puedo rastrear mi envío?</summary><p>El sitio original informa seguimiento GPS en tiempo real y envío de un enlace de tracking por WhatsApp.</p></details>
+<details><summary data-t="faq.q4">¿Trabajan con pedidos mínimos?</summary><p>Para carga consolidada LTL, el contenido original indica que no existe pedido mínimo y que se paga por los metros cúbicos utilizados.</p></details>
+<details><summary data-t="faq.q5">¿Trabajan con carga refrigerada?</summary><p>Si. El contenido original informa transporte refrigerado con un rango de -25°C a +25°C.</p></details>
+</div></div></section>
+
+<section class="contact reveal" id="contacto"><div class="container contact-grid"><div class="contact-copy"><div class="eyebrow" data-t="contact.eyebrow">Cotización</div><h2 data-t="contact.title">¿Tienes una carga que mover?</h2><p data-t="contact.desc">Cuéntanos origen, destino y tipo de carga. El equipo podrá revisar la operación y preparar una alternativa logística.</p><div class="contact-details"><div class="contact-detail"><b>WhatsApp</b><span>+56 9 8765 4321</span></div><div class="contact-detail"><b>Email</b><span>cotizaciones@transallendes.cl</span></div><div class="contact-detail"><b>Operaciones</b><span>operaciones@transallendes.cl</span></div></div></div>
+<form class="form" id="quoteForm"><div class="form-grid">
+<div class="field"><label data-t="form.name">Nombre</label><input name="name" required></div><div class="field"><label data-t="form.company">Empresa</label><input name="company"></div>
+<div class="field"><label>Email</label><input type="email" name="email" required></div><div class="field"><label data-t="form.phone">Teléfono</label><input name="phone"></div>
+<div class="field"><label data-t="form.origin">País de origen</label><select name="origin"><option>Chile</option><option>Argentina</option><option>Brasil</option><option>Paraguay</option></select></div><div class="field"><label data-t="form.destination">País de destino</label><select name="destination"><option>Chile</option><option>Argentina</option><option>Brasil</option><option>Paraguay</option></select></div>
+<div class="field"><label data-t="form.load">Tipo de carga</label><select name="load"><option>General</option><option>Refrigerada</option><option>Consolidada LTL</option><option>Otra</option></select></div><div class="field"><label data-t="form.service">Servicio</label><select name="service"><option>FTL</option><option>LTL</option><option>Refrigerado</option><option>Gestión aduanera</option><option>Seguro de carga</option><option>Asesoría</option></select></div>
+<div class="field full"><label data-t="form.message">Mensaje</label><textarea name="message" placeholder="Cuéntanos volumen, fechas o requisitos de tu operación"></textarea></div>
+<div class="field full"><button class="btn btn-primary" type="submit" data-t="form.submit">Solicitar cotización →</button><div class="form-note" data-t="form.note">El formulario prepara un correo con los datos ingresados. Verifica los datos de contacto antes de publicar el sitio.</div></div>
+</div></form></div></section>
+</main>
+
+<footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="#inicio"><span class="brand-mark">T</span>TRANSALLENDES</a><p data-t="footer.desc">Transporte terrestre internacional de carga entre Chile, Argentina, Brasil y Paraguay.</p></div><div><h4 data-t="footer.services">Servicios</h4><ul><li><a href="#servicios">FTL</a></li><li><a href="#servicios">LTL</a></li><li><a href="#servicios">Refrigerado</a></li><li><a href="#servicios">Aduanas</a></li></ul></div><div><h4 data-t="footer.company">Empresa</h4><ul><li><a href="#nosotros">Nosotros</a></li><li><a href="#cobertura">Cobertura</a></li><li><a href="#flota">Flota</a></li><li><a href="#faq">FAQ</a></li></ul></div><div><h4>Contacto</h4><ul><li>+56 61 2 345 6789</li><li>+56 9 8765 4321</li><li>cotizaciones@transallendes.cl</li></ul></div></div><div class="footer-bottom"><span>© 2026 TRANSALLENDES. Todos los derechos reservados.</span><span>Transporte internacional · Chile · Argentina · Brasil · Paraguay</span></div></div></footer>
+<a class="whatsapp" href="https://wa.me/56987654321" target="_blank" rel="noopener" aria-label="WhatsApp">⌕</a>
+
+<div class="modal" id="modal"><div class="modal-box"><button class="close" id="closeModal">×</button><div class="modal-img"><img id="modalImg" alt=""></div><div class="modal-content"><div class="eyebrow" id="modalEyebrow">SERVICIO</div><h2 id="modalTitle"></h2><p id="modalText"></p><br><a href="#contacto" class="btn btn-primary" id="modalCta">Solicitar cotización →</a></div></div></div>
+
+<script>
+const T={
+es:{
+"nav.services":"Servicios","nav.coverage":"Cobertura","nav.fleet":"Flota","nav.about":"Nosotros","nav.quote":"Cotizar",
+"hero.eyebrow":"Transporte terrestre internacional","hero.desc":"Soluciones de transporte para operaciones que cruzan Chile, Argentina, Brasil y Paraguay. Carga general, refrigerada, gestión aduanera y atención personalizada.","hero.cta":"Solicitar cotización →","hero.services":"Conocer servicios","hero.panel":"Red internacional",
+"stats.years":"Años de experiencia","stats.countries":"Países conectados","stats.solutions":"Soluciones de carga",
+"trust.since":"Inicio de operaciones informado en el sitio","trust.countries":"Chile · Argentina · Brasil · Paraguay","trust.load":"Carga completa y consolidada","trust.cold":"Rango informado para transporte refrigerado",
+"network.eyebrow":"Nuestra red","network.title":"Una red logística que atraviesa Latinoamérica.","network.desc":"Conectamos operaciones de comercio exterior mediante transporte terrestre internacional, con foco en continuidad, control y coordinación.","network.subtitle":"Rutas pensadas para operaciones reales.","network.text":"La cobertura y las condiciones de cada operación se definen según origen, destino, carga y requerimientos documentales.",
+"services.eyebrow":"Servicios","services.title":"Soluciones para cada tipo de carga.","services.desc":"Una propuesta integral para transportar, coordinar y proteger tu operación internacional.","more":"Ver detalles →",
+"svc.0.title":"Transporte FTL","svc.0.desc":"Unidad exclusiva para tu carga, orientada a operaciones de mayor volumen y continuidad directa al destino.","svc.1.title":"Carga consolidada LTL","svc.1.desc":"Alternativa para compartir espacio de carga y pagar según el volumen utilizado.","svc.2.title":"Transporte refrigerado","svc.2.desc":"Cadena de frío con rango informado de -25°C a +25°C para cargas que requieren control térmico.","svc.3.title":"Gestión aduanera","svc.3.desc":"Coordinación de documentación y procesos asociados al cruce internacional.","svc.4.title":"Seguro de carga","svc.4.desc":"Protección de la mercadería de acuerdo con las condiciones y cobertura contratadas.","svc.5.title":"Asesoría personalizada","svc.5.desc":"Acompañamiento para coordinar cada operación y sus requerimientos.",
+"process.title":"Control en cada etapa del viaje.","process.desc":"Una secuencia clara para reducir fricciones y mantener la operación coordinada desde la cotización hasta el destino.",
+"step.1":"Cotizamos","step.1d":"Recibimos origen, destino y tipo de carga.","step.2":"Planificamos","step.2d":"Definimos la alternativa logística.","step.3":"Documentamos","step.3d":"Coordinamos los antecedentes necesarios.","step.4":"Transportamos","step.4d":"Ejecutamos el traslado internacional.","step.5":"Seguimos","step.5d":"Monitoreamos la operación.","step.6":"Entregamos","step.6d":"Coordinamos la llegada a destino.",
+"fleet.eyebrow":"Flota","fleet.title":"Unidades para distintos escenarios de carga.","fleet.desc":"La información técnica disponible se mantiene sin agregar capacidades no presentes en el sitio original.",
+"why.eyebrow":"Por qué TRANSALLENDES","why.title":"Más que transportar carga, conectamos operaciones que no pueden detenerse.","why.1":"Experiencia desde 1999","why.1d":"Una trayectoria comunicada en el contenido original.","why.2":"Operación internacional","why.2d":"Cobertura entre Chile, Argentina, Brasil y Paraguay.","why.3":"Seguimiento GPS","why.3d":"El sitio original informa seguimiento en tiempo real.","why.4":"Gestión y protección","why.4d":"Gestión aduanera, seguro de carga y asesoría personalizada.",
+"exp.title":"Una operación construida alrededor de la continuidad.","exp.desc":"TRANSALLENDES se presenta como un operador de transporte terrestre internacional para cargas entre Chile, Argentina, Brasil y Paraguay. La propuesta combina transporte, coordinación documental, refrigeración, seguro y acompañamiento.",
+"test.eyebrow":"Clientes","test.title":"Experiencias que hablan de la operación.","faq.title":"Preguntas frecuentes.","faq.desc":"Información basada en las respuestas que ya existían en el sitio.","contact.eyebrow":"Cotización","contact.title":"¿Tienes una carga que mover?","contact.desc":"Cuéntanos origen, destino y tipo de carga. El equipo podrá revisar la operación y preparar una alternativa logística.",
+"form.name":"Nombre","form.company":"Empresa","form.phone":"Teléfono","form.origin":"País de origen","form.destination":"País de destino","form.load":"Tipo de carga","form.service":"Servicio","form.message":"Mensaje","form.submit":"Solicitar cotización →","form.note":"El formulario prepara un correo con los datos ingresados. Verifica los datos de contacto antes de publicar el sitio.",
+"footer.desc":"Transporte terrestre internacional de carga entre Chile, Argentina, Brasil y Paraguay.","footer.services":"Servicios","footer.company":"Empresa"
+},
+pt:{
+"nav.services":"Serviços","nav.coverage":"Cobertura","nav.fleet":"Frota","nav.about":"Empresa","nav.quote":"Cotação","hero.eyebrow":"Transporte terrestre internacional","hero.desc":"Soluções de transporte para operações entre Chile, Argentina, Brasil e Paraguai. Carga geral, refrigerada, gestão aduaneira e atendimento personalizado.","hero.cta":"Solicitar cotação →","hero.services":"Conhecer serviços","hero.panel":"Rede internacional","stats.years":"Anos de experiência","stats.countries":"Países conectados","stats.solutions":"Soluções de carga","trust.since":"Início das operações informado no site","trust.countries":"Chile · Argentina · Brasil · Paraguai","trust.load":"Carga completa e consolidada","trust.cold":"Faixa informada para transporte refrigerado","network.eyebrow":"Nossa rede","network.title":"Uma rede logística que atravessa a América Latina.","network.desc":"Conectamos operações de comércio exterior por meio do transporte terrestre internacional.","network.subtitle":"Rotas pensadas para operações reais.","network.text":"A cobertura e as condições de cada operação dependem da origem, destino, carga e documentação.","services.eyebrow":"Serviços","services.title":"Soluções para cada tipo de carga.","services.desc":"Uma proposta integral para transportar, coordenar e proteger sua operação internacional.","more":"Ver detalhes →","svc.0.title":"Transporte FTL","svc.0.desc":"Unidade exclusiva para sua carga, orientada a operações de maior volume.","svc.1.title":"Carga consolidada LTL","svc.1.desc":"Alternativa para compartilhar espaço e pagar conforme o volume utilizado.","svc.2.title":"Transporte refrigerado","svc.2.desc":"Cadeia de frio com faixa informada de -25°C a +25°C.","svc.3.title":"Gestão aduaneira","svc.3.desc":"Coordenação de documentação e processos de fronteira.","svc.4.title":"Seguro de carga","svc.4.desc":"Proteção da mercadoria conforme as condições contratadas.","svc.5.title":"Assessoria personalizada","svc.5.desc":"Acompanhamento para coordenar cada operação.","process.title":"Controle em cada etapa da viagem.","process.desc":"Uma sequência clara desde a cotação até o destino.","step.1":"Cotamos","step.1d":"Recebemos origem, destino e tipo de carga.","step.2":"Planejamos","step.2d":"Definimos a alternativa logística.","step.3":"Documentamos","step.3d":"Coordenamos os documentos necessários.","step.4":"Transportamos","step.4d":"Executamos o transporte internacional.","step.5":"Acompanhamos","step.5d":"Monitoramos a operação.","step.6":"Entregamos","step.6d":"Coordenamos a chegada ao destino.","fleet.eyebrow":"Frota","fleet.title":"Unidades para diferentes cenários de carga.","fleet.desc":"As informações técnicas disponíveis foram mantidas sem adicionar capacidades não presentes no site original.","why.eyebrow":"Por que TRANSALLENDES","why.title":"Mais do que transportar carga, conectamos operações que não podem parar.","why.1":"Experiência desde 1999","why.1d":"Trajetória informada no conteúdo original.","why.2":"Operação internacional","why.2d":"Cobertura entre Chile, Argentina, Brasil e Paraguai.","why.3":"Rastreamento GPS","why.3d":"O site original informa rastreamento em tempo real.","why.4":"Gestão e proteção","why.4d":"Gestão aduaneira, seguro e assessoria.","exp.title":"Uma operação construída em torno da continuidade.","exp.desc":"A TRANSALLENDES se apresenta como operadora de transporte terrestre internacional entre Chile, Argentina, Brasil e Paraguai.","test.eyebrow":"Clientes","test.title":"Experiências que falam da operação.","faq.title":"Perguntas frequentes.","faq.desc":"Informações baseadas nas respostas existentes no site.","contact.eyebrow":"Cotação","contact.title":"Você tem uma carga para transportar?","contact.desc":"Informe origem, destino e tipo de carga para que a equipe possa analisar a operação.","form.name":"Nome","form.company":"Empresa","form.phone":"Telefone","form.origin":"País de origem","form.destination":"País de destino","form.load":"Tipo de carga","form.service":"Serviço","form.message":"Mensagem","form.submit":"Solicitar cotação →","form.note":"O formulário prepara um e-mail com os dados informados.","footer.desc":"Transporte terrestre internacional de carga entre Chile, Argentina, Brasil e Paraguai.","footer.services":"Serviços","footer.company":"Empresa"
+},
+en:{
+"nav.services":"Services","nav.coverage":"Coverage","nav.fleet":"Fleet","nav.about":"Company","nav.quote":"Get a quote","hero.eyebrow":"International ground freight","hero.desc":"Transport solutions for operations connecting Chile, Argentina, Brazil and Paraguay. General and refrigerated cargo, customs coordination and personalized support.","hero.cta":"Request a quote →","hero.services":"Explore services","hero.panel":"International network","stats.years":"Years of experience","stats.countries":"Connected countries","stats.solutions":"Freight solutions","trust.since":"Operations start reported on the site","trust.countries":"Chile · Argentina · Brazil · Paraguay","trust.load":"Full and consolidated loads","trust.cold":"Reported range for refrigerated transport","network.eyebrow":"Our network","network.title":"A logistics network across Latin America.","network.desc":"We connect foreign-trade operations through international ground transportation.","network.subtitle":"Routes designed for real operations.","network.text":"Coverage and conditions depend on origin, destination, cargo and documentation requirements.","services.eyebrow":"Services","services.title":"Solutions for every type of cargo.","services.desc":"An integrated proposal to transport, coordinate and protect your international operation.","more":"View details →","svc.0.title":"FTL Transportation","svc.0.desc":"Dedicated equipment for your cargo, designed for larger-volume operations and direct continuity to destination.","svc.1.title":"Consolidated LTL","svc.1.desc":"Share cargo space and pay according to the volume used.","svc.2.title":"Refrigerated Transport","svc.2.desc":"Cold-chain transport with the reported range of -25°C to +25°C.","svc.3.title":"Customs Management","svc.3.desc":"Coordination of documentation and international border processes.","svc.4.title":"Cargo Insurance","svc.4.desc":"Cargo protection according to the contracted terms and coverage.","svc.5.title":"Personalized Advice","svc.5.desc":"Support to coordinate each operation and its requirements.","process.title":"Control at every stage of the journey.","process.desc":"A clear sequence from quotation to destination.","step.1":"Quote","step.1d":"We receive origin, destination and cargo type.","step.2":"Plan","step.2d":"We define the logistics alternative.","step.3":"Document","step.3d":"We coordinate the required documents.","step.4":"Transport","step.4d":"We execute the international movement.","step.5":"Track","step.5d":"We monitor the operation.","step.6":"Deliver","step.6d":"We coordinate arrival at destination.","fleet.eyebrow":"Fleet","fleet.title":"Units for different cargo scenarios.","fleet.desc":"Available technical information is maintained without adding capabilities not present in the original site.","why.eyebrow":"Why TRANSALLENDES","why.title":"More than moving cargo, we connect operations that cannot stop.","why.1":"Experience since 1999","why.1d":"Track record stated in the original content.","why.2":"International operation","why.2d":"Coverage across Chile, Argentina, Brazil and Paraguay.","why.3":"GPS tracking","why.3d":"The original site reports real-time tracking.","why.4":"Management & protection","why.4d":"Customs management, cargo insurance and personalized advice.","exp.title":"An operation built around continuity.","exp.desc":"TRANSALLENDES presents itself as an international ground freight operator connecting Chile, Argentina, Brazil and Paraguay.","test.eyebrow":"Clients","test.title":"Experiences that speak to the operation.","faq.title":"Frequently asked questions.","faq.desc":"Information based on answers already present on the site.","contact.eyebrow":"Quotation","contact.title":"Do you have cargo to move?","contact.desc":"Tell us origin, destination and cargo type so the team can review the operation.","form.name":"Name","form.company":"Company","form.phone":"Phone","form.origin":"Origin country","form.destination":"Destination country","form.load":"Cargo type","form.service":"Service","form.message":"Message","form.submit":"Request a quote →","form.note":"The form prepares an email with the entered information.","footer.desc":"International ground freight between Chile, Argentina, Brazil and Paraguay.","footer.services":"Services","footer.company":"Company"
+}};
+let lang=localStorage.getItem("trans_lang")||"es";
+function applyLang(){
+ document.documentElement.lang=lang;
+ document.querySelectorAll("[data-t]").forEach(el=>{const v=T[lang][el.dataset.t];if(v)el.textContent=v});
+ document.querySelectorAll(".lang").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
+ document.title=lang==="es"?"TRANSALLENDES | Transporte Internacional de Carga":lang==="pt"?"TRANSALLENDES | Transporte Internacional de Carga":"TRANSALLENDES | International Freight Transport";
+ localStorage.setItem("trans_lang",lang);
+}
+document.querySelectorAll(".lang").forEach(b=>b.addEventListener("click",()=>{lang=b.dataset.lang;applyLang()}));
+const nav=document.getElementById("nav");window.addEventListener("scroll",()=>nav.classList.toggle("scrolled",scrollY>30),{passive:true});
+const menuBtn=document.getElementById("menuBtn"),mobile=document.getElementById("mobileNav");menuBtn.addEventListener("click",()=>mobile.classList.toggle("open"));mobile.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>mobile.classList.remove("open")));
+document.getElementById("theme").addEventListener("click",()=>{document.body.classList.toggle("dark");localStorage.setItem("trans_theme",document.body.classList.contains("dark")?"dark":"light")});
+if(localStorage.getItem("trans_theme")==="dark")document.body.classList.add("dark");
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll(".reveal").forEach(e=>io.observe(e));
+const serviceData=[
+["Transporte FTL","Unidad exclusiva para tu carga y continuidad directa al destino.","https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1000&q=80"],
+["Carga consolidada LTL","Comparte espacio de carga y paga según el volumen utilizado.","https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80"],
+["Transporte refrigerado","Cadena de frío con rango informado de -25°C a +25°C.","https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=1000&q=80"],
+["Gestión aduanera","Coordinación de documentación y procesos asociados al cruce internacional.","https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1000&q=80"],
+["Seguro de carga","Protección de la mercadería según las condiciones contratadas.","https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1000&q=80"],
+["Asesoría personalizada","Acompañamiento para coordinar cada operación y sus requerimientos.","https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1000&q=80"]
+];
+const modal=document.getElementById("modal"),mTitle=document.getElementById("modalTitle"),mText=document.getElementById("modalText"),mImg=document.getElementById("modalImg");
+document.querySelectorAll(".service").forEach(card=>card.addEventListener("click",()=>{const d=serviceData[+card.dataset.service];mTitle.textContent=d[0];mText.textContent=d[1];mImg.src=d[2];mImg.alt=d[0];modal.classList.add("open");document.body.style.overflow="hidden"}));
+document.querySelectorAll(".fleet-card").forEach(card=>card.addEventListener("click",()=>{const titles=["Camión tractocamión","Rampa 48 pies","Rampa 53 pies","Unidad refrigerada"];mTitle.textContent=titles[+card.dataset.fleet];mText.textContent="Información técnica basada en el contenido existente de TRANSALLENDES. Revisa y actualiza las especificaciones antes de publicar.";mImg.src=card.querySelector("img").src;mImg.alt=titles[+card.dataset.fleet];modal.classList.add("open");document.body.style.overflow="hidden"}));
+function closeModal(){modal.classList.remove("open");document.body.style.overflow=""}document.getElementById("closeModal").addEventListener("click",closeModal);modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+document.getElementById("quoteForm").addEventListener("submit",e=>{e.preventDefault();const f=new FormData(e.target);const subject=encodeURIComponent("Solicitud de cotización - TRANSALLENDES");const body=encodeURIComponent(`Nombre: ${f.get("name")}\nEmpresa: ${f.get("company")}\nEmail: ${f.get("email")}\nTeléfono: ${f.get("phone")}\nOrigen: ${f.get("origin")}\nDestino: ${f.get("destination")}\nCarga: ${f.get("load")}\nServicio: ${f.get("service")}\nMensaje: ${f.get("message")}`);window.location.href=`mailto:cotizaciones@transallendes.cl?subject=${subject}&body=${body}`});
+applyLang();
+</script>
+</body>
+</html>

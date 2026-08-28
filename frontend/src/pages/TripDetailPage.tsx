@@ -19,11 +19,12 @@ export default function TripDetailPage() {
 
   useEffect(() => {
     if (!id) return
+    const tripId = id
     async function fetch() {
       try {
         const [t, pos] = await Promise.all([
-          getTrip(id),
-          getTripPositions(id).catch(() => []),
+          getTrip(tripId),
+          getTripPositions(tripId).catch(() => []),
         ])
         setTrip(t)
         setPositions(pos)
@@ -121,8 +122,8 @@ export default function TripDetailPage() {
               id: trip.id,
               truckId: trip.truckId || '',
               plate: trip.truckPlate || '',
-              lat: routePoints[routePoints.length - 1].lat,
-              lng: routePoints[routePoints.length - 1].lng,
+              lat: routePoints[routePoints.length - 1]!.lat,
+              lng: routePoints[routePoints.length - 1]!.lng,
               speed: 0,
               heading: 0,
               status: trip.status,

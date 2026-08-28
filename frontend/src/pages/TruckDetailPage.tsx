@@ -24,13 +24,14 @@ export default function TruckDetailPage() {
 
   useEffect(() => {
     if (!id) return
+    const truckId = id
     async function fetch() {
       try {
         const [t, pos, maint, lastPos] = await Promise.all([
-          getTruck(id),
-          getTruckPositions(id, { from: new Date(Date.now() - 86400000).toISOString() }).catch(() => []),
-          getMaintenance({ truckId: id, limit: '10' }).catch(() => ({ data: [] })),
-          getTruckLastPosition(id).catch(() => null),
+          getTruck(truckId),
+          getTruckPositions(truckId, { from: new Date(Date.now() - 86400000).toISOString() }).catch(() => []),
+          getMaintenance({ truckId, limit: '10' }).catch(() => ({ data: [] })),
+          getTruckLastPosition(truckId).catch(() => null),
         ])
         setTruck(t)
         setPositions(pos)

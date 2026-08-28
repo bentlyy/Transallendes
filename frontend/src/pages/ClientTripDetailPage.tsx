@@ -16,11 +16,12 @@ export default function ClientTripDetailPage() {
 
   useEffect(() => {
     if (!id) return
+    const tripId = id
     async function fetch() {
       try {
         const [t, pos] = await Promise.all([
-          getTrip(id),
-          getTripPositions(id).catch(() => []),
+          getTrip(tripId),
+          getTripPositions(tripId).catch(() => []),
         ])
         setTrip(t)
         setPositions(pos)

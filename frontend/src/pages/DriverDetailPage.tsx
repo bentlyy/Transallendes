@@ -16,11 +16,12 @@ export default function DriverDetailPage() {
 
   useEffect(() => {
     if (!id) return
+    const driverId = id
     async function fetch() {
       try {
         const [d, t] = await Promise.all([
-          getDriver(id),
-          getDriverTrips(id).catch(() => ({ data: [] })),
+          getDriver(driverId),
+          getDriverTrips(driverId).catch(() => ({ data: [] })),
         ])
         setDriver(d)
         setTrips(t.data)
