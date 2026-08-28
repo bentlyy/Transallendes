@@ -42,7 +42,7 @@ export default function RegisterPage() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--background)', padding: 20 }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card" style={{ width: '100%', maxWidth: 480, padding: 32 }}>
         <h2 style={{ margin: '0 0 4px' }}>Crear cuenta</h2>
-        <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20 }}>Regístrate en Transallendes</p>
+        <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20 }}>Regístrate en Transporte</p>
 
         {error && (
           <div style={{ padding: '10px 14px', backgroundColor: '#fee2e2', color: '#dc2626', borderRadius: 8, fontSize: 13, marginBottom: 16 }}>{error}</div>

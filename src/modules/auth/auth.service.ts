@@ -153,7 +153,7 @@ export const register = async ({
 
     const { password: _, ...userWithoutPassword } = user
     return {
-      user: userWithoutPassword as Omit<UserRow, 'password'>,
+      user: userWithoutPassword,
       access_token,
       refresh_token,
     }
@@ -173,7 +173,7 @@ export const register = async ({
 
 export const login = async (
   { email, password, totp_code }: LoginParams,
-  tenantId: string = 'default',
+  tenantId = 'default',
 ): Promise<{
   access_token: string
   refresh_token: string
@@ -388,7 +388,7 @@ export const logoutAll = async (userId: number): Promise<void> => {
 
 export const changePassword = async (
   { userId, currentPassword, newPassword }: ChangePasswordParams,
-  tenantId: string = 'default',
+  tenantId = 'default',
 ): Promise<void> => {
   const userResult = await pool.query('SELECT password FROM users WHERE id = $1 AND tenant_id = $2', [userId, tenantId])
   if (!userResult.rows[0]) throw new BadRequestError('User not found')
@@ -417,7 +417,7 @@ export const generateSecret = (email: string): { secret: string; qrCodeUrl: stri
   const buf = crypto.randomBytes(20)
   const secret = base32Encode(buf)
   const encodedEmail = encodeURIComponent(email)
-  const qrCodeUrl = `otpauth://totp/Transallendes:${encodedEmail}?secret=${secret}&issuer=Transallendes&algorithm=SHA1&digits=6&period=30`
+  const qrCodeUrl = `otpauth://totp/Transporte:${encodedEmail}?secret=${secret}&issuer=Transporte&algorithm=SHA1&digits=6&period=30`
   return { secret, qrCodeUrl }
 }
 
@@ -566,7 +566,7 @@ export const forgotPassword = async (email: string, tenantId: string): Promise<v
     try {
       await sendEmail({
         to: email,
-        subject: 'Password Reset - Transallendes',
+        subject: 'Password Reset - Transporte',
         html: `
           <h2>Password Reset</h2>
           <p>Click the link below to reset your password. This link expires in 1 hour.</p>

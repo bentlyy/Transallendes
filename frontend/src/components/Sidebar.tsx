@@ -91,7 +91,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     logoText = 'Mi Portal'
   } else {
     navItems = ADMIN_NAV
-    logoText = 'Transallendes'
+    logoText = 'Transporte'
   }
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'

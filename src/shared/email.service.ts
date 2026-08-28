@@ -8,8 +8,8 @@ const loadSendGrid = async (): Promise<any> => {
   if (sgMailLoaded) return sgMail
   sgMailLoaded = true
   try {
-    const mod = await import('@sendgrid/mail' as string)
-    sgMail = (mod as any).default || mod
+    const mod = await import('@sendgrid/mail')
+    sgMail = mod.default || mod
   } catch {
     sgMail = null
     logger.warn('[Email] @sendgrid/mail not installed; SendGrid provider unavailable')
@@ -33,7 +33,7 @@ type EmailProvider = 'sendgrid' | 'smtp' | 'log'
 
 let provider: EmailProvider = 'log'
 let transporter: Transporter | null = null
-const DEFAULT_FROM_NAME = 'Transallendes'
+const DEFAULT_FROM_NAME = 'Transporte'
 
 const getFromName = (tenantId?: string): string => {
   if (tenantId) {
@@ -100,7 +100,7 @@ export const validateEmailConfig = async (): Promise<void> => {
   if (provider === 'smtp' && transporter) {
     transporter.verify((err: Error | null) => {
       if (err) {
-        logger.error('[Email] SMTP verification failed:', { error: (err as Error).message })
+        logger.error('[Email] SMTP verification failed:', { error: err.message })
       } else {
         logger.info('[Email] SMTP connection verified')
       }

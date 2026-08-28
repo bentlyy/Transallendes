@@ -106,7 +106,7 @@ export default function LoginPage() {
               <path d="M2 12l10 5 10-5" />
             </svg>
           </div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Transallendes</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Transporte</h1>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
             Sistema de gestión de flota y monitoreo de transporte en tiempo real
           </p>
@@ -154,7 +154,7 @@ export default function LoginPage() {
                 <path d="M2 12l10 5 10-5" />
               </svg>
             </div>
-            <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Transallendes</h1>
+            <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Transporte</h1>
             <p style={{ color: 'var(--muted)', fontSize: 14, marginTop: 4 }}>Inicia sesión en tu cuenta</p>
           </div>
 
@@ -282,7 +282,7 @@ export default function LoginPage() {
           </div>
 
           <p style={{ textAlign: 'center', color: 'var(--muted)', fontSize: 12, marginTop: 24 }}>
-            &copy; {new Date().getFullYear()} Transallendes. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} Transporte. Todos los derechos reservados.
           </p>
         </div>
       </div>
