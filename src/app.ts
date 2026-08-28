@@ -91,8 +91,11 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(resolve(process.cwd(), 'frontend/dist')))
 }
 
+const normalizeOrigin = (value: string) => value.toLowerCase()
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
-const allowedOrigins = ['http://localhost:5173', frontendUrl].filter((origin): origin is string => Boolean(origin))
+const allowedOrigins = ['http://localhost:5173', frontendUrl]
+  .map(normalizeOrigin)
+  .filter((origin): origin is string => Boolean(origin))
 
 app.use(
   cors({
@@ -105,7 +108,7 @@ app.use(
         callback(new Error('CORS misconfigured: no allowed origins in production'))
         return
       }
-      if (allowedOrigins.includes(origin)) {
+      if (allowedOrigins.includes(normalizeOrigin(origin))) {
         callback(null, origin)
       } else {
         callback(new Error('Not allowed by CORS'))

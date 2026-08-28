@@ -32,7 +32,7 @@ services:
       NODE_ENV: production
       PORT: "3000"
       DATABASE_URL: postgresql://transallendes:${DB_PASSWORD}@db:5432/transallendes
-      FRONTEND_URL: https://Transporte.amgdeveloper.cl
+      FRONTEND_URL: https://transporte.amgdeveloper.cl
       DEFAULT_TENANT_ID: transallendes
       JWT_SECRET: ${JWT_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
