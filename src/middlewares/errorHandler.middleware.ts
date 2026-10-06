@@ -26,7 +26,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     status: 'error',
     statusCode,
     errorCode: err instanceof AppError ? err.errorCode : 'INTERNAL_ERROR',
-    message: err.message || 'Error interno del servidor',
+    message: err.message || 'Internal Server Error',
   }
 
   if (isDev) {
@@ -44,6 +44,6 @@ export const notFoundHandler = (req: Request, res: Response): void => {
     status: 'error',
     statusCode: 404,
     errorCode: 'ROUTE_NOT_FOUND',
-    message: `Ruta no encontrada: ${req.method} ${req.path}`,
+    message: `Route not found: ${req.method} ${req.path}`,
   })
 }

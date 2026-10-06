@@ -10,7 +10,7 @@ export const findAll = async (tenant_id: string, filters: TruckFilters = {}) => 
 
 export const findById = async (tenant_id: string, id: number) => {
   const truck = await repo.findById(tenant_id, id)
-  if (!truck) throw new NotFoundError('Camion no encontrado')
+  if (!truck) throw new NotFoundError('Truck not found')
   return truck
 }
 
@@ -20,24 +20,24 @@ export const create = async (tenant_id: string, data: Record<string, unknown>) =
 
 export const update = async (tenant_id: string, id: number, data: Record<string, unknown>) => {
   const truck = await repo.update(tenant_id, id, data)
-  if (!truck) throw new NotFoundError('Camion no encontrado')
+  if (!truck) throw new NotFoundError('Truck not found')
   return truck
 }
 
 export const remove = async (tenant_id: string, id: number) => {
   const deleted = await repo.remove(tenant_id, id)
-  if (!deleted) throw new NotFoundError('Camion no encontrado')
+  if (!deleted) throw new NotFoundError('Truck not found')
 }
 
 export const getLastPosition = async (tenant_id: string, truckId: number) => {
   const exists = await repo.existsById(tenant_id, truckId)
-  if (!exists) throw new NotFoundError('Camion no encontrado')
+  if (!exists) throw new NotFoundError('Truck not found')
   return repo.getLastGpsPosition(tenant_id, truckId)
 }
 
 export const getPositionHistory = async (tenant_id: string, truckId: number, from?: string, to?: string) => {
   const exists = await repo.existsById(tenant_id, truckId)
-  if (!exists) throw new NotFoundError('Camion no encontrado')
+  if (!exists) throw new NotFoundError('Truck not found')
   return repo.getPositionHistory(tenant_id, truckId, from, to)
 }
 

@@ -48,7 +48,7 @@ export const findAll = async (tenant_id: string, filters: DriverFilters = {}) =>
 
 export const findById = async (tenant_id: string, id: number) => {
   const result = await query('SELECT * FROM drivers WHERE id = $1 AND tenant_id = $2', [id, tenant_id])
-  if (result.rows.length === 0) throw new NotFoundError('Conductor no encontrado')
+  if (result.rows.length === 0) throw new NotFoundError('Driver not found')
   return result.rows[0]
 }
 
@@ -77,7 +77,7 @@ export const create = async (tenant_id: string, data: Record<string, unknown>) =
 
 export const update = async (tenant_id: string, id: number, data: Record<string, unknown>) => {
   const existing = await query('SELECT id FROM drivers WHERE id = $1 AND tenant_id = $2', [id, tenant_id])
-  if (existing.rows.length === 0) throw new NotFoundError('Conductor no encontrado')
+  if (existing.rows.length === 0) throw new NotFoundError('Driver not found')
 
   const sets: string[] = []
   const values: unknown[] = []
@@ -104,12 +104,12 @@ export const update = async (tenant_id: string, id: number, data: Record<string,
 
 export const remove = async (tenant_id: string, id: number) => {
   const result = await query('DELETE FROM drivers WHERE id = $1 AND tenant_id = $2 RETURNING id', [id, tenant_id])
-  if (result.rows.length === 0) throw new NotFoundError('Conductor no encontrado')
+  if (result.rows.length === 0) throw new NotFoundError('Driver not found')
 }
 
 export const getDriverTrips = async (tenant_id: string, driverId: number) => {
   const driver = await query('SELECT id FROM drivers WHERE id = $1 AND tenant_id = $2', [driverId, tenant_id])
-  if (driver.rows.length === 0) throw new NotFoundError('Conductor no encontrado')
+  if (driver.rows.length === 0) throw new NotFoundError('Driver not found')
 
   const result = await query(
     `SELECT t.*,

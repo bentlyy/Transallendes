@@ -7,15 +7,6 @@ import DataTable, { type Column } from '@/components/DataTable'
 import { formatDate } from '@/utils/formatters'
 import { motion } from 'framer-motion'
 
-const roleLabels: Record<string, string> = {
-  superadmin: 'Super Admin',
-  admin: 'Administrador',
-  client_admin: 'Cliente Admin',
-  client_viewer: 'Cliente Vista',
-  driver: 'Conductor',
-  user: 'Usuario',
-}
-
 export default function TenantDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -43,7 +34,7 @@ export default function TenantDetailPage() {
   const userCols: Column<Record<string, unknown>>[] = [
     { key: 'name', header: 'Nombre' },
     { key: 'email', header: 'Email' },
-    { key: 'role', header: 'Rol', render: (u: Record<string, unknown>) => roleLabels[String(u.role || '')] || String(u.role || '') },
+    { key: 'role', header: 'Rol' },
   ]
 
   return (

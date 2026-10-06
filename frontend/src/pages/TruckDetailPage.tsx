@@ -69,18 +69,8 @@ export default function TruckDetailPage() {
       }
     : null
 
-  const maintTypeLabels: Record<string, string> = {
-    preventive: 'Preventivo',
-    corrective: 'Correctivo',
-    predictive: 'Predictivo',
-    inspection: 'Inspección',
-    tire_change: 'Cambio de neumáticos',
-    oil_change: 'Cambio de aceite',
-    other: 'Otro',
-  }
-
   const maintCols: Column<Maintenance>[] = [
-    { key: 'type', header: 'Tipo', render: (m) => maintTypeLabels[m.type] || m.type },
+    { key: 'type', header: 'Tipo' },
     { key: 'status', header: 'Estado', render: (m) => <StatusBadge status={m.status} type="maintenance" /> },
     { key: 'description', header: 'Descripción' },
     { key: 'scheduledDate', header: 'Programado', render: (m) => formatDate(m.scheduledDate) },

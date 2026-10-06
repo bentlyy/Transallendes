@@ -17,5 +17,5 @@ export function startAllJobs() {
   startDocumentExpiry()
   startReportGenerator()
   startPartitionEnsure()
-  logger.info('Todos los trabajos en segundo plano registrados')
+  logger.info('All background jobs registered')
 }

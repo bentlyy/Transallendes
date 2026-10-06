@@ -108,43 +108,43 @@ export const validateEnvSecurity = (): void => {
 
   const jwtSecret = process.env.JWT_SECRET
   if (!jwtSecret) {
-    errors.push('JWT_SECRET no esta configurado')
+    errors.push('JWT_SECRET is not set')
   } else if (jwtSecret.length < 32) {
-    errors.push('JWT_SECRET debe tener al menos 32 caracteres')
+    errors.push('JWT_SECRET must be at least 32 characters long')
   } else if (jwtSecret === 'CHANGEME_jwt_secret_key_min_32_chars_long') {
-    errors.push('JWT_SECRET debe cambiarse del valor por defecto')
+    errors.push('JWT_SECRET must be changed from the default value')
   }
 
   const auditHmacSecret = process.env.AUDIT_HMAC_SECRET
   if (!auditHmacSecret) {
-    errors.push('AUDIT_HMAC_SECRET no esta configurado')
+    errors.push('AUDIT_HMAC_SECRET is not set')
   } else if (auditHmacSecret.length < 32) {
-    errors.push('AUDIT_HMAC_SECRET debe tener al menos 32 caracteres')
+    errors.push('AUDIT_HMAC_SECRET must be at least 32 characters long')
   }
 
   const encryptionKey = process.env.ENCRYPTION_KEY
   if (!encryptionKey) {
-    errors.push('ENCRYPTION_KEY no esta configurado')
+    errors.push('ENCRYPTION_KEY is not set')
   } else if (encryptionKey.length < 16) {
-    errors.push('ENCRYPTION_KEY debe tener al menos 16 caracteres')
+    errors.push('ENCRYPTION_KEY must be at least 16 characters long')
   }
 
   const databaseUrl = process.env.DATABASE_URL
   if (!databaseUrl) {
-    errors.push('DATABASE_URL no esta configurado')
+    errors.push('DATABASE_URL is not set')
   } else if (!databaseUrl.startsWith('postgresql://') && !databaseUrl.startsWith('postgres://')) {
-    errors.push('DATABASE_URL debe ser una cadena de conexion PostgreSQL valida')
+    errors.push('DATABASE_URL must be a valid PostgreSQL connection string')
   }
 
   if (errors.length > 0) {
     for (const error of errors) {
-      logger.error(`Fallo la validacion de seguridad: ${error}`)
+      logger.error(`Security validation failed: ${error}`)
     }
     if (process.env.NODE_ENV === 'production') {
-      throw new Error(`Fallo la validacion de seguridad del entorno:\n${errors.join('\n')}`)
+      throw new Error(`Security environment validation failed:\n${errors.join('\n')}`)
     }
-    logger.warn('Ejecutando con advertencias de seguridad (modo no produccion)')
+    logger.warn('Running with security warnings (non-production mode)')
   } else {
-    logger.info('Todas las variables de entorno de seguridad fueron validadas')
+    logger.info('All security environment variables validated')
   }
 }

@@ -166,7 +166,7 @@ class GpsPollingJob extends BaseJob {
 export function startGpsPolling(): void {
   const job = new GpsPollingJob()
   cron.schedule('*/30 * * * * *', () => {
-    job.run().catch((err) => logger.error('Error en el cron del sondeo GPS', { error: err }))
+    job.run().catch((err) => logger.error('GPS polling cron error', { error: err }))
   })
-  logger.info('Sondeo GPS iniciado (cada 30s)')
+  logger.info('GPS polling started (every 30s)')
 }

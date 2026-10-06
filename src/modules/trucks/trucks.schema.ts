@@ -2,9 +2,9 @@ import { z } from 'zod'
 
 export const createTruckSchema = z
   .object({
-    plate: z.string().min(1, 'La patente es obligatoria').max(20),
-    brand: z.string().min(1, 'La marca es obligatoria').max(100),
-    model: z.string().min(1, 'El modelo es obligatorio').max(100),
+    plate: z.string().min(1, 'Plate is required').max(20),
+    brand: z.string().min(1, 'Brand is required').max(100),
+    model: z.string().min(1, 'Model is required').max(100),
     year: z.coerce.number().int().min(1980).max(2100),
     capacity_kg: z.coerce.number().positive(),
     capacity_m3: z.coerce.number().positive(),

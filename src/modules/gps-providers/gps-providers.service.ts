@@ -139,7 +139,7 @@ export async function getLatestForTruck(tenant_id: string, truckId: number) {
      LIMIT 1`,
     [tenant_id, truckId],
   )
-  if (!rows[0]) throw new NotFoundError('No se encontro posicion GPS para este camion')
+  if (!rows[0]) throw new NotFoundError('No GPS position found for this truck')
   return rows[0]
 }
 

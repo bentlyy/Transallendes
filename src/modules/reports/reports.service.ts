@@ -40,12 +40,12 @@ export const findAll = async (tenant_id: string) => {
 
 export const findById = async (tenant_id: string, id: number) => {
   const result = await query('SELECT * FROM reports WHERE id = $1 AND tenant_id = $2', [id, tenant_id])
-  if (result.rows.length === 0) throw new NotFoundError('Informe no encontrado')
+  if (result.rows.length === 0) throw new NotFoundError('Report not found')
   return result.rows[0]
 }
 
 export const download = async (tenant_id: string, id: number) => {
   const report = await findById(tenant_id, id)
-  if (!report.file_path) throw new BadRequestError('El archivo del informe aun no se ha generado')
+  if (!report.file_path) throw new BadRequestError('Report file not yet generated')
   return report
 }

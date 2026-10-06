@@ -56,7 +56,7 @@ const ALERT_TYPES: Record<string, AlertRuleConfig> = {
   speeding: {
     condition: (pos) => (pos.speed_kmh ?? 0) > 90,
     severity: 'warning',
-    titleTemplate: (pos) => `Exceso de velocidad: ${pos.speed_kmh} km/h en ${pos.license_plate || pos.gps_device_id}`,
+    titleTemplate: (pos) => `Speeding: ${pos.speed_kmh} km/h on ${pos.license_plate || pos.gps_device_id}`,
   },
   gps_disconnected: {
     condition: (pos) => {
@@ -64,7 +64,7 @@ const ALERT_TYPES: Record<string, AlertRuleConfig> = {
       return diff > 5 * 60 * 1000
     },
     severity: 'critical',
-    titleTemplate: (pos) => `GPS desconectado: ${pos.license_plate || pos.gps_device_id} (sin datos >5 min)`,
+    titleTemplate: (pos) => `GPS disconnected: ${pos.license_plate || pos.gps_device_id} (no data >5 min)`,
   },
   fuel_drop: {
     condition: (pos, ctx) => {
@@ -72,7 +72,7 @@ const ALERT_TYPES: Record<string, AlertRuleConfig> = {
       return ctx.previous.fuel_level - pos.fuel_level > 10
     },
     severity: 'critical',
-    titleTemplate: (pos) => `Baja de combustible >10% en ${pos.license_plate || pos.gps_device_id}`,
+    titleTemplate: (pos) => `Fuel drop >10% on ${pos.license_plate || pos.gps_device_id}`,
   },
   stopped_too_long: {
     condition: (pos, ctx) => {
@@ -81,7 +81,7 @@ const ALERT_TYPES: Record<string, AlertRuleConfig> = {
       return stoppedDuration >= 2
     },
     severity: 'warning',
-    titleTemplate: (pos) => `Detenido >2h: ${pos.license_plate || pos.gps_device_id}`,
+    titleTemplate: (pos) => `Stopped >2h: ${pos.license_plate || pos.gps_device_id}`,
   },
   high_temp: {
     condition: (pos) => {
@@ -89,7 +89,7 @@ const ALERT_TYPES: Record<string, AlertRuleConfig> = {
       return pos.temperature > (((pos.raw_data as Record<string, unknown>)?.['temp_threshold'] as number) ?? 70)
     },
     severity: 'warning',
-    titleTemplate: (pos) => `Temperatura alta (${pos.temperature}°C) en ${pos.license_plate || pos.gps_device_id}`,
+    titleTemplate: (pos) => `High temperature (${pos.temperature}°C) on ${pos.license_plate || pos.gps_device_id}`,
   },
   low_battery: {
     condition: (pos) => {
@@ -97,7 +97,7 @@ const ALERT_TYPES: Record<string, AlertRuleConfig> = {
       return pos.battery_level < 10
     },
     severity: 'warning',
-    titleTemplate: (pos) => `Bateria baja (${pos.battery_level}%) en ${pos.license_plate || pos.gps_device_id}`,
+    titleTemplate: (pos) => `Low battery (${pos.battery_level}%) on ${pos.license_plate || pos.gps_device_id}`,
   },
 }
 
@@ -259,10 +259,10 @@ class AlertEngineJob extends BaseJob {
             driver_id: pos.driver_id ?? null,
           })
           processed++
-          logger.warn(`Alerta generada: ${typeName}`, { truck_id: pos.truck_id, tenant_id: pos.tenant_id })
+          logger.warn(`Alert triggered: ${typeName}`, { truck_id: pos.truck_id, tenant_id: pos.tenant_id })
         } catch (ruleErr) {
           errors++
-          logger.error(`La regla de alerta ${typeName} fallo`, { error: ruleErr, truck_id: pos.truck_id })
+          logger.error(`Alert rule ${typeName} failed`, { error: ruleErr, truck_id: pos.truck_id })
         }
       }
     }
@@ -274,7 +274,7 @@ class AlertEngineJob extends BaseJob {
 export function startAlertEngine(): void {
   const job = new AlertEngineJob()
   cron.schedule('*/30 * * * * *', () => {
-    job.run().catch((err) => logger.error('Error en el cron del motor de alertas', { error: err }))
+    job.run().catch((err) => logger.error('Alert engine cron error', { error: err }))
   })
-  logger.info('Motor de alertas iniciado (cada 30s)')
+  logger.info('Alert engine started (every 30s)')
 }

@@ -126,12 +126,12 @@ class DocumentExpiryJob extends BaseJob {
         const daysUntil = Math.ceil((new Date(doc.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
 
         const title = isExpired
-          ? `Documento vencido: ${doc.name} (${doc.type})`
-          : `Documento por vencer pronto: ${doc.name} (${doc.type}) en ${daysUntil}d`
+          ? `Document expired: ${doc.name} (${doc.type})`
+          : `Document expiring soon: ${doc.name} (${doc.type}) in ${daysUntil}d`
 
         const message = isExpired
-          ? `El documento "${doc.name}" (${doc.type}) vencio el ${doc.expiry_date}.`
-          : `El documento "${doc.name}" (${doc.type}) vence el ${doc.expiry_date} (${daysUntil} dia(s)).`
+          ? `Document "${doc.name}" (${doc.type}) expired on ${doc.expiry_date}.`
+          : `Document "${doc.name}" (${doc.type}) expires on ${doc.expiry_date} (${daysUntil} day(s)).`
 
         if (await alertExists(doc.id, doc.tenant_id)) continue
 
@@ -152,11 +152,11 @@ class DocumentExpiryJob extends BaseJob {
         processed++
       } catch (err) {
         errors++
-        logger.error('El vencimiento del documento fallo para el documento', { error: err, document_id: doc.id })
+        logger.error('Document expiry failed for document', { error: err, document_id: doc.id })
       }
     }
 
-    logger.info(`Revisiones de vencimiento de documentos enviadas para ${documents.length} documentos`)
+    logger.info(`Document expiry checks sent for ${documents.length} documents`)
     return { success: true, processed, errors, duration: 0 }
   }
 }
@@ -164,7 +164,7 @@ class DocumentExpiryJob extends BaseJob {
 export function startDocumentExpiry(): void {
   const job = new DocumentExpiryJob()
   cron.schedule('0 */6 * * *', () => {
-    job.run().catch((err) => logger.error('Error en el cron de vencimiento de documentos', { error: err }))
+    job.run().catch((err) => logger.error('Document expiry cron error', { error: err }))
   })
-  logger.info('Vencimiento de documentos iniciado (cada 6h)')
+  logger.info('Document expiry started (every 6h)')
 }

@@ -44,7 +44,7 @@ export default function ClientDashboardPage() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <h2 style={{ margin: 0, fontSize: 20 }}>Mi Panel</h2>
+      <h2 style={{ margin: 0, fontSize: 20 }}>Mi Dashboard</h2>
 
       <div className="grid-4">
         <StatCard icon="🛣️" label="Viajes totales" value={tripStats?.total ?? 0} />

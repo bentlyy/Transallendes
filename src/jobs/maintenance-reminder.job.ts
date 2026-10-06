@@ -110,12 +110,12 @@ class MaintenanceReminderJob extends BaseJob {
         const daysUntil = Math.ceil((new Date(rec.scheduled_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
 
         const title = isOverdue
-          ? `Mantenimiento vencido: ${rec.description || rec.type} para ${rec.license_plate}`
-          : `Proximo mantenimiento: ${rec.description || rec.type} para ${rec.license_plate} (${daysUntil}d)`
+          ? `Overdue maintenance: ${rec.description || rec.type} for ${rec.license_plate}`
+          : `Upcoming maintenance: ${rec.description || rec.type} for ${rec.license_plate} (${daysUntil}d)`
 
         const message = isOverdue
-          ? `El mantenimiento "${rec.description || rec.type}" para el camion ${rec.license_plate} estaba programado el ${rec.scheduled_date} y esta vencido.`
-          : `El mantenimiento "${rec.description || rec.type}" para el camion ${rec.license_plate} esta programado en ${daysUntil} dia(s) el ${rec.scheduled_date}.`
+          ? `Maintenance "${rec.description || rec.type}" for truck ${rec.license_plate} was scheduled on ${rec.scheduled_date} and is overdue.`
+          : `Maintenance "${rec.description || rec.type}" for truck ${rec.license_plate} is scheduled in ${daysUntil} day(s) on ${rec.scheduled_date}.`
 
         if (rec.driver_user_id) {
           await createNotification(rec.tenant_id, rec.driver_user_id, title, message)
@@ -144,11 +144,11 @@ class MaintenanceReminderJob extends BaseJob {
         processed++
       } catch (err) {
         errors++
-        logger.error('El recordatorio de mantenimiento fallo para el registro', { error: err, record_id: rec.id })
+        logger.error('Maintenance reminder failed for record', { error: err, record_id: rec.id })
       }
     }
 
-    logger.info(`Recordatorios de mantenimiento enviados para ${records.length} registros`)
+    logger.info(`Maintenance reminders sent for ${records.length} records`)
     return { success: true, processed, errors, duration: 0 }
   }
 }
@@ -156,7 +156,7 @@ class MaintenanceReminderJob extends BaseJob {
 export function startMaintenanceReminder(): void {
   const job = new MaintenanceReminderJob()
   cron.schedule('0 */6 * * *', () => {
-    job.run().catch((err) => logger.error('Error en el cron del recordatorio de mantenimiento', { error: err }))
+    job.run().catch((err) => logger.error('Maintenance reminder cron error', { error: err }))
   })
-  logger.info('Recordatorio de mantenimiento iniciado (cada 6h)')
+  logger.info('Maintenance reminder started (every 6h)')
 }

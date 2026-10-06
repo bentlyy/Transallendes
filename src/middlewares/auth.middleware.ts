@@ -8,7 +8,7 @@ export const authMiddleware: RequestHandler = (req, _res, next) => {
   try {
     const token = extractToken(req)
     if (!token) {
-      throw new UnauthorizedError('Autenticacion requerida')
+      throw new UnauthorizedError('Authentication required')
     }
 
     const decoded = jwtManager.verify<{
@@ -21,15 +21,15 @@ export const authMiddleware: RequestHandler = (req, _res, next) => {
     }>(token)
 
     if (!decoded || !decoded.id || !decoded.email || !decoded.role) {
-      throw new UnauthorizedError('Payload de token invalido')
+      throw new UnauthorizedError('Invalid token payload')
     }
 
     if (decoded.tenant_id && req.tenant_id && decoded.tenant_id !== req.tenant_id) {
-      logger.warn('El tenant del token no coincide', {
+      logger.warn('Tenant mismatch in token', {
         tokenTenant: decoded.tenant_id,
         requestTenant: req.tenant_id,
       })
-      throw new UnauthorizedError('El tenant no coincide')
+      throw new UnauthorizedError('Tenant mismatch')
     }
 
     req.user = {
@@ -92,13 +92,13 @@ export const optionalAuth: RequestHandler = (req, _res, next) => {
 export const authorize = (...roles: UserRole[]): RequestHandler => {
   return (req, _res, next) => {
     if (!req.user) {
-      next(new UnauthorizedError('Autenticacion requerida'))
+      next(new UnauthorizedError('Authentication required'))
       return
     }
 
     const allowed = roles.length === 0 || roles.includes(req.user.role) || req.user.role === 'superadmin'
     if (!allowed) {
-      next(new ForbiddenError('Permisos insuficientes'))
+      next(new ForbiddenError('Insufficient permissions'))
       return
     }
 

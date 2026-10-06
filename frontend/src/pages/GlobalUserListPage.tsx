@@ -5,15 +5,6 @@ import { usePagination } from '@/hooks/usePagination'
 import { formatDate } from '@/utils/formatters'
 import { motion } from 'framer-motion'
 
-const roleLabels: Record<string, string> = {
-  superadmin: 'Super Admin',
-  admin: 'Administrador',
-  client_admin: 'Cliente Admin',
-  client_viewer: 'Cliente Vista',
-  driver: 'Conductor',
-  user: 'Usuario',
-}
-
 export default function GlobalUserListPage() {
   const [users, setUsers] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
@@ -38,7 +29,7 @@ export default function GlobalUserListPage() {
   const columns: Column<Record<string, unknown>>[] = [
     { key: 'name', header: 'Nombre', sortable: true },
     { key: 'email', header: 'Email', sortable: true },
-    { key: 'role', header: 'Rol', sortable: true, render: (u: Record<string, unknown>) => roleLabels[String(u.role || '')] || String(u.role || '') },
+    { key: 'role', header: 'Rol', sortable: true },
     { key: 'tenantName', header: 'Inquilino', sortable: true },
     { key: 'createdAt', header: 'Creado', render: (u: Record<string, unknown>) => formatDate(u.createdAt as string) },
   ]

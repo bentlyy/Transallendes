@@ -113,7 +113,7 @@ export default function LoginPage() {
           <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 16, textAlign: 'left' }}>
             {[
               { icon: '📍', text: 'Monitoreo GPS en tiempo real' },
-              { icon: '📊', text: 'Panel ejecutivo con indicadores' },
+              { icon: '📊', text: 'Dashboard ejecutivo con KPIs' },
               { icon: '🔔', text: 'Alertas y geocercas inteligentes' },
               { icon: '📄', text: 'Reportes y analytics avanzados' },
             ].map((item, i) => (

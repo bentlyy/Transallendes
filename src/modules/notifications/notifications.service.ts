@@ -22,7 +22,7 @@ export const markRead = async (tenant_id: string, id: number, userId: number) =>
     'UPDATE notifications SET read = true, read_at = NOW() WHERE id = $1 AND tenant_id = $2 AND user_id = $3 RETURNING *',
     [id, tenant_id, userId],
   )
-  if (result.rows.length === 0) throw new NotFoundError('Notificacion no encontrada')
+  if (result.rows.length === 0) throw new NotFoundError('Notification not found')
   return result.rows[0]
 }
 

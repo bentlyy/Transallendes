@@ -3,15 +3,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { changePassword } from '@/api/auth'
 import { motion } from 'framer-motion'
 
-const roleLabels: Record<string, string> = {
-  superadmin: 'Super Admin',
-  admin: 'Administrador',
-  client_admin: 'Cliente Admin',
-  client_viewer: 'Cliente Vista',
-  driver: 'Conductor',
-  user: 'Usuario',
-}
-
 export default function AdminSettingsPage() {
   const { user } = useAuth()
   const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
@@ -46,7 +37,7 @@ export default function AdminSettingsPage() {
         <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16 }}>Información de tu cuenta</p>
         <div className="info-row"><span>Nombre</span><span>{user?.name}</span></div>
         <div className="info-row"><span>Email</span><span>{user?.email}</span></div>
-        <div className="info-row"><span>Rol</span><span>{roleLabels[user?.role || ''] || user?.role}</span></div>
+        <div className="info-row"><span>Rol</span><span>{user?.role}</span></div>
       </div>
 
       <div className="card">

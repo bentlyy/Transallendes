@@ -36,12 +36,12 @@ pool.on('connect', (client: pg.PoolClient) => {
   logger.info('DB connected')
   const tenantId = process.env.DEFAULT_TENANT_ID || 'default'
   client.query(`SET SESSION app.tenant_id = '${tenantId.replace(/'/g, "''")}'`).catch((err: Error) => {
-    logger.warn('No se pudo establecer app.tenant_id en la nueva conexion', { error: err.message })
+    logger.warn('Could not set app.tenant_id on new connection', { error: err.message })
   })
 })
 
 pool.on('error', (err: Error) => {
-  logger.error('Error inesperado en cliente inactivo', err)
+  logger.error('Unexpected error on idle client', err)
 })
 
 export const query = pool.query.bind(pool)
@@ -61,7 +61,7 @@ export const readPool = readOnlyUrl
   : pool
 
 if (readOnlyUrl) {
-  logger.info('Pool de replica de lectura configurado via DATABASE_URL_READ_ONLY')
+  logger.info('Read replica pool configured via DATABASE_URL_READ_ONLY')
 }
 
 export type Pool = typeof pool

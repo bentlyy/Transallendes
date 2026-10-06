@@ -66,7 +66,7 @@ export const findById = async (tenant_id: string, id: number) => {
      WHERE b.id = $1 AND b.tenant_id = $2`,
     [id, tenant_id],
   )
-  if (result.rows.length === 0) throw new NotFoundError('Factura no encontrada')
+  if (result.rows.length === 0) throw new NotFoundError('Invoice not found')
   return result.rows[0]
 }
 
@@ -80,7 +80,7 @@ export const createInvoice = async (
     trip_ids,
     tenant_id,
   ])
-  if (tripsResult.rows.length === 0) throw new BadRequestError('No se encontraron viajes validos')
+  if (tripsResult.rows.length === 0) throw new BadRequestError('No valid trips found')
 
   const total = tripsResult.rows.reduce((sum: number, row: any) => sum + (Number(row.cost) || 0), 0)
 
@@ -117,7 +117,7 @@ export const updateStatus = async (
   data: { status: string; notes?: string | null; paid_at?: string | null },
 ) => {
   const existing = await query('SELECT id FROM billing WHERE id = $1 AND tenant_id = $2', [id, tenant_id])
-  if (existing.rows.length === 0) throw new NotFoundError('Factura no encontrada')
+  if (existing.rows.length === 0) throw new NotFoundError('Invoice not found')
 
   const sets: string[] = [`status = $1`]
   const values: unknown[] = [data.status]

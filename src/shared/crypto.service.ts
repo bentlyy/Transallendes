@@ -6,7 +6,7 @@ const IV_LENGTH = 16
 
 function getEncryptionKey(): Buffer {
   const secret = process.env.ENCRYPTION_KEY
-  if (!secret) throw new Error('La variable de entorno ENCRYPTION_KEY debe configurarse por separado de JWT_SECRET')
+  if (!secret) throw new Error('ENCRYPTION_KEY environment variable must be set separately from JWT_SECRET')
   return crypto.pbkdf2Sync(secret, 'encryption-key-salt', 100000, 32, 'sha256')
 }
 
@@ -23,7 +23,7 @@ export function encrypt(text: string): string {
 export function decrypt(encoded: string): string {
   const key = getEncryptionKey()
   const parts = encoded.split(':')
-  if (parts.length !== 3) throw new BadRequestError('Formato cifrado invalido')
+  if (parts.length !== 3) throw new BadRequestError('Invalid encrypted format')
   const [ivHex, tagHex, encrypted] = parts
   const iv = Buffer.from(ivHex, 'hex')
   const tag = Buffer.from(tagHex, 'hex')

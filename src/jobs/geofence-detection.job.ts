@@ -191,8 +191,8 @@ class GeofenceDetectionJob extends BaseJob {
             await createAlert(pos.tenant_id, {
               type: 'geofence_enter',
               severity: 'info',
-              title: `Camion entro a la geocerca: ${gf.name}`,
-              message: `El camion entro a la geocerca "${gf.name}"`,
+              title: `Truck entered geofence: ${gf.name}`,
+              message: `Truck entered geofence "${gf.name}"`,
               resource_type: 'geofence',
               resource_id: gf.id,
               truck_id: pos.truck_id,
@@ -200,7 +200,7 @@ class GeofenceDetectionJob extends BaseJob {
               geofence_id: gf.id,
             })
             processed++
-            logger.info(`Entrada a geocerca: camion ${pos.truck_id} -> ${gf.name}`)
+            logger.info(`Geofence enter: truck ${pos.truck_id} -> ${gf.name}`)
           }
 
           if (!isInside && wasInside && gf.alert_on_exit) {
@@ -208,8 +208,8 @@ class GeofenceDetectionJob extends BaseJob {
             await createAlert(pos.tenant_id, {
               type: 'geofence_exit',
               severity: 'info',
-              title: `Camion salio de la geocerca: ${gf.name}`,
-              message: `El camion salio de la geocerca "${gf.name}"`,
+              title: `Truck exited geofence: ${gf.name}`,
+              message: `Truck exited geofence "${gf.name}"`,
               resource_type: 'geofence',
               resource_id: gf.id,
               truck_id: pos.truck_id,
@@ -217,11 +217,11 @@ class GeofenceDetectionJob extends BaseJob {
               geofence_id: gf.id,
             })
             processed++
-            logger.info(`Salida de geocerca: camion ${pos.truck_id} -> ${gf.name}`)
+            logger.info(`Geofence exit: truck ${pos.truck_id} -> ${gf.name}`)
           }
         } catch (ruleErr) {
           errors++
-          logger.error('La alerta de geocerca fallo', { error: ruleErr, truck_id: pos.truck_id, geofence_id: gf.id })
+          logger.error('Geofence alert failed', { error: ruleErr, truck_id: pos.truck_id, geofence_id: gf.id })
         }
       }
     }
@@ -233,7 +233,7 @@ class GeofenceDetectionJob extends BaseJob {
 export function startGeofenceDetection(): void {
   const job = new GeofenceDetectionJob()
   cron.schedule('*/60 * * * * *', () => {
-    job.run().catch((err) => logger.error('Error en el cron de deteccion de geocercas', { error: err }))
+    job.run().catch((err) => logger.error('Geofence detection cron error', { error: err }))
   })
-  logger.info('Deteccion de geocercas iniciada (cada 60s)')
+  logger.info('Geofence detection started (every 60s)')
 }

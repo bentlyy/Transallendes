@@ -7,7 +7,7 @@ import { usePagination } from '@/hooks/usePagination'
 import { formatDateTime, formatRelativeTime } from '@/utils/formatters'
 import { motion } from 'framer-motion'
 
-const SEVERITY_FILTERS = ['', 'info', 'warning', 'critical', 'emergency']
+const SEVERITY_FILTERS = ['', 'critical', 'high', 'medium', 'low']
 
 export default function AlertListPage() {
   const [alerts, setAlerts] = useState<Alert[]>([])
@@ -82,7 +82,7 @@ export default function AlertListPage() {
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {SEVERITY_FILTERS.map((s) => (
           <button key={s} className={`btn ${severityFilter === s ? 'btn-primary' : 'btn-ghost'}`} onClick={() => { setSeverityFilter(s); pag.setPage(1) }} style={{ fontSize: 12, padding: '4px 10px' }}>
-            {s ? { info: 'Informativa', warning: 'Advertencia', critical: 'Crítico', emergency: 'Emergencia' }[s] || s : 'Todos'}
+            {s ? { critical: 'Crítico', high: 'Alto', medium: 'Medio', low: 'Bajo' }[s] || s : 'Todos'}
           </button>
         ))}
         <div style={{ flex: 1 }} />

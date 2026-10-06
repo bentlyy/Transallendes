@@ -114,14 +114,14 @@ class TripUpdateJob extends BaseJob {
         await createNotification(
           trip.tenant_id,
           userId,
-          `Viaje ${trip.trip_number} iniciado`,
-          `El viaje ${trip.trip_number} se inicio automaticamente.`,
+          `Trip ${trip.trip_number} started`,
+          `Trip ${trip.trip_number} has automatically started.`,
         )
         processed++
-        logger.info(`Viaje auto-iniciado: ${trip.trip_number}`, { trip_id: trip.id })
+        logger.info(`Trip auto-started: ${trip.trip_number}`, { trip_id: trip.id })
       } catch (err) {
         errors++
-        logger.error(`La notificacion de viaje auto-iniciado fallo`, { error: err, trip_id: trip.id })
+        logger.error(`Trip auto-start notification failed`, { error: err, trip_id: trip.id })
       }
     }
 
@@ -132,14 +132,14 @@ class TripUpdateJob extends BaseJob {
         await createNotification(
           trip.tenant_id,
           userId,
-          `Viaje ${trip.trip_number} completado`,
-          `El viaje ${trip.trip_number} se completo automaticamente.`,
+          `Trip ${trip.trip_number} completed`,
+          `Trip ${trip.trip_number} has automatically completed.`,
         )
         processed++
-        logger.info(`Viaje auto-completado: ${trip.trip_number}`, { trip_id: trip.id })
+        logger.info(`Trip auto-completed: ${trip.trip_number}`, { trip_id: trip.id })
       } catch (err) {
         errors++
-        logger.error(`La notificacion de viaje auto-completado fallo`, { error: err, trip_id: trip.id })
+        logger.error(`Trip auto-complete notification failed`, { error: err, trip_id: trip.id })
       }
     }
 
@@ -149,8 +149,8 @@ class TripUpdateJob extends BaseJob {
         await createAlert(trip.tenant_id, {
           type: 'trip_delayed',
           severity: 'warning',
-          title: `Viaje ${trip.trip_number} retrasado`,
-          message: `El viaje ${trip.trip_number} esta retrasado respecto a la llegada estimada (${trip.estimated_arrival_at ?? 'desconocida'}).`,
+          title: `Trip ${trip.trip_number} delayed`,
+          message: `Trip ${trip.trip_number} is delayed past estimated arrival (${trip.estimated_arrival_at ?? 'unknown'}).`,
           resource_type: 'trip',
           resource_id: trip.id,
           truck_id: trip.truck_id ?? null,
@@ -158,10 +158,10 @@ class TripUpdateJob extends BaseJob {
           trip_id: trip.id,
         })
         processed++
-        logger.warn(`Viaje auto-retrasado: ${trip.trip_number}`, { trip_id: trip.id })
+        logger.warn(`Trip auto-delayed: ${trip.trip_number}`, { trip_id: trip.id })
       } catch (err) {
         errors++
-        logger.error(`La alerta de viaje auto-retrasado fallo`, { error: err, trip_id: trip.id })
+        logger.error(`Trip auto-delayed alert failed`, { error: err, trip_id: trip.id })
       }
     }
 
@@ -172,7 +172,7 @@ class TripUpdateJob extends BaseJob {
 export function startTripUpdate(): void {
   const job = new TripUpdateJob()
   cron.schedule('*/60 * * * * *', () => {
-    job.run().catch((err) => logger.error('Error en el cron de actualizacion de viajes', { error: err }))
+    job.run().catch((err) => logger.error('Trip update cron error', { error: err }))
   })
-  logger.info('Actualizacion de viajes iniciada (cada 60s)')
+  logger.info('Trip update started (every 60s)')
 }

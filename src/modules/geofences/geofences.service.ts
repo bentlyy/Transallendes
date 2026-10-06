@@ -10,7 +10,7 @@ export async function findById(tenant_id: string, id: number) {
   const result = await pool.query('SELECT * FROM geofences WHERE tenant_id = $1 AND id = $2', [tenant_id, id])
 
   if (!result.rows.length) {
-    throw new NotFoundError(`Geocerca con id ${id} no encontrada`)
+    throw new NotFoundError(`Geofence with id ${id} not found`)
   }
 
   return result.rows[0]
@@ -80,7 +80,7 @@ export async function update(tenant_id: string, id: number, data: any) {
   )
 
   if (!result.rows.length) {
-    throw new NotFoundError(`Geocerca con id ${id} no encontrada`)
+    throw new NotFoundError(`Geofence with id ${id} not found`)
   }
 
   return result.rows[0]
@@ -93,7 +93,7 @@ export async function remove(tenant_id: string, id: number) {
   ])
 
   if (!result.rows.length) {
-    throw new NotFoundError(`Geocerca con id ${id} no encontrada`)
+    throw new NotFoundError(`Geofence with id ${id} not found`)
   }
 }
 

@@ -66,7 +66,7 @@ export function registerWorkers(): void {
 
     if (!result.sent) {
       logger.error(`Email worker failed for "${emailType}"`, { to, error: result.error })
-      throw new Error(result.error || 'El envio del correo fallo')
+      throw new Error(result.error || 'Email send failed')
     }
 
     logger.info(`Email sent: ${emailType} -> ${to}`)

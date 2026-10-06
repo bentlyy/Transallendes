@@ -72,7 +72,7 @@ export const tenantService = {
         lastLoaded = Date.now()
         logger.info(`Tenants loaded from DB: ${loaded.length} (was ${oldCount})`)
       } catch (error) {
-        logger.error('Fallo al cargar los tenants desde la base de datos', { error: (error as Error).message })
+        logger.error('Failed to load tenants from DB', { error: (error as Error).message })
       } finally {
         loadingLock = null
       }

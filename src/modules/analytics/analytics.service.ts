@@ -141,7 +141,7 @@ export async function getClientDashboard(tenant_id: string, clientId: number, fi
     `SELECT id, name, business_name, status FROM clients WHERE id = $2 AND tenant_id = $1`,
     [tenant_id, clientId],
   )
-  if (!clientRows[0]) throw new NotFoundError('Cliente no encontrado')
+  if (!clientRows[0]) throw new NotFoundError('Client not found')
 
   const { rows } = await pool.query(
     `SELECT

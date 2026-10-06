@@ -125,7 +125,7 @@ function generateDailyReport(_tenantId: string, tenantName: string): Report {
   const since = new Date()
   since.setDate(since.getDate() - 1)
   return {
-    title: `Informe Diario - ${tenantName}`,
+    title: `Daily Report - ${tenantName}`,
     type: 'daily',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
@@ -137,7 +137,7 @@ function generateWeeklyReport(_tenantId: string, tenantName: string): Report {
   const since = new Date()
   since.setDate(since.getDate() - 7)
   return {
-    title: `Informe Semanal - ${tenantName}`,
+    title: `Weekly Report - ${tenantName}`,
     type: 'weekly',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
@@ -149,7 +149,7 @@ function generateMonthlyReport(_tenantId: string, tenantName: string): Report {
   const since = new Date()
   since.setMonth(since.getMonth() - 1)
   return {
-    title: `Informe Mensual - ${tenantName}`,
+    title: `Monthly Report - ${tenantName}`,
     type: 'monthly',
     generated_at: new Date().toISOString(),
     period: { from: since.toISOString(), to: new Date().toISOString() },
@@ -178,8 +178,8 @@ async function notifyAdmins(tenantId: string, reportTitle: string): Promise<void
        VALUES ($1, $2, $3, $4, $5, NOW())`,
       [
         user.id,
-        `Informe listo: ${reportTitle}`,
-        `El ${reportTitle} ha sido generado y esta disponible para revision.`,
+        `Report ready: ${reportTitle}`,
+        `The ${reportTitle} has been generated and is available for review.`,
         'report_ready',
         tenantId,
       ],
@@ -222,7 +222,7 @@ class ReportGeneratorJob extends BaseJob {
             report.data = await queryReportData(tenant.id, new Date(report.period.from))
             break
           default:
-            logger.warn(`Frecuencia de informe desconocida para el tenant ${tenant.id}: ${frequency}`)
+            logger.warn(`Unknown report frequency for tenant ${tenant.id}: ${frequency}`)
             continue
         }
 
@@ -230,14 +230,14 @@ class ReportGeneratorJob extends BaseJob {
         await notifyAdmins(tenant.id, report.title)
 
         processed++
-        logger.info(`Informe generado para el tenant ${tenant.name}`, {
+        logger.info(`Report generated for tenant ${tenant.name}`, {
           tenant_id: tenant.id,
           report_id: saved.id,
           type: frequency,
         })
       } catch (tenantErr) {
         errors++
-        logger.error(`La generacion del informe fallo para el tenant ${tenant.id}`, { error: tenantErr })
+        logger.error(`Report generation failed for tenant ${tenant.id}`, { error: tenantErr })
       }
     }
 
@@ -248,7 +248,7 @@ class ReportGeneratorJob extends BaseJob {
 export function startReportGenerator(): void {
   const job = new ReportGeneratorJob()
   cron.schedule('0 1 * * *', () => {
-    job.run().catch((err) => logger.error('Error en el cron del generador de informes', { error: err }))
+    job.run().catch((err) => logger.error('Report generator cron error', { error: err }))
   })
-  logger.info('Generador de informes iniciado (diario a las 1:00 AM)')
+  logger.info('Report generator started (daily at 1:00 AM)')
 }
