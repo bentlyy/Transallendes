@@ -45,9 +45,7 @@ export async function deleteTenant(id: string): Promise<void> {
   await api.delete(`/super-admin/tenants/${id}`)
 }
 
-export async function getUsers(
-  params?: Record<string, string>,
-): Promise<{ data: Record<string, unknown>[]; total: number }> {
+export async function getUsers(params?: Record<string, string>): Promise<{ data: Record<string, unknown>[]; total: number }> {
   const res = await api.get('/super-admin/users', { params })
   return res.data
 }

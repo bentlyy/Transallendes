@@ -52,8 +52,7 @@ export const requireFeature = (featureKey: string): RequestHandler => {
       const enabled = await isFeatureEnabled(tenantId, featureKey)
 
       if (!enabled) {
-        next(new ForbiddenError(`Feature "${featureKey}" is not available for this tenant`))
-        return
+        return next(new ForbiddenError(`Feature "${featureKey}" is not available for this tenant`))
       }
 
       next()

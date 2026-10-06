@@ -1,51 +1,51 @@
-import { pool } from '../shared/db.js'
-import { logger } from '../utils/logger.js'
-import { BaseJob, type JobContext, type JobResult } from '../shared/job.js'
-import { gpsProviderRegistry } from '../modules/gps-providers/gps-provider-registry.js'
-import cron from 'node-cron'
+import { pool } from '../shared/db.js';
+import { logger } from '../utils/logger.js';
+import { BaseJob, type JobContext, type JobResult } from '../shared/job.js';
+import { gpsProviderRegistry } from '../modules/gps-providers/gps-provider-registry.js';
+import cron from 'node-cron';
 
 interface ActiveTruckRow {
-  truck_id: number
-  tenant_id: string
-  gps_device_id: string
-  gps_provider: string
-  driver_id: number | null
-  trip_id: number | null
+  truck_id: number;
+  tenant_id: string;
+  gps_device_id: string;
+  gps_provider: string;
+  driver_id: number | null;
+  trip_id: number | null;
 }
 
 interface InsertPositionData {
-  lat?: number | null
-  latitude?: number | null
-  lng?: number | null
-  longitude?: number | null
-  speed?: number | null
-  speed_kmh?: number | null
-  heading?: number | null
-  direction?: number | null
-  ignition?: boolean | null
-  odometer?: number | null
-  odometer_km?: number | null
-  fuel_level?: number | null
-  temperature?: number | null
-  battery_level?: number | null
-  battery_voltage?: number | null
-  timestamp?: string | null
-  recorded_at?: string | null
-  extra?: Record<string, unknown> | null
-  truck_id?: number | null
-  driver_id?: number | null
-  trip_id?: number | null
+  lat?: number | null;
+  latitude?: number | null;
+  lng?: number | null;
+  longitude?: number | null;
+  speed?: number | null;
+  speed_kmh?: number | null;
+  heading?: number | null;
+  direction?: number | null;
+  ignition?: boolean | null;
+  odometer?: number | null;
+  odometer_km?: number | null;
+  fuel_level?: number | null;
+  temperature?: number | null;
+  battery_level?: number | null;
+  battery_voltage?: number | null;
+  timestamp?: string | null;
+  recorded_at?: string | null;
+  extra?: Record<string, unknown> | null;
+  truck_id?: number | null;
+  driver_id?: number | null;
+  trip_id?: number | null;
 }
 
 interface TruckLastPosition {
-  lat: number | null
-  lng: number | null
-  speed: number | null
-  heading: number | null
-  ignition: boolean | null
-  timestamp: string
-  odometer: number | null
-  fuel_level: number | null
+  lat: number | null;
+  lng: number | null;
+  speed: number | null;
+  heading: number | null;
+  ignition: boolean | null;
+  timestamp: string;
+  odometer: number | null;
+  fuel_level: number | null;
 }
 
 async function getActiveTrucksByProvider(): Promise<ActiveTruckRow[]> {
@@ -58,8 +58,8 @@ async function getActiveTrucksByProvider(): Promise<ActiveTruckRow[]> {
       AND t.gps_device_id IS NOT NULL
       AND t.gps_provider IS NOT NULL
       AND t.gps_provider != ''
-  `)
-  return rows
+  `);
+  return rows;
 }
 
 async function insertPosition(tenantId: string, data: InsertPositionData): Promise<void> {
@@ -86,8 +86,8 @@ async function insertPosition(tenantId: string, data: InsertPositionData): Promi
       data.driver_id ?? null,
       data.trip_id ?? null,
       data.extra ? JSON.stringify(data.extra) : null,
-    ],
-  )
+    ]
+  );
 }
 
 async function updateTruckLastPosition(truckId: number, tenantId: string, gpsData: InsertPositionData): Promise<void> {
@@ -100,73 +100,75 @@ async function updateTruckLastPosition(truckId: number, tenantId: string, gpsDat
     timestamp: gpsData.timestamp ?? gpsData.recorded_at ?? new Date().toISOString(),
     odometer: gpsData.odometer ?? gpsData.odometer_km ?? null,
     fuel_level: gpsData.fuel_level ?? null,
-  }
+  };
   await pool.query(
     `UPDATE trucks
      SET last_gps_position = $1::jsonb, updated_at = NOW()
      WHERE id = $2 AND tenant_id = $3`,
-    [JSON.stringify(position), truckId, tenantId],
-  )
+    [
+      JSON.stringify(position),
+      truckId,
+      tenantId,
+    ]
+  );
 }
 
 class GpsPollingJob extends BaseJob {
-  readonly name = 'gps-polling'
+  readonly name = 'gps-polling';
 
   async execute(_ctx: JobContext): Promise<JobResult> {
-    const trucks = await getActiveTrucksByProvider()
+    const trucks = await getActiveTrucksByProvider();
     if (!trucks.length) {
-      return { success: true, processed: 0, errors: 0, duration: 0 }
+      return { success: true, processed: 0, errors: 0, duration: 0 };
     }
 
-    const byProvider: Record<string, ActiveTruckRow[]> = {}
+    const byProvider: Record<string, ActiveTruckRow[]> = {};
     for (const t of trucks) {
-      const prov = t.gps_provider
-      if (!byProvider[prov]) byProvider[prov] = []
-      byProvider[prov].push(t)
+      const prov = t.gps_provider;
+      if (!byProvider[prov]) byProvider[prov] = [];
+      byProvider[prov].push(t);
     }
 
-    let processed = 0
-    let errors = 0
+    let processed = 0;
+    let errors = 0;
 
     for (const [providerName, group] of Object.entries(byProvider)) {
-      const provider = gpsProviderRegistry.getProvider(providerName)
+      const provider = gpsProviderRegistry.getProvider(providerName);
       if (!provider) {
-        logger.warn(`GPS provider not registered: ${providerName}`)
-        continue
+        logger.warn(`GPS provider not registered: ${providerName}`);
+        continue;
       }
 
       for (const truck of group) {
         try {
-          const gpsData = await provider.getRealtimeData(truck.gps_device_id)
-          if (!gpsData) continue
+          const gpsData = await provider.getRealtimeData(truck.gps_device_id);
+          if (!gpsData) continue;
 
           await insertPosition(truck.tenant_id, {
             ...gpsData,
             truck_id: truck.truck_id,
             driver_id: truck.driver_id,
             trip_id: truck.trip_id,
-          })
+          });
 
-          await updateTruckLastPosition(truck.truck_id, truck.tenant_id, gpsData)
-          processed++
+          await updateTruckLastPosition(truck.truck_id, truck.tenant_id, gpsData);
+          processed++;
         } catch (err) {
-          errors++
+          errors++;
           logger.error(`GPS poll failed for truck ${truck.truck_id} via ${providerName}`, {
             error: err,
             truck_id: truck.truck_id,
-          })
+          });
         }
       }
     }
 
-    return { success: true, processed, errors, duration: 0 }
+    return { success: true, processed, errors, duration: 0 };
   }
 }
 
 export function startGpsPolling(): void {
-  const job = new GpsPollingJob()
-  cron.schedule('*/30 * * * * *', () => {
-    job.run().catch((err) => logger.error('GPS polling cron error', { error: err }))
-  })
-  logger.info('GPS polling started (every 30s)')
+  const job = new GpsPollingJob();
+  cron.schedule('*/30 * * * * *', () => { job.run().catch(err => logger.error('GPS polling cron error', { error: err })); });
+  logger.info('GPS polling started (every 30s)');
 }

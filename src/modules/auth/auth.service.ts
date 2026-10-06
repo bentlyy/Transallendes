@@ -153,7 +153,7 @@ export const register = async ({
 
     const { password: _, ...userWithoutPassword } = user
     return {
-      user: userWithoutPassword,
+      user: userWithoutPassword as Omit<UserRow, 'password'>,
       access_token,
       refresh_token,
     }
@@ -173,7 +173,7 @@ export const register = async ({
 
 export const login = async (
   { email, password, totp_code }: LoginParams,
-  tenantId = 'default',
+  tenantId: string = 'default',
 ): Promise<{
   access_token: string
   refresh_token: string
@@ -388,7 +388,7 @@ export const logoutAll = async (userId: number): Promise<void> => {
 
 export const changePassword = async (
   { userId, currentPassword, newPassword }: ChangePasswordParams,
-  tenantId = 'default',
+  tenantId: string = 'default',
 ): Promise<void> => {
   const userResult = await pool.query('SELECT password FROM users WHERE id = $1 AND tenant_id = $2', [userId, tenantId])
   if (!userResult.rows[0]) throw new BadRequestError('User not found')

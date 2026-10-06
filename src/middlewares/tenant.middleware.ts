@@ -36,8 +36,7 @@ export const tenantMiddleware: RequestHandler = async (req, res, next) => {
       }
       req.tenant_id = tenantId
       req.locale = 'en'
-      next()
-      return
+      return next()
     }
 
     tenantId = req.headers['x-tenant-id'] as string | undefined
@@ -54,8 +53,7 @@ export const tenantMiddleware: RequestHandler = async (req, res, next) => {
       if (publicPath) {
         req.tenant_id = 'default'
         req.locale = 'en'
-        next()
-        return
+        return next()
       }
       logger.error('No tenant could be resolved for request', { path: req.path })
       return res.status(400).json({ error: 'Tenant not resolved' })

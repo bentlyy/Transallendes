@@ -8,7 +8,7 @@ const COMPANY_TENANT_ID = 'transallendes'
 let _HASH: string | null = null
 const getHash = async (): Promise<string> => {
   if (!_HASH) _HASH = await bcrypt.hash(process.env.SEED_PASSWORD || 'Admin123!', 12)
-  return _HASH
+  return _HASH!
 }
 
 const addDays = (date: Date, days: number): Date => {
@@ -360,66 +360,11 @@ export const seed = async (): Promise<void> => {
 
   // ==================== EXTRA CLIENTS (richer fields) ====================
   const extraClientData = [
-    {
-      name: 'Vinos del Valle Ltda.',
-      rut: '76543213-8',
-      email: 'contacto@vinosdelvalle.cl',
-      phone: '+56225567893',
-      address: 'Camino Real 456, Viña del Mar',
-      city: 'Viña del Mar',
-      country: 'Chile',
-      contact_name: 'Roberto Fuentes',
-      contact_email: 'r.fuentes@vinosdelvalle.cl',
-      contact_phone: '+56966660001',
-    },
-    {
-      name: 'Ferretería Central SpA.',
-      rut: '76543214-6',
-      email: 'compras@ferretera.cl',
-      phone: '+56225567894',
-      address: 'Av. Matta 890, Concepción',
-      city: 'Concepción',
-      country: 'Chile',
-      contact_name: 'Daniela Rojas',
-      contact_email: 'd.rojas@ferretera.cl',
-      contact_phone: '+56966660002',
-    },
-    {
-      name: 'Exportadora Patagonia S.A.',
-      rut: '76543215-4',
-      email: 'ops@exportpatagonia.cl',
-      phone: '+56225567895',
-      address: 'Ruta 5 Norte Km 1200, Puerto Montt',
-      city: 'Puerto Montt',
-      country: 'Chile',
-      contact_name: 'Fernando Lagos',
-      contact_email: 'f.lagos@exportpatagonia.cl',
-      contact_phone: '+56966660003',
-    },
-    {
-      name: 'Cemento Andino S.A.',
-      rut: '76543216-2',
-      email: 'log@cementoandino.cl',
-      phone: '+56225567896',
-      address: 'Avenida Industrial 234, Antofagasta',
-      city: 'Antofagasta',
-      country: 'Chile',
-      contact_name: 'Paola Méndez',
-      contact_email: 'p.mendez@cementoandino.cl',
-      contact_phone: '+56966660004',
-    },
-    {
-      name: 'Frutas del Maule SpA.',
-      rut: '76543217-0',
-      email: 'admin@frutasdelmaule.cl',
-      phone: '+56225567897',
-      address: 'Camino a San Clemente 500, Talca',
-      city: 'Talca',
-      country: 'Chile',
-      contact_name: 'Claudio Torres',
-      contact_email: 'c.torres@frutasdelmaule.cl',
-      contact_phone: '+56966660005',
-    },
+    { name: 'Vinos del Valle Ltda.', rut: '76543213-8', email: 'contacto@vinosdelvalle.cl', phone: '+56225567893', address: 'Camino Real 456, Viña del Mar', city: 'Viña del Mar', country: 'Chile', contact_name: 'Roberto Fuentes', contact_email: 'r.fuentes@vinosdelvalle.cl', contact_phone: '+56966660001' },
+    { name: 'Ferretería Central SpA.', rut: '76543214-6', email: 'compras@ferretera.cl', phone: '+56225567894', address: 'Av. Matta 890, Concepción', city: 'Concepción', country: 'Chile', contact_name: 'Daniela Rojas', contact_email: 'd.rojas@ferretera.cl', contact_phone: '+56966660002' },
+    { name: 'Exportadora Patagonia S.A.', rut: '76543215-4', email: 'ops@exportpatagonia.cl', phone: '+56225567895', address: 'Ruta 5 Norte Km 1200, Puerto Montt', city: 'Puerto Montt', country: 'Chile', contact_name: 'Fernando Lagos', contact_email: 'f.lagos@exportpatagonia.cl', contact_phone: '+56966660003' },
+    { name: 'Cemento Andino S.A.', rut: '76543216-2', email: 'log@cementoandino.cl', phone: '+56225567896', address: 'Avenida Industrial 234, Antofagasta', city: 'Antofagasta', country: 'Chile', contact_name: 'Paola Méndez', contact_email: 'p.mendez@cementoandino.cl', contact_phone: '+56966660004' },
+    { name: 'Frutas del Maule SpA.', rut: '76543217-0', email: 'admin@frutasdelmaule.cl', phone: '+56225567897', address: 'Camino a San Clemente 500, Talca', city: 'Talca', country: 'Chile', contact_name: 'Claudio Torres', contact_email: 'c.torres@frutasdelmaule.cl', contact_phone: '+56966660005' },
   ]
 
   const extraClientIds: number[] = []
@@ -432,20 +377,7 @@ export const seed = async (): Promise<void> => {
          contact_name = EXCLUDED.contact_name, contact_email = EXCLUDED.contact_email,
          contact_phone = EXCLUDED.contact_phone, address = EXCLUDED.address
        RETURNING id`,
-      [
-        c.name,
-        c.rut,
-        c.email,
-        c.phone,
-        c.address,
-        c.city,
-        c.country,
-        c.contact_name,
-        c.contact_email,
-        c.contact_phone,
-        'active',
-        COMPANY_TENANT_ID,
-      ],
+      [c.name, c.rut, c.email, c.phone, c.address, c.city, c.country, c.contact_name, c.contact_email, c.contact_phone, 'active', COMPANY_TENANT_ID],
     )
     if (result.rows.length > 0) extraClientIds.push(result.rows[0].id)
   }
@@ -453,51 +385,11 @@ export const seed = async (): Promise<void> => {
 
   // ==================== EXTRA DRIVERS ====================
   const extraDriverData = [
-    {
-      name: 'Luis Vega',
-      email: 'luis.vega@transallendes.cl',
-      phone: '+56966661111',
-      license_type: 'A5',
-      license_number: 'LIC-006',
-      status: 'available',
-      expiry: '2027-05-01',
-    },
-    {
-      name: 'Carolina Díaz',
-      email: 'carolina.diaz@transallendes.cl',
-      phone: '+56966662222',
-      license_type: 'A5',
-      license_number: 'LIC-007',
-      status: 'on_trip',
-      expiry: '2026-11-15',
-    },
-    {
-      name: 'Andrés Fuentes',
-      email: 'andres.fuentes@transallendes.cl',
-      phone: '+56966663333',
-      license_type: 'A4',
-      license_number: 'LIC-008',
-      status: 'available',
-      expiry: '2027-02-20',
-    },
-    {
-      name: 'Valentina Paredes',
-      email: 'valentina.paredes@transallendes.cl',
-      phone: '+56966664444',
-      license_type: 'A5',
-      license_number: 'LIC-009',
-      status: 'resting',
-      expiry: '2028-01-10',
-    },
-    {
-      name: 'Jorge Salinas',
-      email: 'jorge.salinas@transallendes.cl',
-      phone: '+56966665555',
-      license_type: 'A3',
-      license_number: 'LIC-010',
-      status: 'available',
-      expiry: '2026-09-30',
-    },
+    { name: 'Luis Vega', email: 'luis.vega@transallendes.cl', phone: '+56966661111', license_type: 'A5', license_number: 'LIC-006', status: 'available', expiry: '2027-05-01' },
+    { name: 'Carolina Díaz', email: 'carolina.diaz@transallendes.cl', phone: '+56966662222', license_type: 'A5', license_number: 'LIC-007', status: 'on_trip', expiry: '2026-11-15' },
+    { name: 'Andrés Fuentes', email: 'andres.fuentes@transallendes.cl', phone: '+56966663333', license_type: 'A4', license_number: 'LIC-008', status: 'available', expiry: '2027-02-20' },
+    { name: 'Valentina Paredes', email: 'valentina.paredes@transallendes.cl', phone: '+56966664444', license_type: 'A5', license_number: 'LIC-009', status: 'resting', expiry: '2028-01-10' },
+    { name: 'Jorge Salinas', email: 'jorge.salinas@transallendes.cl', phone: '+56966665555', license_type: 'A3', license_number: 'LIC-010', status: 'available', expiry: '2026-09-30' },
   ]
 
   const extraDriverIds: number[] = []
@@ -510,18 +402,7 @@ export const seed = async (): Promise<void> => {
          current_location_lat = COALESCE(drivers.current_location_lat, EXCLUDED.current_location_lat),
          current_location_lng = COALESCE(drivers.current_location_lng, EXCLUDED.current_location_lng)
        RETURNING id`,
-      [
-        d.name,
-        d.email,
-        d.phone,
-        d.license_type,
-        d.license_number,
-        d.expiry,
-        -33.4489 + extraDriverData.length * 0.01,
-        -70.6693,
-        d.status,
-        COMPANY_TENANT_ID,
-      ],
+      [d.name, d.email, d.phone, d.license_type, d.license_number, d.expiry, -33.4489 + (extraDriverData.length * 0.01), -70.6693, d.status, COMPANY_TENANT_ID],
     )
     if (result.rows.length > 0) extraDriverIds.push(result.rows[0].id)
   }
@@ -529,77 +410,11 @@ export const seed = async (): Promise<void> => {
 
   // ==================== EXTRA TRUCKS ====================
   const extraTruckData = [
-    {
-      plate: 'FGHI-66',
-      brand: 'Volvo',
-      model: 'FH460',
-      year: 2023,
-      capacity_kg: 25000,
-      capacity_m3: 88,
-      fuel_type: 'Diesel',
-      status: 'active',
-      driverIdx: 0,
-      lat: -33.4512,
-      lng: -70.6631,
-      speed: 74.2,
-      direction: 130,
-    },
-    {
-      plate: 'GHIJ-77',
-      brand: 'MAN',
-      model: 'TGX 18.480',
-      year: 2024,
-      capacity_kg: 26000,
-      capacity_m3: 90,
-      fuel_type: 'Diesel',
-      status: 'in_maintenance',
-      driverIdx: -1,
-    },
-    {
-      plate: 'HIJK-88',
-      brand: 'Scania',
-      model: 'R520',
-      year: 2025,
-      capacity_kg: 28000,
-      capacity_m3: 96,
-      fuel_type: 'Diesel',
-      status: 'active',
-      driverIdx: 1,
-      lat: -34.1721,
-      lng: -70.744,
-      speed: 58.9,
-      direction: 200,
-    },
-    {
-      plate: 'IJKL-99',
-      brand: 'Renault',
-      model: 'T520',
-      year: 2022,
-      capacity_kg: 24500,
-      capacity_m3: 84,
-      fuel_type: 'Diesel',
-      status: 'active',
-      driverIdx: 2,
-      lat: -33.5943,
-      lng: -71.6122,
-      speed: 0.4,
-      direction: 45,
-    },
-    {
-      plate: 'JKLM-00',
-      brand: 'Iveco',
-      model: 'S-Way 500',
-      year: 2024,
-      capacity_kg: 25500,
-      capacity_m3: 87,
-      fuel_type: 'Diesel',
-      status: 'active',
-      driverIdx: 3,
-      lat: -36.8201,
-      lng: -73.0484,
-      speed: 81.7,
-      direction: 350,
-    },
+    { plate: 'FGHI-66', brand: 'Volvo', model: 'FH460', year: 2023, capacity_kg: 25000, capacity_m3: 88, fuel_type: 'Diesel', status: 'active', driverIdx: 0, lat: -33.4512, lng: -70.6631, speed: 74.2, direction: 130 },
+    { plate: 'GHIJ-77', brand: 'MAN', model: 'TGX 18.480', year: 2024, capacity_kg: 26000, capacity_m3: 90, fuel_type: 'Diesel', status: 'in_maintenance', driverIdx: -1 },
+    { plate: 'HIJK-88', brand: 'Scania', model: 'R520', year: 2025, capacity_kg: 28000, capacity_m3: 96, fuel_type: 'Diesel', status: 'active', driverIdx: 1, lat: -34.1721, lng: -70.7440, speed: 58.9, direction: 200 },
+    { plate: 'IJKL-99', brand: 'Renault', model: 'T520', year: 2022, capacity_kg: 24500, capacity_m3: 84, fuel_type: 'Diesel', status: 'active', driverIdx: 2, lat: -33.5943, lng: -71.6122, speed: 0.4, direction: 45 },
+    { plate: 'JKLM-00', brand: 'Iveco', model: 'S-Way 500', year: 2024, capacity_kg: 25500, capacity_m3: 87, fuel_type: 'Diesel', status: 'active', driverIdx: 3, lat: -36.8201, lng: -73.0484, speed: 81.7, direction: 350 },
   ]
 
   const extraTruckIds: number[] = []
@@ -616,18 +431,10 @@ export const seed = async (): Promise<void> => {
          permits = EXCLUDED.permits
        RETURNING id`,
       [
-        t.plate,
-        t.brand,
-        t.model,
-        t.year,
-        t.capacity_kg,
-        t.capacity_m3,
-        t.status,
+        t.plate, t.brand, t.model, t.year, t.capacity_kg, t.capacity_m3, t.status,
         t.driverIdx >= 0 ? extraDriverIds[t.driverIdx] : null,
-        gpsId,
-        gpsId ? 'mock' : null,
-        '2027-03-15',
-        '2027-01-20',
+        gpsId, gpsId ? 'mock' : null,
+        '2027-03-15', '2027-01-20',
         JSON.stringify([{ type: 'circulacion', number: `PERM-${t.plate}`, expiry: '2027-06-30' }]),
         COMPANY_TENANT_ID,
       ],
@@ -638,51 +445,14 @@ export const seed = async (): Promise<void> => {
 
   // ==================== extra geofences ====================
   const extraGeofenceData = [
-    {
-      name: 'Planta Viña del Mar',
-      type: 'circle',
-      center_lat: -33.03,
-      center_lng: -71.55,
-      radius_meters: 800,
-      city: 'Viña del Mar',
-    },
-    {
-      name: 'Terminal Concepción',
-      type: 'circle',
-      center_lat: -36.82,
-      center_lng: -73.05,
-      radius_meters: 1200,
-      city: 'Concepción',
-    },
-    {
-      name: 'Puerto San Antonio Norte',
-      type: 'circle',
-      center_lat: -33.59,
-      center_lng: -71.62,
-      radius_meters: 2000,
-      city: 'San Antonio',
-    },
-    {
-      name: 'Bodega Antofagasta',
-      type: 'circle',
-      center_lat: -23.65,
-      center_lng: -70.4,
-      radius_meters: 1000,
-      city: 'Antofagasta',
-    },
-    {
-      name: 'Zona Industrial Talca',
-      type: 'circle',
-      center_lat: -35.43,
-      center_lng: -71.67,
-      radius_meters: 900,
-      city: 'Talca',
-    },
+    { name: 'Planta Viña del Mar', type: 'circle', center_lat: -33.03, center_lng: -71.55, radius_meters: 800, city: 'Viña del Mar' },
+    { name: 'Terminal Concepción', type: 'circle', center_lat: -36.82, center_lng: -73.05, radius_meters: 1200, city: 'Concepción' },
+    { name: 'Puerto San Antonio Norte', type: 'circle', center_lat: -33.59, center_lng: -71.62, radius_meters: 2000, city: 'San Antonio' },
+    { name: 'Bodega Antofagasta', type: 'circle', center_lat: -23.65, center_lng: -70.4, radius_meters: 1000, city: 'Antofagasta' },
+    { name: 'Zona Industrial Talca', type: 'circle', center_lat: -35.43, center_lng: -71.67, radius_meters: 900, city: 'Talca' },
   ]
 
-  const geofenceCountCheck = await pool.query('SELECT COUNT(*) FROM geofences WHERE tenant_id = $1', [
-    COMPANY_TENANT_ID,
-  ])
+  const geofenceCountCheck = await pool.query('SELECT COUNT(*) FROM geofences WHERE tenant_id = $1', [COMPANY_TENANT_ID])
   if (Number(geofenceCountCheck.rows[0].count) === 0) {
     for (const g of extraGeofenceData) {
       await pool.query(
@@ -696,24 +466,16 @@ export const seed = async (): Promise<void> => {
   // ==================== SET LIVE GPS POSITIONS ON TRUCKS (Mapa) ====================
   const dat = [
     { plate: 'ABCD-11', lat: -33.4489, lng: -70.6693, speed: 0.8, direction: 90 },
-    { plate: 'BCDE-22', lat: -33.452, lng: -70.667, speed: 64.5, direction: 150 },
+    { plate: 'BCDE-22', lat: -33.4520, lng: -70.6670, speed: 64.5, direction: 150 },
     { plate: 'DEFG-44', lat: -34.1708, lng: -70.7445, speed: 55.2, direction: 210 },
     { plate: 'FGHI-66', lat: -33.4512, lng: -70.6631, speed: 74.2, direction: 130 },
-    { plate: 'HIJK-88', lat: -34.1721, lng: -70.744, speed: 58.9, direction: 200 },
+    { plate: 'HIJK-88', lat: -34.1721, lng: -70.7440, speed: 58.9, direction: 200 },
     { plate: 'IJKL-99', lat: -33.5943, lng: -71.6122, speed: 0.4, direction: 45 },
     { plate: 'JKLM-00', lat: -36.8201, lng: -73.0484, speed: 81.7, direction: 350 },
   ]
   for (const p of dat) {
     const recorded = new Date(Date.now() - 2 * 60 * 1000).toISOString()
-    const pos = JSON.stringify({
-      lat: p.lat,
-      lng: p.lng,
-      speed: p.speed,
-      direction: p.direction,
-      ignition: p.speed > 1,
-      recorded_at: recorded,
-      timestamp: recorded,
-    })
+    const pos = JSON.stringify({ lat: p.lat, lng: p.lng, speed: p.speed, direction: p.direction, ignition: p.speed > 1, recorded_at: recorded, timestamp: recorded })
     await pool.query(
       'UPDATE trucks SET last_gps_position = $2 WHERE plate = $1 AND tenant_id = $3 AND last_gps_position IS NULL',
       [p.plate, pos, COMPANY_TENANT_ID],
@@ -729,125 +491,56 @@ export const seed = async (): Promise<void> => {
   const extraTripData = [
     {
       trip_number: 'TMS-004',
-      clientIdx: 3,
-      driverIdx: 5,
-      truckIdx: 5,
-      origin: 'Santiago',
-      destination: 'Valparaíso',
-      status: 'completed',
-      departure_at: addDays(today, -9),
-      estimated_arrival_at: addDays(today, -8),
-      actual_arrival_at: addDays(today, -8),
-      distance_km: 115,
-      cargo_description: 'Vinos embotellados',
-      cargo_weight_kg: 18000,
-      cargo_value: 45000000,
-      fuel_consumed: 38,
-      cost: 420000,
-      billing_status: 'paid',
+      clientIdx: 3, driverIdx: 5, truckIdx: 5,
+      origin: 'Santiago', destination: 'Valparaíso',
+      status: 'completed', departure_at: addDays(today, -9), estimated_arrival_at: addDays(today, -8), actual_arrival_at: addDays(today, -8),
+      distance_km: 115, cargo_description: 'Vinos embotellados', cargo_weight_kg: 18000, cargo_value: 45000000,
+      fuel_consumed: 38, cost: 420000, billing_status: 'paid',
     },
     {
       trip_number: 'TMS-005',
-      clientIdx: 4,
-      driverIdx: 6,
-      truckIdx: 1,
-      origin: 'Concepción',
-      destination: 'Santiago',
-      status: 'delayed',
-      departure_at: addDays(today, -2),
-      estimated_arrival_at: addDays(today, 1),
-      actual_arrival_at: null,
-      distance_km: 510,
-      cargo_description: 'Ferretería y herramientas',
-      cargo_weight_kg: 16500,
-      cargo_value: 28000000,
-      fuel_consumed: 168,
-      cost: 950000,
-      billing_status: 'invoiced',
+      clientIdx: 4, driverIdx: 6, truckIdx: 1,
+      origin: 'Concepción', destination: 'Santiago',
+      status: 'delayed', departure_at: addDays(today, -2), estimated_arrival_at: addDays(today, 1), actual_arrival_at: null,
+      distance_km: 510, cargo_description: 'Ferretería y herramientas', cargo_weight_kg: 16500, cargo_value: 28000000,
+      fuel_consumed: 168, cost: 950000, billing_status: 'invoiced',
     },
     {
       trip_number: 'TMS-006',
-      clientIdx: 5,
-      driverIdx: 7,
-      truckIdx: 7,
-      origin: 'Puerto Montt',
-      destination: 'Osorno',
-      status: 'completed',
-      departure_at: addDays(today, -14),
-      estimated_arrival_at: addDays(today, -13),
-      actual_arrival_at: addDays(today, -13),
-      distance_km: 110,
-      cargo_description: 'Productos del mar congelados',
-      cargo_weight_kg: 21000,
-      cargo_value: 60000000,
-      fuel_consumed: 36,
-      cost: 400000,
-      billing_status: 'paid',
+      clientIdx: 5, driverIdx: 7, truckIdx: 7,
+      origin: 'Puerto Montt', destination: 'Osorno',
+      status: 'completed', departure_at: addDays(today, -14), estimated_arrival_at: addDays(today, -13), actual_arrival_at: addDays(today, -13),
+      distance_km: 110, cargo_description: 'Productos del mar congelados', cargo_weight_kg: 21000, cargo_value: 60000000,
+      fuel_consumed: 36, cost: 400000, billing_status: 'paid',
     },
     {
       trip_number: 'TMS-007',
-      clientIdx: 6,
-      driverIdx: 8,
-      truckIdx: 8,
-      origin: 'Antofagasta',
-      destination: 'Calama',
-      status: 'completed',
-      departure_at: addDays(today, -21),
-      estimated_arrival_at: addDays(today, -20),
-      actual_arrival_at: addDays(today, -20),
-      distance_km: 220,
-      cargo_description: 'Cemento a granel',
-      cargo_weight_kg: 24000,
-      cargo_value: 18000000,
-      fuel_consumed: 80,
-      cost: 520000,
-      billing_status: 'overdue',
+      clientIdx: 6, driverIdx: 8, truckIdx: 8,
+      origin: 'Antofagasta', destination: 'Calama',
+      status: 'completed', departure_at: addDays(today, -21), estimated_arrival_at: addDays(today, -20), actual_arrival_at: addDays(today, -20),
+      distance_km: 220, cargo_description: 'Cemento a granel', cargo_weight_kg: 24000, cargo_value: 18000000,
+      fuel_consumed: 80, cost: 520000, billing_status: 'overdue',
     },
     {
       trip_number: 'TMS-008',
-      clientIdx: 7,
-      driverIdx: 9,
-      truckIdx: 9,
-      origin: 'Talca',
-      destination: 'Santiago',
-      status: 'cancelled',
-      departure_at: addDays(today, 1),
-      estimated_arrival_at: addDays(today, 1),
-      actual_arrival_at: null,
-      distance_km: 260,
-      cargo_description: 'Frutas estacionales',
-      cargo_weight_kg: 20000,
-      cargo_value: 15000000,
-      fuel_consumed: 0,
-      cost: 0,
-      billing_status: 'pending',
+      clientIdx: 7, driverIdx: 9, truckIdx: 9,
+      origin: 'Talca', destination: 'Santiago',
+      status: 'cancelled', departure_at: addDays(today, 1), estimated_arrival_at: addDays(today, 1), actual_arrival_at: null,
+      distance_km: 260, cargo_description: 'Frutas estacionales', cargo_weight_kg: 20000, cargo_value: 15000000,
+      fuel_consumed: 0, cost: 0, billing_status: 'pending',
     },
     {
       trip_number: 'TMS-009',
-      clientIdx: 0,
-      driverIdx: 0,
-      truckIdx: 0,
-      origin: 'Santiago',
-      destination: 'Rancagua',
-      status: 'pending',
-      departure_at: addDays(today, 3),
-      estimated_arrival_at: addDays(today, 3),
-      actual_arrival_at: null,
-      distance_km: 87,
-      cargo_description: 'Alimentos refrigerados',
-      cargo_weight_kg: 14000,
-      cargo_value: 20000000,
-      fuel_consumed: 0,
-      cost: 0,
-      billing_status: 'pending',
+      clientIdx: 0, driverIdx: 0, truckIdx: 0,
+      origin: 'Santiago', destination: 'Rancagua',
+      status: 'pending', departure_at: addDays(today, 3), estimated_arrival_at: addDays(today, 3), actual_arrival_at: null,
+      distance_km: 87, cargo_description: 'Alimentos refrigerados', cargo_weight_kg: 14000, cargo_value: 20000000,
+      fuel_consumed: 0, cost: 0, billing_status: 'pending',
     },
   ]
 
   for (const t of extraTripData) {
-    const existing = await pool.query('SELECT id FROM trips WHERE trip_number = $1 AND tenant_id = $2', [
-      t.trip_number,
-      COMPANY_TENANT_ID,
-    ])
+    const existing = await pool.query('SELECT id FROM trips WHERE trip_number = $1 AND tenant_id = $2', [t.trip_number, COMPANY_TENANT_ID])
     if (existing.rows.length > 0) continue
     await pool.query(
       `INSERT INTO trips (trip_number, client_id, driver_id, truck_id, origin_city, destination_city, status, departure_at, estimated_arrival_at, actual_arrival_at, distance_km, cargo_description, cargo_weight_kg, cargo_value, fuel_consumed, cost, billing_status, tenant_id)
@@ -857,20 +550,8 @@ export const seed = async (): Promise<void> => {
         allClientIds[t.clientIdx],
         allDriverIds[t.driverIdx],
         allTruckIds[t.truckIdx],
-        t.origin,
-        t.destination,
-        t.status,
-        t.departure_at,
-        t.estimated_arrival_at,
-        t.actual_arrival_at,
-        t.distance_km,
-        t.cargo_description,
-        t.cargo_weight_kg,
-        t.cargo_value,
-        t.fuel_consumed,
-        t.cost,
-        t.billing_status,
-        COMPANY_TENANT_ID,
+        t.origin, t.destination, t.status, t.departure_at, t.estimated_arrival_at, t.actual_arrival_at,
+        t.distance_km, t.cargo_description, t.cargo_weight_kg, t.cargo_value, t.fuel_consumed, t.cost, t.billing_status, COMPANY_TENANT_ID,
       ],
     )
   }
@@ -880,46 +561,11 @@ export const seed = async (): Promise<void> => {
   const billingCheck = await pool.query('SELECT COUNT(*) FROM billing WHERE tenant_id = $1', [COMPANY_TENANT_ID])
   if (Number(billingCheck.rows[0].count) === 0) {
     const billingData = [
-      {
-        invoice: 'FAC-2026-001',
-        clientIdx: 0,
-        total: 25000000,
-        status: 'paid',
-        due: addDays(today, -6),
-        paid: addDays(today, -5),
-      },
-      {
-        invoice: 'FAC-2026-002',
-        clientIdx: 1,
-        total: 85000000,
-        status: 'invoiced',
-        due: addDays(today, 20),
-        paid: null,
-      },
-      {
-        invoice: 'FAC-2026-003',
-        clientIdx: 2,
-        total: 12000000,
-        status: 'paid',
-        due: addDays(today, -8),
-        paid: addDays(today, -7),
-      },
-      {
-        invoice: 'FAC-2026-004',
-        clientIdx: 5,
-        total: 60000000,
-        status: 'overdue',
-        due: addDays(today, -2),
-        paid: null,
-      },
-      {
-        invoice: 'FAC-2026-005',
-        clientIdx: 6,
-        total: 18000000,
-        status: 'paid',
-        due: addDays(today, -10),
-        paid: addDays(today, -9),
-      },
+      { invoice: 'FAC-2026-001', clientIdx: 0, total: 25000000, status: 'paid', due: addDays(today, -6), paid: addDays(today, -5) },
+      { invoice: 'FAC-2026-002', clientIdx: 1, total: 85000000, status: 'invoiced', due: addDays(today, 20), paid: null },
+      { invoice: 'FAC-2026-003', clientIdx: 2, total: 12000000, status: 'paid', due: addDays(today, -8), paid: addDays(today, -7) },
+      { invoice: 'FAC-2026-004', clientIdx: 5, total: 60000000, status: 'overdue', due: addDays(today, -2), paid: null },
+      { invoice: 'FAC-2026-005', clientIdx: 6, total: 18000000, status: 'paid', due: addDays(today, -10), paid: addDays(today, -9) },
       { invoice: 'FAC-2026-006', clientIdx: 7, total: 0, status: 'cancelled', due: addDays(today, 5), paid: null },
     ]
     for (const b of billingData) {
@@ -934,10 +580,7 @@ export const seed = async (): Promise<void> => {
   // ==================== GPS POSITIONS (telemetry / fuel KPI) ====================
   const gpsCheck = await pool.query('SELECT COUNT(*) FROM gps_positions WHERE tenant_id = $1', [COMPANY_TENANT_ID])
   if (Number(gpsCheck.rows[0].count) === 0) {
-    const gpsTripIds = await pool.query(
-      'SELECT id, truck_id, driver_id FROM trips WHERE tenant_id = $1 AND status = $2 ORDER BY id ASC LIMIT 3',
-      [COMPANY_TENANT_ID, 'in_progress'],
-    )
+    const gpsTripIds = await pool.query('SELECT id, truck_id, driver_id FROM trips WHERE tenant_id = $1 AND status = $2 ORDER BY id ASC LIMIT 3', [COMPANY_TENANT_ID, 'in_progress'])
     for (let i = 0; i < 6; i++) {
       const minutesAgo = (30 - i * 4) * 60 * 1000
       const recorded = new Date(Date.now() - minutesAgo).toISOString()
@@ -946,22 +589,7 @@ export const seed = async (): Promise<void> => {
         await pool.query(
           `INSERT INTO gps_positions (truck_id, driver_id, trip_id, latitude, longitude, speed_kmh, direction, ignition, odometer_km, fuel_level, fuel_consumption, temperature, recorded_at, tenant_id)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
-          [
-            row.truck_id,
-            row.driver_id,
-            row.id,
-            -33.45 + i * 0.01,
-            -70.67 + i * 0.005,
-            60 + i * 5,
-            120 + i * 20,
-            true,
-            120000 + i * 120,
-            65 - i * 3,
-            14.2 + i * 2.1,
-            18.5,
-            recorded,
-            COMPANY_TENANT_ID,
-          ],
+          [row.truck_id, row.driver_id, row.id, -33.45 + i * 0.01, -70.67 + i * 0.005, 60 + i * 5, 120 + i * 20, true, 120000 + i * 120, 65 - i * 3, 14.2 + i * 2.1, 18.5, recorded, COMPANY_TENANT_ID],
         )
       }
     }
@@ -972,101 +600,20 @@ export const seed = async (): Promise<void> => {
   const maintCheck = await pool.query('SELECT COUNT(*) FROM maintenance WHERE tenant_id = $1', [COMPANY_TENANT_ID])
   if (Number(maintCheck.rows[0].count) === 0) {
     const maintenanceData = [
-      {
-        truckPlate: 'ABCD-11',
-        type: 'preventive',
-        description: 'Cambio de aceite y filtros',
-        scheduled: addDays(today, 5),
-        completed: null,
-        odometer: 154200,
-        cost: 350000,
-        provider: 'Taller Scania Santiago',
-        status: 'scheduled',
-        notes: 'Servicio preventivo 120.000 km',
-      },
-      {
-        truckPlate: 'BCDE-22',
-        type: 'oil_change',
-        description: 'Cambio de aceite motor',
-        scheduled: addDays(today, -3),
-        completed: addDays(today, -2),
-        odometer: 98000,
-        cost: 280000,
-        provider: 'Servicio Volvo',
-        status: 'completed',
-        notes: 'Aceite sintético 5W-30',
-      },
-      {
-        truckPlate: 'CDEF-33',
-        type: 'corrective',
-        description: 'Reparación del sistema de frenos',
-        scheduled: addDays(today, -1),
-        completed: null,
-        odometer: 210300,
-        cost: 620000,
-        provider: 'Mecánica El Sur',
-        status: 'in_progress',
-        notes: 'Cambio discos y pastillas',
-      },
-      {
-        truckPlate: 'DEFG-44',
-        type: 'inspection',
-        description: 'Revisión técnica y alineación',
-        scheduled: addDays(today, 12),
-        completed: null,
-        odometer: 76000,
-        cost: 145000,
-        provider: 'Revisión Técnica RM',
-        status: 'scheduled',
-        notes: 'Alteración menor detectada',
-      },
-      {
-        truckPlate: 'GHIJ-77',
-        type: 'tire_change',
-        description: 'Cambio de neumáticos traseros',
-        scheduled: addDays(today, -2),
-        completed: addDays(today, -1),
-        odometer: 132500,
-        cost: 940000,
-        provider: 'Neumáticos Pacífico',
-        status: 'completed',
-        notes: '4 cubiertas 315/80 R22.5',
-      },
-      {
-        truckPlate: 'EFGH-55',
-        type: 'corrective',
-        description: 'Reparación de transmisión',
-        scheduled: addDays(today, 18),
-        completed: null,
-        odometer: 240000,
-        cost: 1850000,
-        provider: 'Maestranza Norte',
-        status: 'scheduled',
-        notes: 'Fuera de servicio hasta reparación',
-      },
+      { truckPlate: 'ABCD-11', type: 'preventive', description: 'Cambio de aceite y filtros', scheduled: addDays(today, 5), completed: null, odometer: 154200, cost: 350000, provider: 'Taller Scania Santiago', status: 'scheduled', notes: 'Servicio preventivo 120.000 km' },
+      { truckPlate: 'BCDE-22', type: 'oil_change', description: 'Cambio de aceite motor', scheduled: addDays(today, -3), completed: addDays(today, -2), odometer: 98000, cost: 280000, provider: 'Servicio Volvo', status: 'completed', notes: 'Aceite sintético 5W-30' },
+      { truckPlate: 'CDEF-33', type: 'corrective', description: 'Reparación del sistema de frenos', scheduled: addDays(today, -1), completed: null, odometer: 210300, cost: 620000, provider: 'Mecánica El Sur', status: 'in_progress', notes: 'Cambio discos y pastillas' },
+      { truckPlate: 'DEFG-44', type: 'inspection', description: 'Revisión técnica y alineación', scheduled: addDays(today, 12), completed: null, odometer: 76000, cost: 145000, provider: 'Revisión Técnica RM', status: 'scheduled', notes: 'Alteración menor detectada' },
+      { truckPlate: 'GHIJ-77', type: 'tire_change', description: 'Cambio de neumáticos traseros', scheduled: addDays(today, -2), completed: addDays(today, -1), odometer: 132500, cost: 940000, provider: 'Neumáticos Pacífico', status: 'completed', notes: '4 cubiertas 315/80 R22.5' },
+      { truckPlate: 'EFGH-55', type: 'corrective', description: 'Reparación de transmisión', scheduled: addDays(today, 18), completed: null, odometer: 240000, cost: 1850000, provider: 'Maestranza Norte', status: 'scheduled', notes: 'Fuera de servicio hasta reparación' },
     ]
     for (const m of maintenanceData) {
-      const tr = await pool.query('SELECT id FROM trucks WHERE plate = $1 AND tenant_id = $2', [
-        m.truckPlate,
-        COMPANY_TENANT_ID,
-      ])
+      const tr = await pool.query('SELECT id FROM trucks WHERE plate = $1 AND tenant_id = $2', [m.truckPlate, COMPANY_TENANT_ID])
       if (tr.rows.length === 0) continue
       await pool.query(
         `INSERT INTO maintenance (truck_id, type, description, scheduled_date, completed_date, odometer_at_km, cost, provider, status, notes, tenant_id)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-        [
-          tr.rows[0].id,
-          m.type,
-          m.description,
-          m.scheduled,
-          m.completed,
-          m.odometer,
-          m.cost,
-          m.provider,
-          m.status,
-          m.notes,
-          COMPANY_TENANT_ID,
-        ],
+        [tr.rows[0].id, m.type, m.description, m.scheduled, m.completed, m.odometer, m.cost, m.provider, m.status, m.notes, COMPANY_TENANT_ID],
       )
     }
   }
@@ -1085,88 +632,23 @@ export const seed = async (): Promise<void> => {
       const r = await pool.query('SELECT email FROM drivers WHERE id = $1', [id])
       if (r.rows[0]) byEmail.set(r.rows[0].email, id)
     }
-    const alertRows = await pool.query(
-      'SELECT id, trip_number FROM trips WHERE tenant_id = $1 AND status = $2 ORDER BY id ASC',
-      [COMPANY_TENANT_ID, 'in_progress'],
-    )
+    const alertRows = await pool.query('SELECT id, trip_number FROM trips WHERE tenant_id = $1 AND status = $2 ORDER BY id ASC', [COMPANY_TENANT_ID, 'in_progress'])
     const inProgressTripIds = alertRows.rows.map((r: any) => r.id)
     const t1 = byPlate.get('ABCD-11') ?? allTruckIds[0]
     const t2 = byPlate.get('BCDE-22') ?? allTruckIds[1]
-    const t3 = byPlate.get('FGHI-66') ?? extraTruckIds[0] ?? allTruckIds[0]
+    const t3 = byPlate.get('FGHI-66') ?? (extraTruckIds[0] ?? allTruckIds[0])
     const d1 = allDriverIds[0]
     const d2 = allDriverIds[5] ?? allDriverIds[0]
-    const geofenceFirst = await pool.query('SELECT id FROM geofences WHERE tenant_id = $1 ORDER BY id ASC LIMIT 1', [
-      COMPANY_TENANT_ID,
-    ])
+    const geofenceFirst = await pool.query('SELECT id FROM geofences WHERE tenant_id = $1 ORDER BY id ASC LIMIT 1', [COMPANY_TENANT_ID])
     const g1 = geofenceFirst.rows[0]?.id ?? null
 
     const alertData = [
-      {
-        type: 'speeding',
-        severity: 'warning',
-        title: 'Exceso de velocidad',
-        description: 'El vehículo BCDE-22 superó los 90 km/h en ruta 5',
-        truck_id: t2,
-        driver_id: d1,
-        trip_id: inProgressTripIds[0] ?? null,
-        geofence_id: null,
-        client_id: null,
-      },
-      {
-        type: 'geofence_exit',
-        severity: 'critical',
-        title: 'Salida de geocerca',
-        description: 'Camión FGHI-66 abandonó la zona autorizada',
-        truck_id: t3,
-        driver_id: d2,
-        trip_id: null,
-        geofence_id: g1,
-        client_id: allClientIds[0],
-      },
-      {
-        type: 'extended_stop',
-        severity: 'info',
-        title: 'Detención prolongada',
-        description: 'IJKL-99 detenido más de 30 minutos sin motivo',
-        truck_id: byPlate.get('IJKL-99') ?? allTruckIds[0],
-        driver_id: null,
-        trip_id: null,
-        geofence_id: null,
-        client_id: null,
-      },
-      {
-        type: 'low_fuel',
-        severity: 'warning',
-        title: 'Nivel de combustible bajo',
-        description: 'Combustible bajo el 15% en DEFG-44',
-        truck_id: byPlate.get('DEFG-44') ?? allTruckIds[2],
-        driver_id: null,
-        trip_id: null,
-        geofence_id: null,
-        client_id: null,
-      },
-      {
-        type: 'panic',
-        severity: 'emergency',
-        title: 'Botón de pánico',
-        description: 'Se activó el botón de pánico en viaje TMS-002',
-        truck_id: t1,
-        driver_id: d1,
-        trip_id: inProgressTripIds[0] ?? null,
-        geofence_id: null,
-        client_id: null,
-      },
-      {
-        type: 'temperature',
-        severity: 'warning',
-        title: 'Alerta de temperatura',
-        description: 'Temperatura de carga fuera de rango en HIJK-88',
-        truck_id: byPlate.get('HIJK-88') ?? allTruckIds[0],
-        driver_id: null,
-        trip_id: null,
-        geofence_id: null,
-        client_id: null,
-      },
+      { type: 'speeding', severity: 'warning', title: 'Exceso de velocidad', description: 'El vehículo BCDE-22 superó los 90 km/h en ruta 5', truck_id: t2, driver_id: d1, trip_id: inProgressTripIds[0] ?? null, geofence_id: null, client_id: null },
+      { type: 'geofence_exit', severity: 'critical', title: 'Salida de geocerca', description: 'Camión FGHI-66 abandonó la zona autorizada', truck_id: t3, driver_id: d2, trip_id: null, geofence_id: g1, client_id: allClientIds[0] },
+      { type: 'extended_stop', severity: 'info', title: 'Detención prolongada', description: 'IJKL-99 detenido más de 30 minutos sin motivo', truck_id: byPlate.get('IJKL-99') ?? allTruckIds[0], driver_id: null, trip_id: null, geofence_id: null, client_id: null },
+      { type: 'low_fuel', severity: 'warning', title: 'Nivel de combustible bajo', description: 'Combustible bajo el 15% en DEFG-44', truck_id: byPlate.get('DEFG-44') ?? allTruckIds[2], driver_id: null, trip_id: null, geofence_id: null, client_id: null },
+      { type: 'panic', severity: 'emergency', title: 'Botón de pánico', description: 'Se activó el botón de pánico en viaje TMS-002', truck_id: t1, driver_id: d1, trip_id: inProgressTripIds[0] ?? null, geofence_id: null, client_id: null },
+      { type: 'temperature', severity: 'warning', title: 'Alerta de temperatura', description: 'Temperatura de carga fuera de rango en HIJK-88', truck_id: byPlate.get('HIJK-88') ?? allTruckIds[0], driver_id: null, trip_id: null, geofence_id: null, client_id: null },
     ]
     for (let i = 0; i < alertData.length; i++) {
       const a = alertData[i]
@@ -1174,21 +656,7 @@ export const seed = async (): Promise<void> => {
       await pool.query(
         `INSERT INTO alerts (type, severity, title, description, truck_id, driver_id, trip_id, geofence_id, client_id, acknowledged, resolved, created_at, tenant_id)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
-        [
-          a.type,
-          a.severity,
-          a.title,
-          a.description,
-          a.truck_id,
-          a.driver_id,
-          a.trip_id,
-          a.geofence_id,
-          a.client_id,
-          i < 2,
-          i % 2 === 0,
-          created,
-          COMPANY_TENANT_ID,
-        ],
+        [a.type, a.severity, a.title, a.description, a.truck_id, a.driver_id, a.trip_id, a.geofence_id, a.client_id, i < 2, i % 2 === 0, created, COMPANY_TENANT_ID],
       )
     }
   }
@@ -1209,16 +677,7 @@ export const seed = async (): Promise<void> => {
       await pool.query(
         `INSERT INTO reports (tenant_id, created_by, type, format, from_date, to_date, status, file_url)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [
-          COMPANY_TENANT_ID,
-          companyAdminResult.rows[0]?.id ?? null,
-          r.type,
-          r.format,
-          r.from,
-          r.to,
-          r.status,
-          r.status === 'completed' ? `/reports/${r.type}-seed.${r.format}` : null,
-        ],
+        [COMPANY_TENANT_ID, companyAdminResult.rows[0]?.id ?? null, r.type, r.format, r.from, r.to, r.status, r.status === 'completed' ? `/reports/${r.type}-seed.${r.format}` : null],
       )
     }
   }

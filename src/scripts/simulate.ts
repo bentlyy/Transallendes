@@ -155,7 +155,7 @@ function getRandomSpeed(): number {
   return 60 + Math.random() * 30
 }
 
-function addNoise(value: number, amount = 0.001): number {
+function addNoise(value: number, amount: number = 0.001): number {
   return value + (Math.random() - 0.5) * amount
 }
 
@@ -324,7 +324,7 @@ export const simulate = async (): Promise<void> => {
   }
 }
 
-async function runLoop(intervalMs = 10000): Promise<void> {
+async function runLoop(intervalMs: number = 10000): Promise<void> {
   logger.info(`GPS simulator starting (interval: ${intervalMs}ms)`)
   const run = async () => {
     try {

@@ -54,10 +54,7 @@ export const authMiddleware: RequestHandler = (req, _res, next) => {
 export const optionalAuth: RequestHandler = (req, _res, next) => {
   try {
     const token = extractToken(req)
-    if (!token) {
-      next()
-      return
-    }
+    if (!token) return next()
 
     const decoded = jwtManager.verify<{
       id: number
@@ -92,14 +89,12 @@ export const optionalAuth: RequestHandler = (req, _res, next) => {
 export const authorize = (...roles: UserRole[]): RequestHandler => {
   return (req, _res, next) => {
     if (!req.user) {
-      next(new UnauthorizedError('Authentication required'))
-      return
+      return next(new UnauthorizedError('Authentication required'))
     }
 
     const allowed = roles.length === 0 || roles.includes(req.user.role) || req.user.role === 'superadmin'
     if (!allowed) {
-      next(new ForbiddenError('Insufficient permissions'))
-      return
+      return next(new ForbiddenError('Insufficient permissions'))
     }
 
     next()

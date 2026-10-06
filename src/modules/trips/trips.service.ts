@@ -66,7 +66,7 @@ export async function getTripPositions(tenant_id: string, tripId: number) {
 
 export async function getStats(tenant_id: string) {
   const result = await repo.getStats(tenant_id)
-  const row = result
+  const row = result as Record<string, unknown>
   return {
     total: row.total,
     inProgress: row.in_progress,

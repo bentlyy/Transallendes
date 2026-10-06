@@ -9,7 +9,7 @@ interface JobData {
 type JobHandler = (job: JobData) => Promise<void>
 
 class MemoryQueue {
-  private handlers = new Map<string, JobHandler>()
+  private handlers: Map<string, JobHandler> = new Map()
 
   register(type: string, handler: JobHandler): void {
     this.handlers.set(type, handler)

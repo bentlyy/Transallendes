@@ -152,7 +152,7 @@ export const remove = async (tenant_id: string, id: number) => {
   if (result.rows.length === 0) throw new NotFoundError('Maintenance record not found')
 }
 
-export const getUpcoming = async (tenant_id: string, days = 30) => {
+export const getUpcoming = async (tenant_id: string, days: number = 30) => {
   const result = await query(
     `SELECT m.*, t.plate AS truck_plate
      FROM maintenance m
